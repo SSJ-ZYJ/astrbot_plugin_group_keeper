@@ -13,9 +13,6 @@ from .handlers import GroupHandler, JoinHandler, NoticeHandler
 from .i18n import I18nManager
 
 PLUGIN_BASE_DIR = Path(__file__).parent
-DEFAULT_LOCALE = "zh_CN"
-DEFAULT_MUTE_DURATION = 60
-DEFAULT_RECALL_COUNT = 1
 WELCOME_MESSAGE_MAX_LEN = 200
 
 CST = timezone(timedelta(hours=8))
@@ -25,34 +22,38 @@ CST = timezone(timedelta(hours=8))
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.0",
+    version="1.0.1",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
     """QQ Group Keeper - comprehensive group management plugin."""
 
-    def __init__(self, context: star.Context):
+    def __init__(self, context: star.Context, config: dict | None = None):
         super().__init__(context)
+        self.config = config or {}
         self.data_path = star.StarTools.get_data_dir("astrbot_plugin_group_keeper")
         self.groups_path = self.data_path / "groups"
         self.groups_path.mkdir(parents=True, exist_ok=True)
+
+        self.locale = self.config.get("locale", "zh_CN")
+        self.default_mute_duration = self.config.get("default_mute_duration", 60)
+        self.default_welcome_enabled = self.config.get("default_welcome_enabled", True)
+        self.default_welcome_message = self.config.get("default_welcome_message", "")
+        self.max_recall_count = max(1, self.config.get("max_recall_count", 10))
 
         self.i18n = I18nManager(PLUGIN_BASE_DIR / "locales")
         self.group_handler = GroupHandler()
         self.notice_handler = NoticeHandler()
         self.join_handler = JoinHandler()
 
-        self.global_config: dict = {}
         self._group_configs: dict[str, dict] = {}
 
     async def initialize(self):
-        """Load global configuration on plugin activation."""
-        await self._load_global_config()
+        """Load per-group data on plugin activation."""
         logger.info("Group Keeper plugin initialized.")
 
     async def terminate(self):
-        """Save all data on plugin deactivation."""
-        await self._save_global_config()
+        """Save all per-group data on plugin deactivation."""
         for group_id, cfg in self._group_configs.items():
             self._save_group_config(group_id, cfg)
         logger.info("Group Keeper plugin terminated.")
@@ -60,26 +61,6 @@ class GroupKeeperPlugin(star.Star):
     # ------------------------------------------------------------------ #
     #  Data persistence
     # ------------------------------------------------------------------ #
-
-    async def _load_global_config(self):
-        config_file = self.data_path / "config.json"
-        if config_file.exists():
-            try:
-                with open(config_file, encoding="utf-8") as f:
-                    self.global_config = json.load(f)
-            except Exception as e:
-                logger.error(f"Failed to load global config: {e}")
-                self.global_config = {}
-        if "locale" not in self.global_config:
-            self.global_config["locale"] = DEFAULT_LOCALE
-
-    async def _save_global_config(self):
-        config_file = self.data_path / "config.json"
-        try:
-            with open(config_file, "w", encoding="utf-8") as f:
-                json.dump(self.global_config, f, ensure_ascii=False, indent=2)
-        except Exception as e:
-            logger.error(f"Failed to save global config: {e}")
 
     def _get_group_config(self, group_id: str) -> dict:
         if group_id in self._group_configs:
@@ -94,7 +75,7 @@ class GroupKeeperPlugin(star.Star):
                 cfg = {}
         else:
             cfg = {}
-        cfg.setdefault("welcome_enabled", True)
+        cfg.setdefault("welcome_enabled", self.default_welcome_enabled)
         cfg.setdefault("welcome_message", "")
         cfg.setdefault("admin_list", [])
         cfg.setdefault("announcements", [])
@@ -114,8 +95,7 @@ class GroupKeeperPlugin(star.Star):
     # ------------------------------------------------------------------ #
 
     def _t(self, key: str, event: AstrMessageEvent | None = None, **kwargs) -> str:
-        locale = self.global_config.get("locale", DEFAULT_LOCALE)
-        return self.i18n.get(key, locale, **kwargs)
+        return self.i18n.get(key, self.locale, **kwargs)
 
     def _reply(self, event: AstrMessageEvent, text: str):
         event.set_result(MessageEventResult().message(text))
@@ -359,7 +339,7 @@ class GroupKeeperPlugin(star.Star):
             return
 
         duration = self._parse_int_from_text(
-            event, exclude=target, default=DEFAULT_MUTE_DURATION
+            event, exclude=target, default=self.default_mute_duration
         )
         success = await self.group_handler.mute(
             bot, int(group_id), int(target), duration
@@ -481,10 +461,8 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_parameter_error")
             return
 
-        count = self._parse_int_from_text(
-            event, exclude=target, default=DEFAULT_RECALL_COUNT
-        )
-        count = max(1, min(count, 20))
+        count = self._parse_int_from_text(event, exclude=target, default=1)
+        count = max(1, min(count, self.max_recall_count))
 
         recalled = 0
         try:
@@ -769,6 +747,8 @@ class GroupKeeperPlugin(star.Star):
             if not user_id:
                 return
             custom_msg = cfg.get("welcome_message", "")
+            if not custom_msg:
+                custom_msg = self.default_welcome_message
             if not custom_msg:
                 custom_msg = self._t("welcome_message", event)
             await self.join_handler.send_welcome(

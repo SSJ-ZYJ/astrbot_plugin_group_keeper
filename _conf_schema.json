@@ -1,0 +1,33 @@
+{
+  "locale": {
+    "description": "Language / 语言",
+    "type": "string",
+    "default": "zh_CN",
+    "options": ["zh_CN", "en_US"],
+    "hint": "Select plugin language / 选择插件语言"
+  },
+  "default_mute_duration": {
+    "description": "Default mute duration (seconds) / 默认禁言时长（秒）",
+    "type": "int",
+    "default": 60,
+    "hint": "Used when no duration is specified in /bot mute / 不指定时长时的默认禁言秒数"
+  },
+  "default_welcome_enabled": {
+    "description": "Welcome enabled by default / 新人欢迎默认开启",
+    "type": "bool",
+    "default": true,
+    "hint": "Whether welcome messages are enabled for new groups / 新群是否默认开启欢迎消息"
+  },
+  "default_welcome_message": {
+    "description": "Default welcome message / 默认欢迎消息",
+    "type": "text",
+    "default": "",
+    "hint": "Leave empty to use i18n default / 留空则使用语言包中的默认欢迎语"
+  },
+  "max_recall_count": {
+    "description": "Max recall count / 最大撤回条数",
+    "type": "int",
+    "default": 10,
+    "hint": "Maximum messages that can be recalled at once / 单次最多撤回的消息条数"
+  }
+}
