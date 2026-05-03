@@ -7,7 +7,7 @@ from pathlib import Path
 
 from astrbot.api import logger, star
 from astrbot.api.event import AstrMessageEvent, MessageEventResult, filter
-from astrbot.api.message_components import At
+from astrbot.api.message_components import At, Plain
 
 from .handlers import GroupHandler, JoinHandler, NoticeHandler
 from .i18n import I18nManager
@@ -22,7 +22,7 @@ CST = timezone(timedelta(hours=8))
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.1",
+    version="1.0.3",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -40,6 +40,10 @@ class GroupKeeperPlugin(star.Star):
         self.default_welcome_enabled = self.config.get("default_welcome_enabled", True)
         self.default_welcome_message = self.config.get("default_welcome_message", "")
         self.max_recall_count = max(1, self.config.get("max_recall_count", 10))
+        self.default_announce_confirm_required = self.config.get(
+            "default_announce_confirm_required", False
+        )
+        self.default_announce_pinned = self.config.get("default_announce_pinned", False)
 
         self.i18n = I18nManager(PLUGIN_BASE_DIR / "locales")
         self.group_handler = GroupHandler()
@@ -108,7 +112,9 @@ class GroupKeeperPlugin(star.Star):
     ):
         base = self._t(key, event, **kwargs)
         if detail:
-            self._reply(event, f"{base}\n{self._t('msg_error_detail', event, error=detail)}")
+            self._reply(
+                event, f"{base}\n{self._t('msg_error_detail', event, error=detail)}"
+            )
         else:
             self._reply(event, base)
 
@@ -275,6 +281,8 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_no_permission")
             return
         if not qq or not qq.isdigit():
+            qq = self._extract_target_user(event) or ""
+        if not qq or not qq.isdigit():
             self._reply_key(event, "msg_parameter_error")
             return
 
@@ -297,6 +305,8 @@ class GroupKeeperPlugin(star.Star):
         if not self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
+        if not qq or not qq.isdigit():
+            qq = self._extract_target_user(event) or ""
         if not qq or not qq.isdigit():
             self._reply_key(event, "msg_parameter_error")
             return
@@ -644,6 +654,17 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_platform_not_supported")
             return
 
+        if not name:
+            msg_str = event.get_message_str().strip()
+            rest = re.sub(
+                r"^/?bot\s+set_group_name\s*", "", msg_str, flags=re.IGNORECASE
+            ).strip()
+            quote_match = re.match(r'^"(.*)"$', rest) or re.match(r"^'(.*)'$", rest)
+            if quote_match:
+                name = quote_match.group(1)
+            else:
+                name = rest
+
         name = name.strip()
         if not name:
             self._reply_key(event, "msg_parameter_error")
@@ -672,12 +693,22 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_platform_not_supported")
             return
 
+        if not content:
+            msg_str = event.get_message_str().strip()
+            content = re.sub(
+                r"^/?bot\s+announce\s*", "", msg_str, flags=re.IGNORECASE
+            ).strip()
+
         content = content.strip()
         if not content:
             self._reply_key(event, "msg_parameter_error")
             return
 
-        success = await self.notice_handler.publish(bot, int(group_id), content)
+        confirm_required = self.default_announce_confirm_required
+        pinned = self.default_announce_pinned
+        success = await self.notice_handler.publish(
+            bot, int(group_id), content, confirm_required, pinned
+        )
         if success:
             cfg = self._get_group_config(group_id)
             sender_name = event.get_sender_name() or event.get_sender_id()
@@ -697,6 +728,36 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
+
+        bot = self._get_bot(event)
+        remote_announcements = []
+        if bot is not None:
+            remote_announcements = await self.notice_handler.get_from_group(
+                bot, int(group_id)
+            )
+
+        if remote_announcements:
+            lines = [self._t("msg_announcement_list_header", event)]
+            for i, ann in enumerate(remote_announcements[:10], 1):
+                ts = ann.get("time", ann.get("timestamp", 0))
+                dt = (
+                    datetime.fromtimestamp(ts, tz=CST).strftime("%Y-%m-%d %H:%M")
+                    if ts
+                    else "N/A"
+                )
+                content = ann.get("content", "")
+                pinned_flag = ann.get("pinned", False)
+                confirm_flag = ann.get("confirm_required", False)
+                tags = []
+                if pinned_flag:
+                    tags.append(self._t("msg_tag_pinned", event))
+                if confirm_flag:
+                    tags.append(self._t("msg_tag_confirm", event))
+                tag_str = f" [{', '.join(tags)}]" if tags else ""
+                lines.append(f"{i}. [{dt}]{tag_str} {content}")
+            self._reply(event, "\n".join(lines))
+            return
+
         cfg = self._get_group_config(group_id)
         announcements = cfg.get("announcements", [])
         if not announcements:
@@ -774,6 +835,18 @@ class GroupKeeperPlugin(star.Star):
 
         Handles both At-based and plain-text-based target references.
         """
+        messages = event.get_messages()
+        found_target = False
+        text_parts = []
+        for comp in messages:
+            if isinstance(comp, At) and str(comp.qq) == target:
+                found_target = True
+                continue
+            if found_target and isinstance(comp, Plain):
+                text_parts.append(comp.text)
+        if text_parts:
+            return " ".join(text_parts).strip()
+
         msg_str = event.get_message_str().strip()
         parts = msg_str.split(None, 2)
         if len(parts) >= 3:

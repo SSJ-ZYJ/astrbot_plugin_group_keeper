@@ -7,6 +7,27 @@
 
 ---
 
+## [1.0.3] - 2026-05-03
+
+### 修复
+- 🐛 修复设置头衔（`set_group_special_title`）和提升管理员（`set_group_admin`）功能无效的问题
+- 🐛 修复所有写操作（禁言、踢人、改名等）成功后仍提示"操作失败"的根因：OneBot API 成功时返回 `None` 被误判为失败
+- 🐛 修复获取公告列表无法获取群内公告的问题，新增 `_get_group_notice` API 调用
+- 🐛 修复添加管理员（`add_admin`）和移除管理员（`remove_admin`）功能不可用，增加手动参数提取回退逻辑
+- 🐛 修复 `_extract_text_after_target` 在 At 组件后无法正确提取文本的问题
+
+### 新增
+- ✨ 发布公告支持配置项：是否需要群成员确认（`default_announce_confirm_required`）
+- ✨ 发布公告支持配置项：是否置顶（`default_announce_pinned`）
+- ✨ 公告列表显示置顶和需确认标签
+- ✨ 设置群名（`set_group_name`）支持双引号包裹带空格的群名，如 `/bot set_group_name "群名称"`
+
+### 修改
+- ♻️ 重构 `GroupHandler`，新增 `_execute_api` 和 `_execute_api_with_error` 方法，区分读操作和写操作的返回值判断逻辑
+- ♻️ 重构 `NoticeHandler`，新增 `get_from_group` 方法获取群内公告
+
+---
+
 ## [1.0.2] - 2026-05-03
 
 ### 修复
@@ -60,6 +81,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [1.0.3] - 2026-05-03
+
+### Fixed
+- 🐛 Fix `set_group_special_title` (set title) and `set_group_admin` (promote to admin) not working
+- 🐛 Fix root cause of all write operations showing "Operation failed" on success: OneBot API returns `None` on success which was incorrectly judged as failure
+- 🐛 Fix list announcements not fetching from QQ group, added `_get_group_notice` API call
+- 🐛 Fix `add_admin` and `remove_admin` not working, added manual parameter extraction fallback
+- 🐛 Fix `_extract_text_after_target` failing to extract text after At components
+
+### Added
+- ✨ Announcement supports `default_announce_confirm_required` config: require group members to confirm
+- ✨ Announcement supports `default_announce_pinned` config: pin announcement
+- ✨ Announcement list shows pinned and confirm-required tags
+- ✨ Set group name (`set_group_name`) supports quoted names with spaces, e.g. `/bot set_group_name "Group Name"`
+
+### Changed
+- ♻️ Refactor `GroupHandler`: add `_execute_api` and `_execute_api_with_error` to distinguish read/write operation return value logic
+- ♻️ Refactor `NoticeHandler`: add `get_from_group` method to fetch announcements from QQ group
 
 ---
 

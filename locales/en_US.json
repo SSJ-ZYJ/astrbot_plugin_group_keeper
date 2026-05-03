@@ -50,6 +50,8 @@
 	"msg_announce_success": "✅ Announcement published",
 	"msg_announcement_list_header": "📋 Group Announcements:",
 	"msg_no_announcements": "No announcements currently",
+	"msg_tag_pinned": "Pinned",
+	"msg_tag_confirm": "Confirm",
 	"msg_parameter_error": "❌ Parameter error. Please check command format.",
 	"msg_operation_failed": "❌ Operation failed. Please try again later.",
 	"msg_error_detail": "Detail: {error}",

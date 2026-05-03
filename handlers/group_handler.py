@@ -18,6 +18,7 @@ class GroupHandler:
         """Call a OneBot API action and return the response.
 
         Returns the response dict on success, or None on failure.
+        Use this for read operations where you need the return value.
         """
         try:
             result = await bot.call_action(action, **params)
@@ -27,12 +28,27 @@ class GroupHandler:
             return None
 
     @staticmethod
+    async def _execute_api(bot: Any, action: str, **params) -> bool:
+        """Execute a OneBot API action. Returns True if no exception was raised.
+
+        Use this for write/mutation operations (mute, ban, promote, etc.)
+        where the API may return None on success.
+        """
+        try:
+            await bot.call_action(action, **params)
+            return True
+        except Exception as e:
+            logger.error(f"OneBot API call '{action}' failed: {e}")
+            return False
+
+    @staticmethod
     async def _call_api_with_error(
         bot: Any, action: str, **params
     ) -> tuple[dict | None, str]:
         """Call a OneBot API action and return (result, error_msg).
 
         Returns (result, "") on success, or (None, error_message) on failure.
+        Use this for read operations where you need the return value.
         """
         try:
             result = await bot.call_action(action, **params)
@@ -41,6 +57,23 @@ class GroupHandler:
             error_msg = str(e)
             logger.error(f"OneBot API call '{action}' failed: {error_msg}")
             return None, error_msg
+
+    @staticmethod
+    async def _execute_api_with_error(
+        bot: Any, action: str, **params
+    ) -> tuple[bool, str]:
+        """Execute a OneBot API action and return (success, error_msg).
+
+        Returns (True, "") on success, or (False, error_message) on failure.
+        Use this for write/mutation operations where the API may return None on success.
+        """
+        try:
+            await bot.call_action(action, **params)
+            return True, ""
+        except Exception as e:
+            error_msg = str(e)
+            logger.error(f"OneBot API call '{action}' failed: {error_msg}")
+            return False, error_msg
 
     async def mute(
         self,
@@ -60,10 +93,9 @@ class GroupHandler:
         Returns:
             True if successful, False otherwise.
         """
-        result = await self._call_api(
+        return await self._execute_api(
             bot, "set_group_ban", group_id=group_id, user_id=user_id, duration=duration
         )
-        return result is not None
 
     async def unmute(self, bot: Any, group_id: int, user_id: int) -> bool:
         """Unmute a user in the group (duration=0)."""
@@ -80,10 +112,9 @@ class GroupHandler:
         Returns:
             True if successful, False otherwise.
         """
-        result = await self._call_api(
+        return await self._execute_api(
             bot, "set_group_whole_ban", group_id=group_id, enable=enable
         )
-        return result is not None
 
     async def ban(self, bot: Any, group_id: int, user_id: int) -> bool:
         """Kick and ban a user from the group (reject future join requests).
@@ -96,14 +127,13 @@ class GroupHandler:
         Returns:
             True if successful, False otherwise.
         """
-        result = await self._call_api(
+        return await self._execute_api(
             bot,
             "set_group_kick",
             group_id=group_id,
             user_id=user_id,
             reject_add_request=True,
         )
-        return result is not None
 
     async def recall(self, bot: Any, message_id: int) -> bool:
         """Recall (delete) a message.
@@ -115,8 +145,7 @@ class GroupHandler:
         Returns:
             True if successful, False otherwise.
         """
-        result = await self._call_api(bot, "delete_msg", message_id=message_id)
-        return result is not None
+        return await self._execute_api(bot, "delete_msg", message_id=message_id)
 
     async def rename(
         self, bot: Any, group_id: int, user_id: int, new_name: str
@@ -132,10 +161,9 @@ class GroupHandler:
         Returns:
             True if successful, False otherwise.
         """
-        result = await self._call_api(
+        return await self._execute_api(
             bot, "set_group_card", group_id=group_id, user_id=user_id, card=new_name
         )
-        return result is not None
 
     async def set_title(
         self, bot: Any, group_id: int, user_id: int, title: str
@@ -151,7 +179,7 @@ class GroupHandler:
         Returns:
             (True, "") on success, (False, error_message) on failure.
         """
-        result, error_msg = await self._call_api_with_error(
+        return await self._execute_api_with_error(
             bot,
             "set_group_special_title",
             group_id=group_id,
@@ -159,7 +187,6 @@ class GroupHandler:
             special_title=title,
             duration=-1,
         )
-        return result is not None, error_msg
 
     async def promote(self, bot: Any, group_id: int, user_id: int) -> bool:
         """Set a user as group admin.
@@ -172,10 +199,9 @@ class GroupHandler:
         Returns:
             True if successful, False otherwise.
         """
-        result = await self._call_api(
+        return await self._execute_api(
             bot, "set_group_admin", group_id=group_id, user_id=user_id, enable=True
         )
-        return result is not None
 
     async def demote(self, bot: Any, group_id: int, user_id: int) -> bool:
         """Remove a user from group admin.
@@ -188,10 +214,9 @@ class GroupHandler:
         Returns:
             True if successful, False otherwise.
         """
-        result = await self._call_api(
+        return await self._execute_api(
             bot, "set_group_admin", group_id=group_id, user_id=user_id, enable=False
         )
-        return result is not None
 
     async def set_group_name(self, bot: Any, group_id: int, name: str) -> bool:
         """Change the group name.
@@ -204,10 +229,9 @@ class GroupHandler:
         Returns:
             True if successful, False otherwise.
         """
-        result = await self._call_api(
+        return await self._execute_api(
             bot, "set_group_name", group_id=group_id, group_name=name
         )
-        return result is not None
 
     async def get_member_info(
         self, bot: Any, group_id: int, user_id: int

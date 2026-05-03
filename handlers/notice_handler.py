@@ -10,25 +10,63 @@ class NoticeHandler:
     """Handles group announcement operations."""
 
     @staticmethod
-    async def publish(bot: Any, group_id: int, content: str) -> bool:
+    async def publish(
+        bot: Any,
+        group_id: int,
+        content: str,
+        confirm_required: bool = False,
+        pinned: bool = False,
+    ) -> bool:
         """Publish a group announcement (notice).
 
         Args:
             bot: The CQHttp bot instance.
             group_id: The group ID.
             content: The announcement content.
+            confirm_required: Whether group members need to confirm.
+            pinned: Whether the announcement is pinned.
 
         Returns:
             True if successful, False otherwise.
         """
         try:
-            await bot.call_action(
-                "_send_group_notice", group_id=group_id, content=content
-            )
+            params: dict[str, Any] = {
+                "group_id": group_id,
+                "content": content,
+            }
+            if confirm_required:
+                params["confirm_required"] = True
+            if pinned:
+                params["pinned"] = True
+            await bot.call_action("_send_group_notice", **params)
             return True
         except Exception as e:
             logger.error(f"Failed to publish announcement to group {group_id}: {e}")
             return False
+
+    @staticmethod
+    async def get_from_group(bot: Any, group_id: int) -> list[dict]:
+        """Fetch announcements from the QQ group via API.
+
+        Args:
+            bot: The CQHttp bot instance.
+            group_id: The group ID.
+
+        Returns:
+            List of announcement dicts, or empty list on failure.
+        """
+        try:
+            result = await bot.call_action("_get_group_notice", group_id=group_id)
+            if result is None:
+                return []
+            if isinstance(result, list):
+                return result
+            if isinstance(result, dict):
+                return result.get("data", result.get("notices", []))
+            return []
+        except Exception as e:
+            logger.error(f"Failed to get announcements from group {group_id}: {e}")
+            return []
 
     @staticmethod
     def add_to_local(

@@ -50,6 +50,8 @@
 	"msg_announce_success": "✅ 群公告已发布",
 	"msg_announcement_list_header": "📋 群公告列表：",
 	"msg_no_announcements": "当前没有群公告",
+	"msg_tag_pinned": "置顶",
+	"msg_tag_confirm": "需确认",
 	"msg_parameter_error": "❌ 参数错误，请检查指令格式",
 	"msg_operation_failed": "❌ 操作失败，请稍后重试",
 	"msg_error_detail": "详情: {error}",

@@ -29,5 +29,17 @@
     "type": "int",
     "default": 10,
     "hint": "Maximum messages that can be recalled at once / 单次最多撤回的消息条数"
+  },
+  "default_announce_confirm_required": {
+    "description": "Announcement requires confirmation / 公告需要群成员确认",
+    "type": "bool",
+    "default": false,
+    "hint": "Whether announcements require group members to confirm / 发布的公告是否需要群成员确认"
+  },
+  "default_announce_pinned": {
+    "description": "Pin announcement / 置顶公告",
+    "type": "bool",
+    "default": false,
+    "hint": "Whether announcements are pinned / 发布的公告是否置顶"
   }
 }
