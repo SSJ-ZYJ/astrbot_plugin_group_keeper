@@ -33,8 +33,7 @@ class GroupKeeperPlugin(star.Star):
 
     def __init__(self, context: star.Context):
         super().__init__(context)
-        self.data_path = Path(context.data_dir) / "group_keeper"
-        self.data_path.mkdir(parents=True, exist_ok=True)
+        self.data_path = star.StarTools.get_data_dir("astrbot_plugin_group_keeper")
         self.groups_path = self.data_path / "groups"
         self.groups_path.mkdir(parents=True, exist_ok=True)
 
