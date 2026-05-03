@@ -1,185 +1,795 @@
-from astrbot.api.event import filter, AstrMessageEvent
-from astrbot.api.star import Context, Star, register
-from astrbot.api import logger
-from pathlib import Path
-import json
-import asyncio
+from __future__ import annotations
 
-@register(
-    name="qq_group_keeper",
+import json
+import re
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+from astrbot.api import logger, star
+from astrbot.api.event import AstrMessageEvent, MessageEventResult, filter
+from astrbot.api.message_components import At
+
+from .handlers import GroupHandler, JoinHandler, NoticeHandler
+from .i18n import I18nManager
+
+PLUGIN_BASE_DIR = Path(__file__).parent
+DEFAULT_LOCALE = "zh_CN"
+DEFAULT_MUTE_DURATION = 60
+DEFAULT_RECALL_COUNT = 1
+WELCOME_MESSAGE_MAX_LEN = 200
+
+CST = timezone(timedelta(hours=8))
+
+
+@star.register(
+    name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
-    description="一个用来管理 QQ群聊 的 Astrbot 插件，用于管理 HTS Team，满足 HTS 管理需求",
+    description="A QQ group management plugin for AstrBot, designed for HTS Team.",
     version="1.0.0",
-    repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper"
+    repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
-class GroupKeeperPlugin(Star):
-    """QQ群管理插件主类
-    
-    提供群成员管理、公告管理等功能
-    """
-    
-    def __init__(self, context: Context):
+class GroupKeeperPlugin(star.Star):
+    """QQ Group Keeper - comprehensive group management plugin."""
+
+    def __init__(self, context: star.Context):
         super().__init__(context)
         self.data_path = Path(context.data_dir) / "group_keeper"
         self.data_path.mkdir(parents=True, exist_ok=True)
-        self.welcome_enabled = True
-        self.admin_list = []
-        asyncio.create_task(self._load_config())
+        self.groups_path = self.data_path / "groups"
+        self.groups_path.mkdir(parents=True, exist_ok=True)
 
-    async def _load_config(self):
-        """异步加载配置文件"""
+        self.i18n = I18nManager(PLUGIN_BASE_DIR / "locales")
+        self.group_handler = GroupHandler()
+        self.notice_handler = NoticeHandler()
+        self.join_handler = JoinHandler()
+
+        self.global_config: dict = {}
+        self._group_configs: dict[str, dict] = {}
+
+    async def initialize(self):
+        """Load global configuration on plugin activation."""
+        await self._load_global_config()
+        logger.info("Group Keeper plugin initialized.")
+
+    async def terminate(self):
+        """Save all data on plugin deactivation."""
+        await self._save_global_config()
+        for group_id, cfg in self._group_configs.items():
+            self._save_group_config(group_id, cfg)
+        logger.info("Group Keeper plugin terminated.")
+
+    # ------------------------------------------------------------------ #
+    #  Data persistence
+    # ------------------------------------------------------------------ #
+
+    async def _load_global_config(self):
         config_file = self.data_path / "config.json"
         if config_file.exists():
             try:
-                with open(config_file, 'r', encoding='utf-8') as f:
-                    config = json.load(f)
-                    self.welcome_enabled = config.get('welcome_enabled', True)
-                    self.admin_list = config.get('admin_list', [])
-                logger.info("群管理插件配置加载成功")
+                with open(config_file, encoding="utf-8") as f:
+                    self.global_config = json.load(f)
             except Exception as e:
-                logger.error(f"加载配置文件失败: {str(e)}")
-        else:
-            await self._save_config()
+                logger.error(f"Failed to load global config: {e}")
+                self.global_config = {}
+        if "locale" not in self.global_config:
+            self.global_config["locale"] = DEFAULT_LOCALE
 
-    async def _save_config(self):
-        """异步保存配置文件"""
+    async def _save_global_config(self):
         config_file = self.data_path / "config.json"
         try:
-            with open(config_file, 'w', encoding='utf-8') as f:
-                json.dump({
-                    'welcome_enabled': self.welcome_enabled,
-                    'admin_list': self.admin_list
-                }, f, ensure_ascii=False, indent=2)
+            with open(config_file, "w", encoding="utf-8") as f:
+                json.dump(self.global_config, f, ensure_ascii=False, indent=2)
         except Exception as e:
-            logger.error(f"保存配置文件失败: {str(e)}")
+            logger.error(f"Failed to save global config: {e}")
 
-    async def initialize(self):
-        """插件初始化方法"""
-        logger.info("QQ群管理插件初始化完成")
+    def _get_group_config(self, group_id: str) -> dict:
+        if group_id in self._group_configs:
+            return self._group_configs[group_id]
+        group_file = self.groups_path / f"group_{group_id}.json"
+        if group_file.exists():
+            try:
+                with open(group_file, encoding="utf-8") as f:
+                    cfg = json.load(f)
+            except Exception as e:
+                logger.error(f"Failed to load group config for {group_id}: {e}")
+                cfg = {}
+        else:
+            cfg = {}
+        cfg.setdefault("welcome_enabled", True)
+        cfg.setdefault("welcome_message", "")
+        cfg.setdefault("admin_list", [])
+        cfg.setdefault("announcements", [])
+        self._group_configs[group_id] = cfg
+        return cfg
 
-    @filter.command_group("group")
-    async def group_command_group(self):
-        """群管理指令组"""
+    def _save_group_config(self, group_id: str, cfg: dict):
+        group_file = self.groups_path / f"group_{group_id}.json"
+        try:
+            with open(group_file, "w", encoding="utf-8") as f:
+                json.dump(cfg, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to save group config for {group_id}: {e}")
+
+    # ------------------------------------------------------------------ #
+    #  Helpers
+    # ------------------------------------------------------------------ #
+
+    def _t(self, key: str, event: AstrMessageEvent | None = None, **kwargs) -> str:
+        locale = self.global_config.get("locale", DEFAULT_LOCALE)
+        return self.i18n.get(key, locale, **kwargs)
+
+    def _reply(self, event: AstrMessageEvent, text: str):
+        event.set_result(MessageEventResult().message(text))
+
+    def _reply_key(self, event: AstrMessageEvent, key: str, **kwargs):
+        self._reply(event, self._t(key, event, **kwargs))
+
+    @staticmethod
+    def _get_bot(event: AstrMessageEvent):
+        return getattr(event, "bot", None)
+
+    @staticmethod
+    def _is_group_chat(event: AstrMessageEvent) -> bool:
+        return bool(event.get_group_id())
+
+    def _is_plugin_admin(self, event: AstrMessageEvent, group_id: str) -> bool:
+        cfg = self._get_group_config(group_id)
+        admin_list = cfg.get("admin_list", [])
+        if not admin_list:
+            return True
+        return event.get_sender_id() in admin_list
+
+    @staticmethod
+    async def _check_group_role(
+        event: AstrMessageEvent, group_id: str, required_role: str
+    ) -> bool:
+        """Check if the sender has the required role in the QQ group.
+
+        Args:
+            required_role: "owner" or "admin".
+
+        Returns:
+            True if the sender meets the requirement.
+        """
+        bot = getattr(event, "bot", None)
+        if bot is None:
+            return False
+        try:
+            info = await bot.call_action(
+                "get_group_member_info",
+                group_id=int(group_id),
+                user_id=int(event.get_sender_id()),
+                no_cache=True,
+            )
+            role = info.get("role", "member")
+            if required_role == "owner":
+                return role == "owner"
+            if required_role == "admin":
+                return role in ("owner", "admin")
+            return True
+        except Exception:
+            return False
+
+    def _extract_target_user(self, event: AstrMessageEvent) -> str | None:
+        """Extract the target user ID from an At component or message text."""
+        for comp in event.get_messages():
+            if isinstance(comp, At):
+                return str(comp.qq)
+        msg_str = event.get_message_str().strip()
+        numbers = re.findall(r"\b(\d{5,15})\b", msg_str)
+        if numbers:
+            return numbers[0]
+        return None
+
+    def _parse_int_from_text(
+        self, event: AstrMessageEvent, exclude: str = "", default: int = 0
+    ) -> int:
+        """Parse the first integer from message text that is not excluded."""
+        msg_str = event.get_message_str().strip()
+        for match in re.finditer(r"\b(\d+)\b", msg_str):
+            val = match.group(1)
+            if val != exclude:
+                return int(val)
+        return default
+
+    # ------------------------------------------------------------------ #
+    #  Command group: /bot
+    # ------------------------------------------------------------------ #
+
+    @filter.command_group("bot")
+    async def bot_group(self):
         pass
 
-    @group_command_group.command("welcome")
-    async def group_welcome(self, event: AstrMessageEvent, status: str = None):
-        """设置新人欢迎功能
-        
-        参数:
-            status: on/off，开启或关闭欢迎功能
-        """
-        try:
-            if not self._is_admin(event):
-                yield event.plain_result("❌ 权限不足，只有管理员可以执行此操作")
+    # ---- /bot help ----
+
+    @bot_group.command("help")
+    async def cmd_help(self, event: AstrMessageEvent):
+        t = self._t
+        lines = [
+            t("help_title", event),
+            "",
+            t("help_header", event),
+            t("cmd_welcome", event),
+            t("cmd_add_admin", event),
+            t("cmd_remove_admin", event),
+            t("cmd_list_admins", event),
+            t("cmd_mute", event),
+            t("cmd_unmute", event),
+            t("cmd_global_mute", event),
+            t("cmd_ban", event),
+            t("cmd_recall", event),
+            t("cmd_rename", event),
+            t("cmd_title", event),
+            t("cmd_promote", event),
+            t("cmd_demote", event),
+            t("cmd_set_group_name", event),
+            t("cmd_announce", event),
+            t("cmd_list_announcements", event),
+        ]
+        self._reply(event, "\n".join(lines))
+
+    # ---- /bot welcome [on|off|message <text>] ----
+
+    @bot_group.command("welcome")
+    async def cmd_welcome(
+        self, event: AstrMessageEvent, arg1: str = "", arg2: str = ""
+    ):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        cfg = self._get_group_config(group_id)
+
+        if not arg1:
+            status = (
+                self._t("msg_status_on", event)
+                if cfg["welcome_enabled"]
+                else self._t("msg_status_off", event)
+            )
+            self._reply_key(event, "msg_welcome_status", status=status)
+            return
+
+        if arg1.lower() == "on":
+            cfg["welcome_enabled"] = True
+            self._save_group_config(group_id, cfg)
+            self._reply_key(event, "msg_welcome_enabled")
+        elif arg1.lower() == "off":
+            cfg["welcome_enabled"] = False
+            self._save_group_config(group_id, cfg)
+            self._reply_key(event, "msg_welcome_disabled")
+        elif arg1.lower() == "message":
+            new_msg = arg2.strip()
+            if not new_msg:
+                self._reply_key(event, "msg_parameter_error")
                 return
-            
-            if status is None:
-                current_status = "开启" if self.welcome_enabled else "关闭"
-                yield event.plain_result(f"当前新人欢迎功能状态: {current_status}")
-            elif status.lower() == "on":
-                self.welcome_enabled = True
-                await self._save_config()
-                yield event.plain_result("✅ 新人欢迎功能已开启")
-            elif status.lower() == "off":
-                self.welcome_enabled = False
-                await self._save_config()
-                yield event.plain_result("✅ 新人欢迎功能已关闭")
+            if len(new_msg) > WELCOME_MESSAGE_MAX_LEN:
+                self._reply_key(event, "msg_welcome_message_too_long")
+                return
+            cfg["welcome_message"] = new_msg
+            self._save_group_config(group_id, cfg)
+            self._reply_key(event, "msg_welcome_message_set")
+        else:
+            self._reply_key(event, "msg_parameter_error")
+
+    # ---- /bot add_admin <qq> ----
+
+    @bot_group.command("add_admin")
+    async def cmd_add_admin(self, event: AstrMessageEvent, qq: str = ""):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+        if not qq or not qq.isdigit():
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        cfg = self._get_group_config(group_id)
+        if qq in cfg["admin_list"]:
+            self._reply_key(event, "msg_admin_already_exists", qq=qq)
+            return
+        cfg["admin_list"].append(qq)
+        self._save_group_config(group_id, cfg)
+        self._reply_key(event, "msg_admin_added", qq=qq)
+
+    # ---- /bot remove_admin <qq> ----
+
+    @bot_group.command("remove_admin")
+    async def cmd_remove_admin(self, event: AstrMessageEvent, qq: str = ""):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+        if not qq or not qq.isdigit():
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        cfg = self._get_group_config(group_id)
+        if qq not in cfg["admin_list"]:
+            self._reply_key(event, "msg_admin_not_exists", qq=qq)
+            return
+        cfg["admin_list"].remove(qq)
+        self._save_group_config(group_id, cfg)
+        self._reply_key(event, "msg_admin_removed", qq=qq)
+
+    # ---- /bot list_admins ----
+
+    @bot_group.command("list_admins")
+    async def cmd_list_admins(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        cfg = self._get_group_config(group_id)
+        admin_list = cfg.get("admin_list", [])
+        if not admin_list:
+            self._reply_key(event, "msg_no_admins")
+            return
+        admin_str = "\n".join(f"- {a}" for a in admin_list)
+        self._reply_key(event, "msg_admins_list", list=admin_str)
+
+    # ---- /bot mute @user [seconds] ----
+
+    @bot_group.command("mute")
+    async def cmd_mute(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        duration = self._parse_int_from_text(
+            event, exclude=target, default=DEFAULT_MUTE_DURATION
+        )
+        success = await self.group_handler.mute(
+            bot, int(group_id), int(target), duration
+        )
+        if success:
+            self._reply_key(
+                event, "msg_mute_success", user=target, duration=f"{duration}s"
+            )
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot unmute @user ----
+
+    @bot_group.command("unmute")
+    async def cmd_unmute(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.group_handler.unmute(bot, int(group_id), int(target))
+        if success:
+            self._reply_key(event, "msg_unmute_success", user=target)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot global_mute on|off ----
+
+    @bot_group.command("global_mute")
+    async def cmd_global_mute(self, event: AstrMessageEvent, status: str = ""):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        if status.lower() == "on":
+            enable = True
+        elif status.lower() == "off":
+            enable = False
+        else:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.group_handler.global_mute(bot, int(group_id), enable)
+        if success:
+            key = "msg_global_mute_enabled" if enable else "msg_global_mute_disabled"
+            self._reply_key(event, key)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot ban @user ----
+
+    @bot_group.command("ban")
+    async def cmd_ban(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.group_handler.ban(bot, int(group_id), int(target))
+        if success:
+            self._reply_key(event, "msg_ban_success", user=target)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot recall @user [count] ----
+
+    @bot_group.command("recall")
+    async def cmd_recall(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        count = self._parse_int_from_text(
+            event, exclude=target, default=DEFAULT_RECALL_COUNT
+        )
+        count = max(1, min(count, 20))
+
+        recalled = 0
+        try:
+            history = await bot.call_action(
+                "get_group_msg_history", group_id=int(group_id), count=count * 3
+            )
+            messages = history.get("messages", []) if history else []
+            for msg in messages:
+                sender = msg.get("sender", {})
+                if str(sender.get("user_id", "")) == target:
+                    ok = await self.group_handler.recall(bot, msg["message_id"])
+                    if ok:
+                        recalled += 1
+                    if recalled >= count:
+                        break
+        except Exception as e:
+            logger.error(f"Failed to recall messages: {e}")
+
+        if recalled > 0:
+            self._reply_key(event, "msg_recall_success", count=str(recalled))
+        else:
+            self._reply_key(event, "msg_recall_no_messages")
+
+    # ---- /bot rename @user <name> ----
+
+    @bot_group.command("rename")
+    async def cmd_rename(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        new_name = self._extract_text_after_target(event, target)
+        if not new_name:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.group_handler.rename(
+            bot, int(group_id), int(target), new_name
+        )
+        if success:
+            self._reply_key(event, "msg_rename_success", user=target, new_name=new_name)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot title @user <title> ----
+
+    @bot_group.command("title")
+    async def cmd_title(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+
+        is_owner = await self._check_group_role(event, group_id, "owner")
+        if not is_owner:
+            self._reply_key(event, "msg_owner_required")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        title = self._extract_text_after_target(event, target)
+        if not title:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.group_handler.set_title(
+            bot, int(group_id), int(target), title
+        )
+        if success:
+            self._reply_key(event, "msg_title_success", user=target, title=title)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot promote @user ----
+
+    @bot_group.command("promote")
+    async def cmd_promote(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+
+        is_owner = await self._check_group_role(event, group_id, "owner")
+        if not is_owner:
+            self._reply_key(event, "msg_owner_required")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.group_handler.promote(bot, int(group_id), int(target))
+        if success:
+            self._reply_key(event, "msg_promote_success", user=target)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot demote @user ----
+
+    @bot_group.command("demote")
+    async def cmd_demote(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+
+        is_owner = await self._check_group_role(event, group_id, "owner")
+        if not is_owner:
+            self._reply_key(event, "msg_owner_required")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.group_handler.demote(bot, int(group_id), int(target))
+        if success:
+            self._reply_key(event, "msg_demote_success", user=target)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot set_group_name <name> ----
+
+    @bot_group.command("set_group_name")
+    async def cmd_set_group_name(self, event: AstrMessageEvent, *, name: str = ""):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        name = name.strip()
+        if not name:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.group_handler.set_group_name(bot, int(group_id), name)
+        if success:
+            self._reply_key(event, "msg_group_name_success", name=name)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot announce <content> ----
+
+    @bot_group.command("announce")
+    async def cmd_announce(self, event: AstrMessageEvent, *, content: str = ""):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        content = content.strip()
+        if not content:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        success = await self.notice_handler.publish(bot, int(group_id), content)
+        if success:
+            cfg = self._get_group_config(group_id)
+            sender_name = event.get_sender_name() or event.get_sender_id()
+            cfg["announcements"] = self.notice_handler.add_to_local(
+                cfg.get("announcements", []), content, sender_name
+            )
+            self._save_group_config(group_id, cfg)
+            self._reply_key(event, "msg_announce_success")
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot list_announcements ----
+
+    @bot_group.command("list_announcements")
+    async def cmd_list_announcements(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        cfg = self._get_group_config(group_id)
+        announcements = cfg.get("announcements", [])
+        if not announcements:
+            self._reply_key(event, "msg_no_announcements")
+            return
+
+        lines = [self._t("msg_announcement_list_header", event)]
+        for i, ann in enumerate(announcements[-10:], 1):
+            ts = ann.get("timestamp", 0)
+            dt = (
+                datetime.fromtimestamp(ts, tz=CST).strftime("%Y-%m-%d %H:%M")
+                if ts
+                else "N/A"
+            )
+            sender = ann.get("sender", "Unknown")
+            content = ann.get("content", "")
+            lines.append(f"{i}. [{dt}] {sender}: {content}")
+        self._reply(event, "\n".join(lines))
+
+    # ------------------------------------------------------------------ #
+    #  Event listener for member join / leave
+    # ------------------------------------------------------------------ #
+
+    @filter.event_message_type(filter.EventMessageType.ALL)
+    async def on_event(self, event: AstrMessageEvent):
+        """Listen for all events and handle group notice events."""
+        bot = self._get_bot(event)
+        if bot is None:
+            return
+
+        raw = getattr(event.message_obj, "raw_message", None)
+        if raw is None:
+            return
+
+        if not isinstance(raw, dict):
+            if hasattr(raw, "get"):
+                try:
+                    raw = dict(raw)
+                except (TypeError, ValueError):
+                    return
             else:
-                yield event.plain_result("❌ 参数错误，请使用 on 或 off")
-        except Exception as e:
-            logger.error(f"执行欢迎设置命令失败: {str(e)}")
-            yield event.plain_result("❌ 操作失败，请稍后重试")
+                return
 
-    @group_command_group.command("add_admin")
-    async def group_add_admin(self, event: AstrMessageEvent, qq: str):
-        """添加管理员
-        
-        参数:
-            qq: 要添加的管理员QQ号
+        post_type = raw.get("post_type", "")
+        if post_type != "notice":
+            return
+
+        notice_type = raw.get("notice_type", "")
+        group_id = str(raw.get("group_id", ""))
+        if not group_id:
+            return
+
+        cfg = self._get_group_config(group_id)
+
+        if notice_type == "group_increase" and cfg.get("welcome_enabled", False):
+            user_id = str(raw.get("user_id", ""))
+            if not user_id:
+                return
+            custom_msg = cfg.get("welcome_message", "")
+            if not custom_msg:
+                custom_msg = self._t("welcome_message", event)
+            await self.join_handler.send_welcome(
+                bot, int(group_id), int(user_id), custom_msg
+            )
+
+    # ------------------------------------------------------------------ #
+    #  Text extraction helpers
+    # ------------------------------------------------------------------ #
+
+    @staticmethod
+    def _extract_text_after_target(event: AstrMessageEvent, target: str) -> str:
+        """Extract the text portion after the target user identifier.
+
+        Handles both At-based and plain-text-based target references.
         """
-        try:
-            if not self._is_admin(event):
-                yield event.plain_result("❌ 权限不足，只有管理员可以执行此操作")
-                return
-            
-            if qq in self.admin_list:
-                yield event.plain_result(f"❌ QQ {qq} 已经是管理员")
-                return
-            
-            self.admin_list.append(qq)
-            await self._save_config()
-            yield event.plain_result(f"✅ 已添加管理员: {qq}")
-        except Exception as e:
-            logger.error(f"添加管理员失败: {str(e)}")
-            yield event.plain_result("❌ 添加失败，请稍后重试")
-
-    @group_command_group.command("remove_admin")
-    async def group_remove_admin(self, event: AstrMessageEvent, qq: str):
-        """移除管理员
-        
-        参数:
-            qq: 要移除的管理员QQ号
-        """
-        try:
-            if not self._is_admin(event):
-                yield event.plain_result("❌ 权限不足，只有管理员可以执行此操作")
-                return
-            
-            if qq not in self.admin_list:
-                yield event.plain_result(f"❌ QQ {qq} 不是管理员")
-                return
-            
-            self.admin_list.remove(qq)
-            await self._save_config()
-            yield event.plain_result(f"✅ 已移除管理员: {qq}")
-        except Exception as e:
-            logger.error(f"移除管理员失败: {str(e)}")
-            yield event.plain_result("❌ 移除失败，请稍后重试")
-
-    @group_command_group.command("list_admins")
-    async def group_list_admins(self, event: AstrMessageEvent):
-        """列出所有管理员"""
-        try:
-            if not self.admin_list:
-                yield event.plain_result("当前没有管理员")
-            else:
-                admins = "\n".join([f"- {admin}" for admin in self.admin_list])
-                yield event.plain_result(f"📋 管理员列表:\n{admins}")
-        except Exception as e:
-            logger.error(f"获取管理员列表失败: {str(e)}")
-            yield event.plain_result("❌ 获取失败，请稍后重试")
-
-    @group_command_group.command("help")
-    async def group_help(self, event: AstrMessageEvent):
-        """显示群管理插件帮助信息"""
-        help_text = """
-📖 群管理插件帮助
-
-/group welcome [on/off] - 设置新人欢迎功能
-/group add_admin <qq> - 添加管理员
-/group remove_admin <qq> - 移除管理员
-/group list_admins - 列出所有管理员
-/group help - 显示此帮助信息
-
-示例:
-/group welcome on
-/group add_admin 123456789
-        """.strip()
-        yield event.plain_result(help_text)
-
-    def _is_admin(self, event: AstrMessageEvent) -> bool:
-        """检查用户是否为管理员
-        
-        优先检查消息发送者是否在管理员列表中，
-        如果列表为空则默认所有群成员都有管理权限
-        """
-        sender_id = event.get_sender_id()
-        if not self.admin_list:
-            return True
-        return sender_id in self.admin_list
-
-    async def terminate(self):
-        """插件终止方法"""
-        await self._save_config()
-        logger.info("QQ群管理插件已终止")
+        msg_str = event.get_message_str().strip()
+        parts = msg_str.split(None, 2)
+        if len(parts) >= 3:
+            remainder = parts[2]
+            remainder = re.sub(r"^\d{5,15}\s*", "", remainder, count=1).strip()
+            return remainder
+        return ""
