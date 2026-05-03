@@ -24,7 +24,7 @@ CST = timezone(timedelta(hours=8))
 @star.register(
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
-    description="A QQ group management plugin for AstrBot, designed for HTS Team.",
+    desc="A QQ group management plugin for AstrBot, designed for HTS Team.",
     version="1.0.0",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
