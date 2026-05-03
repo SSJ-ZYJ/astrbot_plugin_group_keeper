@@ -157,7 +157,7 @@ git clone https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper.git
 
 ## 📄 许可证
 
-MIT License
+GNU Affero General Public License v3
 
 ---
 
