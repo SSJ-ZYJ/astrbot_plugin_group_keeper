@@ -26,6 +26,22 @@ class GroupHandler:
             logger.error(f"OneBot API call '{action}' failed: {e}")
             return None
 
+    @staticmethod
+    async def _call_api_with_error(
+        bot: Any, action: str, **params
+    ) -> tuple[dict | None, str]:
+        """Call a OneBot API action and return (result, error_msg).
+
+        Returns (result, "") on success, or (None, error_message) on failure.
+        """
+        try:
+            result = await bot.call_action(action, **params)
+            return result, ""
+        except Exception as e:
+            error_msg = str(e)
+            logger.error(f"OneBot API call '{action}' failed: {error_msg}")
+            return None, error_msg
+
     async def mute(
         self,
         bot: Any,
@@ -123,8 +139,8 @@ class GroupHandler:
 
     async def set_title(
         self, bot: Any, group_id: int, user_id: int, title: str
-    ) -> bool:
-        """Set a user's special title (requires owner privileges).
+    ) -> tuple[bool, str]:
+        """Set a user's special title (requires bot to be group owner).
 
         Args:
             bot: The CQHttp bot instance.
@@ -133,16 +149,17 @@ class GroupHandler:
             title: The title text.
 
         Returns:
-            True if successful, False otherwise.
+            (True, "") on success, (False, error_message) on failure.
         """
-        result = await self._call_api(
+        result, error_msg = await self._call_api_with_error(
             bot,
             "set_group_special_title",
             group_id=group_id,
             user_id=user_id,
             special_title=title,
+            duration=-1,
         )
-        return result is not None
+        return result is not None, error_msg
 
     async def promote(self, bot: Any, group_id: int, user_id: int) -> bool:
         """Set a user as group admin.

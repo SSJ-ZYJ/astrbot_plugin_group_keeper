@@ -7,7 +7,15 @@
 
 ---
 
-## [未发布]
+## [1.0.2] - 2026-05-03
+
+### 修复
+- 🐛 修复 `set_group_special_title` API 缺少 `duration` 参数导致设置头衔失败
+- 🐛 改进错误处理，操作失败时显示具体错误信息
+
+### 修改
+- ♻️ 将指令参数从 `@用户` 格式改为 `<QQ号>` 格式
+- ♻️ 规范本地化文件格式，统一使用 `<QQ号>` / `<QQ>` 格式
 
 ## [1.0.1] - 2026-05-03
 
@@ -55,7 +63,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [1.0.2] - 2026-05-03
+
+### Fixed
+- 🐛 Fix `set_group_special_title` API missing `duration` parameter causing title setting failure
+- 🐛 Improve error handling, show detailed error message when operation fails
+
+### Changed
+- ♻️ Change command parameter format from `@用户` to `<QQ号>` / `<QQ>`
+- ♻️ Standardize locale file format, use consistent `<QQ号>` / `<QQ>` format
 
 ## [1.0.1] - 2026-05-03
 

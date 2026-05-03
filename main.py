@@ -103,6 +103,15 @@ class GroupKeeperPlugin(star.Star):
     def _reply_key(self, event: AstrMessageEvent, key: str, **kwargs):
         self._reply(event, self._t(key, event, **kwargs))
 
+    def _reply_error_with_detail(
+        self, event: AstrMessageEvent, key: str, detail: str, **kwargs
+    ):
+        base = self._t(key, event, **kwargs)
+        if detail:
+            self._reply(event, f"{base}\n{self._t('msg_error_detail', event, error=detail)}")
+        else:
+            self._reply(event, base)
+
     @staticmethod
     def _get_bot(event: AstrMessageEvent):
         return getattr(event, "bot", None)
@@ -254,7 +263,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_parameter_error")
 
-    # ---- /bot add_admin <qq> ----
+    # ---- /bot add_admin <QQ号> ----
 
     @bot_group.command("add_admin")
     async def cmd_add_admin(self, event: AstrMessageEvent, qq: str = ""):
@@ -277,7 +286,7 @@ class GroupKeeperPlugin(star.Star):
         self._save_group_config(group_id, cfg)
         self._reply_key(event, "msg_admin_added", qq=qq)
 
-    # ---- /bot remove_admin <qq> ----
+    # ---- /bot remove_admin <QQ号> ----
 
     @bot_group.command("remove_admin")
     async def cmd_remove_admin(self, event: AstrMessageEvent, qq: str = ""):
@@ -316,7 +325,7 @@ class GroupKeeperPlugin(star.Star):
         admin_str = "\n".join(f"- {a}" for a in admin_list)
         self._reply_key(event, "msg_admins_list", list=admin_str)
 
-    # ---- /bot mute @user [seconds] ----
+    # ---- /bot mute <QQ号> [seconds] ----
 
     @bot_group.command("mute")
     async def cmd_mute(self, event: AstrMessageEvent):
@@ -351,7 +360,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot unmute @user ----
+    # ---- /bot unmute <QQ号> ----
 
     @bot_group.command("unmute")
     async def cmd_unmute(self, event: AstrMessageEvent):
@@ -411,7 +420,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot ban @user ----
+    # ---- /bot ban <QQ号> ----
 
     @bot_group.command("ban")
     async def cmd_ban(self, event: AstrMessageEvent):
@@ -439,7 +448,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot recall @user [count] ----
+    # ---- /bot recall <QQ号> [count] ----
 
     @bot_group.command("recall")
     async def cmd_recall(self, event: AstrMessageEvent):
@@ -486,7 +495,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_recall_no_messages")
 
-    # ---- /bot rename @user <name> ----
+    # ---- /bot rename <QQ号> <name> ----
 
     @bot_group.command("rename")
     async def cmd_rename(self, event: AstrMessageEvent):
@@ -521,7 +530,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot title @user <title> ----
+    # ---- /bot title <QQ号> <title> ----
 
     @bot_group.command("title")
     async def cmd_title(self, event: AstrMessageEvent):
@@ -550,15 +559,15 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_parameter_error")
             return
 
-        success = await self.group_handler.set_title(
+        success, error_msg = await self.group_handler.set_title(
             bot, int(group_id), int(target), title
         )
         if success:
             self._reply_key(event, "msg_title_success", user=target, title=title)
         else:
-            self._reply_key(event, "msg_operation_failed")
+            self._reply_error_with_detail(event, "msg_operation_failed", error_msg)
 
-    # ---- /bot promote @user ----
+    # ---- /bot promote <QQ号> ----
 
     @bot_group.command("promote")
     async def cmd_promote(self, event: AstrMessageEvent):
@@ -588,7 +597,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot demote @user ----
+    # ---- /bot demote <QQ号> ----
 
     @bot_group.command("demote")
     async def cmd_demote(self, event: AstrMessageEvent):

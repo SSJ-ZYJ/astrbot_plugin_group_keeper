@@ -228,18 +228,18 @@ data/group_keeper/
 |----------|----------|------|----------|
 | `/bot help` | `/bot help` | 显示帮助 | 全体 |
 | `/bot welcome on/off` | `/bot welcome on/off` | 欢迎消息控制 | 管理员 |
-| `/bot add_admin <qq>` | `/bot add_admin <qq>` | 添加管理员 | 管理员 |
-| `/bot remove_admin <qq>` | `/bot remove_admin <qq>` | 移除管理员 | 管理员 |
+| `/bot add_admin <QQ号>` | `/bot add_admin <QQ>` | 添加管理员 | 管理员 |
+| `/bot remove_admin <QQ号>` | `/bot remove_admin <QQ>` | 移除管理员 | 管理员 |
 | `/bot list_admins` | `/bot list_admins` | 列出管理员 | 全体 |
-| `/bot mute @用户 [秒数]` | `/bot mute @user [seconds]` | 禁言用户 | 管理员 |
-| `/bot unmute @用户` | `/bot unmute @user` | 解除禁言 | 管理员 |
+| `/bot mute <QQ号> [秒数]` | `/bot mute <QQ> [seconds]` | 禁言用户 | 管理员 |
+| `/bot unmute <QQ号>` | `/bot unmute <QQ>` | 解除禁言 | 管理员 |
 | `/bot global_mute on/off` | `/bot global_mute on/off` | 全体禁言 | 管理员 |
-| `/bot ban @用户` | `/bot ban @user` | 拉黑用户 | 管理员 |
-| `/bot recall @用户 [数量]` | `/bot recall @user [count]` | 撤回消息 | 管理员 |
-| `/bot rename @用户 昵称` | `/bot rename @user name` | 修改群名片 | 管理员 |
-| `/bot title @用户 头衔` | `/bot title @user title` | 设置头衔 | 群主 |
-| `/bot promote @用户` | `/bot promote @user` | 设置管理员 | 群主 |
-| `/bot demote @用户` | `/bot demote @user` | 取消管理员 | 群主 |
+| `/bot ban <QQ号>` | `/bot ban <QQ>` | 拉黑用户 | 管理员 |
+| `/bot recall <QQ号> [数量]` | `/bot recall <QQ> [count]` | 撤回消息 | 管理员 |
+| `/bot rename <QQ号> 昵称` | `/bot rename <QQ> name` | 修改群名片 | 管理员 |
+| `/bot title <QQ号> 头衔` | `/bot title <QQ> title` | 设置头衔 | 群主 |
+| `/bot promote <QQ号>` | `/bot promote <QQ>` | 设置管理员 | 群主 |
+| `/bot demote <QQ号>` | `/bot demote <QQ>` | 取消管理员 | 群主 |
 | `/bot set_group_name 名称` | `/bot set_group_name name` | 修改群名称 | 管理员 |
 | `/bot announce 内容` | `/bot announce content` | 发布公告 | 管理员 |
 | `/bot list_announcements` | `/bot list_announcements` | 查看公告 | 全体 |
