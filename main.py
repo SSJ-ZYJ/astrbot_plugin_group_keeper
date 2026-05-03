@@ -1,7 +1,6 @@
 from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
-from astrbot.api.message_components import At, Plain
 from pathlib import Path
 import json
 import asyncio
@@ -16,7 +15,7 @@ import asyncio
 class GroupKeeperPlugin(Star):
     """QQ群管理插件主类
     
-    提供群成员管理、公告管理、自动欢迎等功能
+    提供群成员管理、公告管理等功能
     """
     
     def __init__(self, context: Context):
@@ -36,7 +35,7 @@ class GroupKeeperPlugin(Star):
                     config = json.load(f)
                     self.welcome_enabled = config.get('welcome_enabled', True)
                     self.admin_list = config.get('admin_list', [])
-                logger.info(f"群管理插件配置加载成功")
+                logger.info("群管理插件配置加载成功")
             except Exception as e:
                 logger.error(f"加载配置文件失败: {str(e)}")
         else:
@@ -168,20 +167,6 @@ class GroupKeeperPlugin(Star):
 /group add_admin 123456789
         """.strip()
         yield event.plain_result(help_text)
-
-    @filter.on_member_join()
-    async def on_member_join(self, event: AstrMessageEvent):
-        """监听新成员加入事件"""
-        try:
-            if not self.welcome_enabled:
-                return
-            
-            user_name = event.get_sender_name()
-            welcome_msg = f"🎉 欢迎 {user_name} 加入 HTS Team！\n请遵守群规，文明交流~"
-            yield event.plain_result(welcome_msg)
-            logger.info(f"新成员加入: {user_name}")
-        except Exception as e:
-            logger.error(f"处理新成员加入事件失败: {str(e)}")
 
     def _is_admin(self, event: AstrMessageEvent) -> bool:
         """检查用户是否为管理员
