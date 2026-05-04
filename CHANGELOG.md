@@ -1,9 +1,25 @@
 # 更新日志
 
-本项目的所有重要变更都将记录在此文件中。
+---
 
-格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
-本项目遵循 [语义化版本控制](https://semver.org/lang/zh-CN/)。
+## [1.0.7] - 2026-05-04
+
+### 修复
+- 🐛 修复语言切换无效问题：`locale` 改为每次调用 `_t()` 时动态读取配置，不再缓存
+- 🐛 修复公告置顶配置不生效问题：`notice_handler.publish()` 始终传递 `pinned` 和 `confirm_required` 参数
+
+### 新增
+- ✨ 所有指令新增中文别名：帮助、欢迎、禁言、解禁、全员禁言、封禁、撤回、改名、头衔、提升、降级、设置群名、公告
+- ✨ 指令组新增中文别名：`/机器人` 可替代 `/bot`
+- ✨ 新增 `_strip_command_prefix()` 辅助方法，支持中英文指令前缀解析
+
+### 修改
+- ♻️ 移除 `add_admin`、`remove_admin`、`list_admins` 冗余指令，权限自动同步群内管理员角色
+- ♻️ 移除 `list_announcements` 查看公告指令及相关功能
+- ♻️ 移除 `admin_list` 本地管理员列表，所有权限检测直接查询 QQ 群内真实角色
+- ♻️ `title`、`promote`、`demote` 指令新增 `_is_plugin_admin` 权限检查
+- ♻️ 移除 `NoticeHandler.get_from_group()` 未使用的方法
+- ♻️ 配置值（禁言时长、最大撤回条数等）改为动态读取，不再缓存
 
 ---
 
@@ -112,10 +128,26 @@
 
 # Changelog
 
-All notable changes to this project will be documented in this file.
+---
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.0.7] - 2026-05-04
+
+### Fixed
+- 🐛 Fix locale switching not working: `locale` is now read dynamically from config on each `_t()` call instead of being cached
+- 🐛 Fix announcement pinned config not taking effect: `notice_handler.publish()` now always passes `pinned` and `confirm_required` parameters
+
+### Added
+- ✨ Add Chinese aliases for all commands: 帮助、欢迎、禁言、解禁、全员禁言、封禁、撤回、改名、头衔、提升、降级、设置群名、公告
+- ✨ Add Chinese alias for command group: `/机器人` as alternative to `/bot`
+- ✨ Add `_strip_command_prefix()` helper method supporting both Chinese and English command prefix parsing
+
+### Changed
+- ♻️ Remove redundant commands: `add_admin`, `remove_admin`, `list_admins`; permissions auto-sync with real group admin roles
+- ♻️ Remove `list_announcements` command and related functionality
+- ♻️ Remove local `admin_list`; all permission checks query real QQ group roles directly
+- ♻️ Add `_is_plugin_admin` permission check to `title`, `promote`, `demote` commands
+- ♻️ Remove unused `NoticeHandler.get_from_group()` method
+- ♻️ Config values (mute duration, max recall count, etc.) are now read dynamically instead of cached
 
 ---
 

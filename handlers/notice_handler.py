@@ -44,45 +44,14 @@ class NoticeHandler:
             params: dict[str, Any] = {
                 "group_id": group_id,
                 "content": content,
+                "confirm_required": confirm_required,
+                "pinned": pinned,
             }
-            if confirm_required:
-                params["confirm_required"] = True
-            if pinned:
-                params["pinned"] = True
             await bot.call_action("_send_group_notice", **params)
             return True
         except Exception as e:
             logger.error(f"Failed to publish announcement to group {group_id}: {e}")
             return False
-
-    @staticmethod
-    async def get_from_group(bot: Any, group_id: int) -> list[dict]:
-        """Fetch announcements from the QQ group via API.
-
-        通过 API 从QQ群获取公告。
-
-        Args:
-            bot: The CQHttp bot instance.
-                 CQHttp 机器人实例。
-            group_id: The group ID.
-                      群ID。
-
-        Returns:
-            List of announcement dicts, or empty list on failure.
-            公告字典列表，失败返回空列表。
-        """
-        try:
-            result = await bot.call_action("_get_group_notice", group_id=group_id)
-            if result is None:
-                return []
-            if isinstance(result, list):
-                return result
-            if isinstance(result, dict):
-                return result.get("data", result.get("notices", []))
-            return []
-        except Exception as e:
-            logger.error(f"Failed to get announcements from group {group_id}: {e}")
-            return []
 
     @staticmethod
     def add_to_local(
