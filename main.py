@@ -267,7 +267,6 @@ class GroupKeeperPlugin(star.Star):
             self._t("cmd_mute"),
             self._t("cmd_unmute"),
             self._t("cmd_global_mute"),
-            self._t("cmd_ban"),
             self._t("cmd_recall"),
             self._t("cmd_rename"),
             self._t("cmd_title"),
@@ -423,34 +422,6 @@ class GroupKeeperPlugin(star.Star):
         if success:
             key = "msg_global_mute_enabled" if enable else "msg_global_mute_disabled"
             self._reply_key(event, key)
-        else:
-            self._reply_key(event, "msg_operation_failed")
-
-    # ---- /bot ban <QQ> ----
-
-    @bot_group.command("ban", alias={"封禁"})
-    async def cmd_ban(self, event: AstrMessageEvent):
-        if not self._is_group_chat(event):
-            self._reply_key(event, "msg_not_in_group")
-            return
-        group_id = event.get_group_id()
-        if not await self._is_plugin_admin(event, group_id):
-            self._reply_key(event, "msg_no_permission")
-            return
-
-        bot = self._get_bot(event)
-        if bot is None:
-            self._reply_key(event, "msg_platform_not_supported")
-            return
-
-        target = self._extract_target_user(event)
-        if not target:
-            self._reply_key(event, "msg_parameter_error")
-            return
-
-        success = await self.group_handler.ban(bot, int(group_id), int(target))
-        if success:
-            self._reply_key(event, "msg_ban_success", user=target)
         else:
             self._reply_key(event, "msg_operation_failed")
 

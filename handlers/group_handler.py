@@ -160,31 +160,6 @@ class GroupHandler:
             bot, "set_group_whole_ban", group_id=group_id, enable=enable
         )
 
-    async def ban(self, bot: Any, group_id: int, user_id: int) -> bool:
-        """Kick and ban a user from the group (reject future join requests).
-
-        踢出并封禁群成员（拒绝后续加群请求）。
-
-        Args:
-            bot: The CQHttp bot instance.
-                 CQHttp 机器人实例。
-            group_id: The group ID.
-                      群ID。
-            user_id: The target user ID.
-                     目标用户ID。
-
-        Returns:
-            True if successful, False otherwise.
-            成功返回 True，失败返回 False。
-        """
-        return await self._execute_api(
-            bot,
-            "set_group_kick",
-            group_id=group_id,
-            user_id=user_id,
-            reject_add_request=True,
-        )
-
     async def recall(self, bot: Any, message_id: int) -> bool:
         """Recall (delete) a message.
 

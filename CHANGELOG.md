@@ -10,7 +10,7 @@
 - 🐛 修复配置页始终显示英文问题：`_conf_schema.json` 改为中文描述，i18n 文件提供英文覆盖
 
 ### 新增
-- ✨ 所有指令新增中文别名：帮助、欢迎、禁言、解禁、全员禁言、封禁、撤回、改名、头衔、提升、降级、设置群名、公告
+- ✨ 所有指令新增中文别名：帮助、欢迎、禁言、解禁、全员禁言、撤回、改名、头衔、提升、降级、设置群名、公告
 - ✨ 指令组新增中文别名：`/机器人` 可替代 `/bot`
 - ✨ 新增 `_strip_command_prefix()` 辅助方法，支持中英文指令前缀解析
 - ✨ 欢迎消息支持 `{membername}` 变量，自动替换为新成员的群昵称
@@ -22,6 +22,7 @@
 - ♻️ `title`、`promote`、`demote` 指令新增 `_is_plugin_admin` 权限检查
 - ♻️ 移除 `NoticeHandler.get_from_group()` 未使用的方法
 - ♻️ 配置值（禁言时长、最大撤回条数等）改为动态读取，不再缓存
+- ♻️ 移除 `ban`（封禁）指令及相关功能
 - ♻️ 更新 README.md 反映当前功能状态
 
 ---
@@ -141,7 +142,7 @@
 - 🐛 Fix config page always showing English: `_conf_schema.json` now uses Chinese descriptions, i18n files provide English overrides
 
 ### Added
-- ✨ Add Chinese aliases for all commands: 帮助、欢迎、禁言、解禁、全员禁言、封禁、撤回、改名、头衔、提升、降级、设置群名、公告
+- ✨ Add Chinese aliases for all commands: 帮助、欢迎、禁言、解禁、全员禁言、撤回、改名、头衔、提升、降级、设置群名、公告
 - ✨ Add Chinese alias for command group: `/机器人` as alternative to `/bot`
 - ✨ Add `_strip_command_prefix()` helper method supporting both Chinese and English command prefix parsing
 - ✨ Welcome message supports `{membername}` variable, auto-replaced with new member's group nickname
@@ -153,6 +154,7 @@
 - ♻️ Add `_is_plugin_admin` permission check to `title`, `promote`, `demote` commands
 - ♻️ Remove unused `NoticeHandler.get_from_group()` method
 - ♻️ Config values (mute duration, max recall count, etc.) are now read dynamically instead of cached
+- ♻️ Remove `ban` (kick and ban) command and related functionality
 - ♻️ Update README.md to reflect current feature state
 
 ---
