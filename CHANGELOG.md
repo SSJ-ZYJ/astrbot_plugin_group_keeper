@@ -13,6 +13,7 @@
 - ✨ 所有指令新增中文别名：帮助、欢迎、禁言、解禁、全员禁言、封禁、撤回、改名、头衔、提升、降级、设置群名、公告
 - ✨ 指令组新增中文别名：`/机器人` 可替代 `/bot`
 - ✨ 新增 `_strip_command_prefix()` 辅助方法，支持中英文指令前缀解析
+- ✨ 欢迎消息支持 `{membername}` 变量，自动替换为新成员的群昵称
 
 ### 修改
 - ♻️ 移除 `add_admin`、`remove_admin`、`list_admins` 冗余指令，权限自动同步群内管理员角色
@@ -143,6 +144,7 @@
 - ✨ Add Chinese aliases for all commands: 帮助、欢迎、禁言、解禁、全员禁言、封禁、撤回、改名、头衔、提升、降级、设置群名、公告
 - ✨ Add Chinese alias for command group: `/机器人` as alternative to `/bot`
 - ✨ Add `_strip_command_prefix()` helper method supporting both Chinese and English command prefix parsing
+- ✨ Welcome message supports `{membername}` variable, auto-replaced with new member's group nickname
 
 ### Changed
 - ♻️ Remove redundant commands: `add_admin`, `remove_admin`, `list_admins`; permissions auto-sync with real group admin roles

@@ -20,7 +20,7 @@
     },
     "default_welcome_message": {
       "description": "默认欢迎消息",
-      "hint": "留空则使用语言包中的默认欢迎语"
+      "hint": "留空则使用语言包中的默认欢迎语。支持变量：{membername} = 新成员昵称"
     },
     "max_recall_count": {
       "description": "最大撤回条数",
@@ -38,7 +38,7 @@
   "messages": {
     "help_title": "📖 QQ群管家 - 命令帮助",
     "help_header": "可用命令：",
-    "cmd_welcome": "/bot welcome / 欢迎 [on|off|message <文本>] - 新人欢迎设置",
+    "cmd_welcome": "/bot welcome / 欢迎 [on|off|message <文本>] - 新人欢迎设置（支持 {membername} 变量）",
     "cmd_mute": "/bot mute / 禁言 <QQ> [秒数] - 禁言群成员",
     "cmd_unmute": "/bot unmute / 解禁 <QQ> - 解除禁言",
     "cmd_global_mute": "/bot global_mute / 全员禁言 on|off - 全员禁言",
@@ -57,7 +57,7 @@
     "msg_welcome_status": "🎉 新人欢迎消息状态：{status}",
     "msg_welcome_enabled": "✅ 已开启新人欢迎",
     "msg_welcome_disabled": "✅ 已关闭新人欢迎",
-    "msg_welcome_message": "欢迎新成员 {user} 加入群聊！",
+    "msg_welcome_message": "欢迎 {membername} 加入群聊！",
     "msg_parameter_error": "❌ 参数错误",
     "msg_welcome_message_too_long": "❌ 欢迎消息过长（最多200字符）",
     "msg_welcome_message_set": "✅ 欢迎消息已设置",

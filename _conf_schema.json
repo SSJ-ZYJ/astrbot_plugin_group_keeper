@@ -3,8 +3,14 @@
 		"description": "语言",
 		"type": "string",
 		"default": "zh_CN",
-		"options": ["zh_CN", "en_US"],
-		"labels": ["简体中文", "English"],
+		"options": [
+			"zh_CN",
+			"en_US"
+		],
+		"labels": [
+			"简体中文",
+			"English"
+		],
 		"hint": "选择插件显示语言"
 	},
 	"default_mute_duration": {
@@ -23,7 +29,7 @@
 		"description": "默认欢迎消息",
 		"type": "text",
 		"default": "",
-		"hint": "留空则使用语言包中的默认欢迎语"
+		"hint": "留空则使用语言包中的默认欢迎语。支持变量：{membername} = 新成员昵称"
 	},
 	"max_recall_count": {
 		"description": "最大撤回条数",

@@ -8,7 +8,10 @@
     "locale": {
       "description": "Language",
       "hint": "Select plugin display language",
-      "labels": ["Chinese", "English"]
+      "labels": [
+        "Chinese",
+        "English"
+      ]
     },
     "default_mute_duration": {
       "description": "Default mute duration (seconds)",
@@ -20,7 +23,7 @@
     },
     "default_welcome_message": {
       "description": "Default welcome message",
-      "hint": "Leave empty to use i18n default"
+      "hint": "Leave empty to use i18n default. Supported variables: {membername} = new member's name"
     },
     "max_recall_count": {
       "description": "Max recall count",
@@ -38,7 +41,7 @@
   "messages": {
     "help_title": "📖 QQ Group Manager - Help",
     "help_header": "Available commands:",
-    "cmd_welcome": "/bot welcome / 欢迎 [on|off|message <text>] - Welcome settings",
+    "cmd_welcome": "/bot welcome / 欢迎 [on|off|message <text>] - Welcome settings (supports {membername} variable)",
     "cmd_mute": "/bot mute / 禁言 <QQ> [seconds] - Mute member",
     "cmd_unmute": "/bot unmute / 解禁 <QQ> - Unmute member",
     "cmd_global_mute": "/bot global_mute / 全员禁言 on|off - Global mute",
@@ -57,7 +60,7 @@
     "msg_welcome_status": "🎉 Welcome message status: {status}",
     "msg_welcome_enabled": "✅ Welcome messages enabled",
     "msg_welcome_disabled": "✅ Welcome messages disabled",
-    "msg_welcome_message": "Welcome {user} to the group!",
+    "msg_welcome_message": "Welcome {membername} to the group!",
     "msg_parameter_error": "❌ Parameter error",
     "msg_welcome_message_too_long": "❌ Welcome message too long (max 200 chars)",
     "msg_welcome_message_set": "✅ Welcome message set",

@@ -8,7 +8,7 @@
 
 | 功能分类 | 功能描述 |
 |----------|----------|
-| 🎉 新人欢迎 | 自动欢迎新成员加入群聊 |
+| 🎉 新人欢迎 | 自动欢迎新成员加入群聊，支持 `{membername}` 变量显示昵称 |
 | 🔇 禁言管理 | 支持单个禁言、解禁、全员禁言 |
 | 🚫 封禁功能 | 踢出并封禁用户 |
 | 📝 消息管理 | 撤回指定用户消息 |
@@ -42,7 +42,7 @@ git clone https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper.git
 | 指令 | 中文别名 | 功能描述 | 权限要求 |
 |------|----------|----------|----------|
 | `/bot help` | `/bot 帮助` | 显示帮助信息 | 全体 |
-| `/bot welcome [on\|off\|message <文本>]` | `/bot 欢迎` | 新人欢迎设置 | 管理员 |
+| `/bot welcome [on\|off\|message <文本>]` | `/bot 欢迎` | 新人欢迎设置（支持 `{membername}` 变量） | 管理员 |
 | `/bot mute <QQ> [秒数]` | `/bot 禁言` | 禁言指定用户 | 管理员 |
 | `/bot unmute <QQ>` | `/bot 解禁` | 解除禁言 | 管理员 |
 | `/bot global_mute on\|off` | `/bot 全员禁言` | 全员禁言控制 | 管理员 |
@@ -77,6 +77,20 @@ git clone https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper.git
 /机器人 头衔 @张三 优秀成员
 ```
 
+### 欢迎消息变量
+
+欢迎消息支持以下变量，发送时会自动替换为实际值：
+
+| 变量 | 说明 | 示例 |
+|------|------|------|
+| `{membername}` | 新成员的群昵称/昵称 | 欢迎 张三 加入群聊！ |
+
+示例：设置自定义欢迎消息
+```
+/bot welcome message 欢迎 {membername} 加入群聊，请阅读群公告！
+/机器人 欢迎 message 欢迎 {membername} 加入群聊，请阅读群公告！
+```
+
 ---
 
 ## ⚙️ 配置说明
@@ -88,7 +102,7 @@ git clone https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper.git
 | `locale` | 选择 | zh_CN | 插件显示语言（简体中文 / English） |
 | `default_mute_duration` | 整数 | 60 | 默认禁言时长（秒） |
 | `default_welcome_enabled` | 布尔 | true | 新人欢迎默认开启 |
-| `default_welcome_message` | 文本 | (空) | 默认欢迎消息，留空使用语言包 |
+| `default_welcome_message` | 文本 | (空) | 默认欢迎消息，留空使用语言包。支持 `{membername}` 变量 |
 | `max_recall_count` | 整数 | 10 | 单次最多撤回消息条数 |
 | `default_announce_confirm_required` | 布尔 | false | 公告是否需要群成员确认 |
 | `default_announce_pinned` | 布尔 | false | 公告是否默认置顶 |
@@ -101,12 +115,10 @@ git clone https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper.git
 
 ## 🌍 国际化支持
 
-插件支持中文和英文两种语言，通过配置文件中的 `locale` 选项切换。
+插件支持中文和英文两种语言：
 
-- `zh_CN` - 简体中文（默认）
-- `en_US` - English
-
-语言包文件位于 `.astrbot-plugin/i18n/` 目录。
+- **机器人消息语言**：通过配置文件中的 `locale` 选项切换（`zh_CN` / `en_US`），控制机器人在群聊中的回复语言。
+- **WebUI 配置页语言**：通过 AstrBot WebUI 右上角的语言切换器切换，自动显示对应语言的配置描述。
 
 ---
 

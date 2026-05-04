@@ -763,6 +763,19 @@ class GroupKeeperPlugin(star.Star):
                 custom_msg = self.config.get("default_welcome_message", "")
             if not custom_msg:
                 custom_msg = self._t("msg_welcome_message")
+
+            member_name = ""
+            try:
+                info = await bot.call_action(
+                    "get_group_member_info",
+                    group_id=int(group_id),
+                    user_id=int(user_id),
+                    no_cache=True,
+                )
+                member_name = info.get("card", "") or info.get("nickname", "") or ""
+            except Exception as e:
+                logger.debug(f"Failed to get member info for {user_id}: {e}")
+
             await self.join_handler.send_welcome(
-                bot, int(group_id), int(user_id), custom_msg
+                bot, int(group_id), int(user_id), custom_msg, member_name
             )
