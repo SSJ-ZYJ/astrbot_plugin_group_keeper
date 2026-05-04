@@ -8,11 +8,14 @@
 - 🐛 修复语言切换无效问题：`locale` 改为每次调用 `_t()` 时动态读取配置，不再缓存
 - 🐛 修复公告置顶配置不生效问题：`notice_handler.publish()` 始终传递 `pinned` 和 `confirm_required` 参数
 - 🐛 修复配置页始终显示英文问题：`_conf_schema.json` 改为中文描述，i18n 文件提供英文覆盖
+- 🐛 修复设置群名带空格失败问题：移除框架自动参数解析，改为从原始消息提取，新增 `_strip_quotes` 引号处理
+- 🐛 修复发布公告带空格内容被截断的问题
 
 ### 新增
 - ✨ 所有指令新增中文别名：帮助、欢迎、禁言、解禁、全员禁言、撤回、改名、头衔、提升、降级、设置群名、公告
 - ✨ 指令组新增中文别名：`/机器人` 可替代 `/bot`
 - ✨ 新增 `_strip_command_prefix()` 辅助方法，支持中英文指令前缀解析
+- ✨ 新增 `_strip_quotes()` 辅助方法，支持双引号/单引号包裹参数
 - ✨ 欢迎消息支持 `{membername}` 变量，自动替换为新成员的群昵称
 
 ### 修改
@@ -23,6 +26,7 @@
 - ♻️ 移除 `NoticeHandler.get_from_group()` 未使用的方法
 - ♻️ 配置值（禁言时长、最大撤回条数等）改为动态读取，不再缓存
 - ♻️ 移除 `ban`（封禁）指令及相关功能
+- ♻️ 帮助菜单根据语言设置只显示对应语言的指令，不再中英混杂
 - ♻️ 更新 README.md 反映当前功能状态
 
 ---
@@ -140,11 +144,14 @@
 - 🐛 Fix locale switching not working: `locale` is now read dynamically from config on each `_t()` call instead of being cached
 - 🐛 Fix announcement pinned config not taking effect: `notice_handler.publish()` now always passes `pinned` and `confirm_required` parameters
 - 🐛 Fix config page always showing English: `_conf_schema.json` now uses Chinese descriptions, i18n files provide English overrides
+- 🐛 Fix set_group_name failing with quoted names containing spaces: remove framework auto param parsing, extract from raw message, add `_strip_quotes` helper
+- 🐛 Fix announce command content being truncated when containing spaces
 
 ### Added
 - ✨ Add Chinese aliases for all commands: 帮助、欢迎、禁言、解禁、全员禁言、撤回、改名、头衔、提升、降级、设置群名、公告
 - ✨ Add Chinese alias for command group: `/机器人` as alternative to `/bot`
 - ✨ Add `_strip_command_prefix()` helper method supporting both Chinese and English command prefix parsing
+- ✨ Add `_strip_quotes()` helper method supporting double/single quoted parameters
 - ✨ Welcome message supports `{membername}` variable, auto-replaced with new member's group nickname
 
 ### Changed
@@ -155,6 +162,7 @@
 - ♻️ Remove unused `NoticeHandler.get_from_group()` method
 - ♻️ Config values (mute duration, max recall count, etc.) are now read dynamically instead of cached
 - ♻️ Remove `ban` (kick and ban) command and related functionality
+- ♻️ Help menu now shows only commands in the current locale language, no more mixed Chinese/English
 - ♻️ Update README.md to reflect current feature state
 
 ---

@@ -247,6 +247,21 @@ class GroupKeeperPlugin(star.Star):
         pattern = rf"^/?(bot|机器人)\s+({names_pattern})\s*"
         return re.sub(pattern, "", msg_str, flags=re.IGNORECASE).strip()
 
+    @staticmethod
+    def _strip_quotes(text: str) -> str:
+        """Strip matching surrounding quotes (double or single) from text and trim whitespace.
+
+        ``"hello world"`` -> ``hello world``
+        ``'hello world'`` -> ``hello world``
+        ``hello``         -> ``hello``
+        """
+        text = text.strip()
+        if len(text) >= 2 and text[0] == '"' and text[-1] == '"':
+            return text[1:-1].strip()
+        if len(text) >= 2 and text[0] == "'" and text[-1] == "'":
+            return text[1:-1].strip()
+        return text
+
     # ------------------------------------------------------------------ #
     #  Command group: /bot
     # ------------------------------------------------------------------ #
@@ -616,7 +631,7 @@ class GroupKeeperPlugin(star.Star):
     # ---- /bot set_group_name <name> ----
 
     @bot_group.command("set_group_name", alias={"设置群名"})
-    async def cmd_set_group_name(self, event: AstrMessageEvent, *, name: str = ""):
+    async def cmd_set_group_name(self, event: AstrMessageEvent):
         if not self._is_group_chat(event):
             self._reply_key(event, "msg_not_in_group")
             return
@@ -630,15 +645,9 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_platform_not_supported")
             return
 
-        if not name:
-            rest = self._strip_command_prefix(event, "set_group_name", "设置群名")
-            quote_match = re.match(r'^"(.*)"$', rest) or re.match(r"^'(.*)'$", rest)
-            if quote_match:
-                name = quote_match.group(1)
-            else:
-                name = rest
+        rest = self._strip_command_prefix(event, "set_group_name", "设置群名")
+        name = self._strip_quotes(rest)
 
-        name = name.strip()
         if not name:
             self._reply_key(event, "msg_parameter_error")
             return
@@ -652,7 +661,7 @@ class GroupKeeperPlugin(star.Star):
     # ---- /bot announce <content> ----
 
     @bot_group.command("announce", alias={"公告"})
-    async def cmd_announce(self, event: AstrMessageEvent, *, content: str = ""):
+    async def cmd_announce(self, event: AstrMessageEvent):
         if not self._is_group_chat(event):
             self._reply_key(event, "msg_not_in_group")
             return
@@ -666,10 +675,8 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_platform_not_supported")
             return
 
-        if not content:
-            content = self._strip_command_prefix(event, "announce", "公告")
+        content = self._strip_command_prefix(event, "announce", "公告")
 
-        content = content.strip()
         if not content:
             self._reply_key(event, "msg_parameter_error")
             return

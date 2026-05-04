@@ -8,7 +8,10 @@
     "locale": {
       "description": "语言",
       "hint": "选择插件显示语言",
-      "labels": ["简体中文", "English"]
+      "labels": [
+        "简体中文",
+        "English"
+      ]
     },
     "default_mute_duration": {
       "description": "默认禁言时长（秒）",
@@ -38,17 +41,17 @@
   "messages": {
     "help_title": "📖 QQ群管家 - 命令帮助",
     "help_header": "可用命令：",
-    "cmd_welcome": "/bot welcome / 欢迎 [on|off|message <文本>] - 新人欢迎设置（支持 {membername} 变量）",
-    "cmd_mute": "/bot mute / 禁言 <QQ> [秒数] - 禁言群成员",
-    "cmd_unmute": "/bot unmute / 解禁 <QQ> - 解除禁言",
-    "cmd_global_mute": "/bot global_mute / 全员禁言 on|off - 全员禁言",
-    "cmd_recall": "/bot recall / 撤回 <QQ> [条数] - 撤回消息",
-    "cmd_rename": "/bot rename / 改名 <QQ> <昵称> - 修改群昵称",
-    "cmd_title": "/bot title / 头衔 <QQ> <头衔> - 设置专属头衔",
-    "cmd_promote": "/bot promote / 提升 <QQ> - 提升为管理员",
-    "cmd_demote": "/bot demote / 降级 <QQ> - 移除管理员",
-    "cmd_set_group_name": "/bot set_group_name / 设置群名 <名称> - 修改群名",
-    "cmd_announce": "/bot announce / 公告 <内容> - 发布公告",
+    "cmd_welcome": "/机器人 欢迎 [on|off|message <文本>] - 新人欢迎设置（支持 {membername} 变量）",
+    "cmd_mute": "/机器人 禁言 <QQ> [秒数] - 禁言群成员",
+    "cmd_unmute": "/机器人 解禁 <QQ> - 解除禁言",
+    "cmd_global_mute": "/机器人 全员禁言 on|off - 全员禁言",
+    "cmd_recall": "/机器人 撤回 <QQ> [条数] - 撤回消息",
+    "cmd_rename": "/机器人 改名 <QQ> <昵称> - 修改群昵称",
+    "cmd_title": "/机器人 头衔 <QQ> <头衔> - 设置专属头衔",
+    "cmd_promote": "/机器人 提升 <QQ> - 提升为管理员",
+    "cmd_demote": "/机器人 降级 <QQ> - 移除管理员",
+    "cmd_set_group_name": "/机器人 设置群名 <名称> - 修改群名",
+    "cmd_announce": "/机器人 公告 <内容> - 发布公告",
     "msg_not_in_group": "❌ 请在群聊中使用此命令",
     "msg_no_permission": "❌ 您没有权限执行此操作",
     "msg_status_on": "开启",
