@@ -290,8 +290,9 @@ class GroupKeeperPlugin(star.Star):
     #  Command group: /bot
     # ------------------------------------------------------------------ #
 
-    @filter.command_group("bot")
+    @filter.command_group("bot", alias={"群控助手"})
     async def bot_group(self):
+        """BotKeeper - QQ group management commands."""
         pass
 
     # ---- /bot help ----
