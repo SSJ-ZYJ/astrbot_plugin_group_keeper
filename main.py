@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.13",
+    version="1.0.14",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -290,9 +290,8 @@ class GroupKeeperPlugin(star.Star):
     #  Command group: /bot
     # ------------------------------------------------------------------ #
 
-    @filter.command_group("bot", alias={"群控助手"})
+    @filter.command_group("bot")
     async def bot_group(self):
-        """BotKeeper - QQ group management commands."""
         pass
 
     # ---- /bot help ----

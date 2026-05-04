@@ -2,6 +2,15 @@
 
 ---
 
+## [1.0.14] - 2026-05-04
+
+### 修改
+- ♻️ 全面更新 README.md，反映最新功能状态
+- ♻️ 更新插件名称、指令列表、配置说明、权限说明等内容
+- ♻️ 添加欢迎消息变量说明和未知指令处理说明
+
+---
+
 ## [1.0.13] - 2026-05-04
 
 ### 修复
@@ -180,6 +189,15 @@
 ---
 
 # Changelog
+
+---
+
+## [1.0.14] - 2026-05-04
+
+### Changed
+- ♻️ Fully updated README.md to reflect latest feature status
+- ♻️ Updated plugin name, command list, configuration description, permission description
+- ♻️ Added welcome message variable description and unknown command handling description
 
 ---
 

@@ -1,4 +1,4 @@
-# Q群管理插件 (Group Keeper)
+# 群控助手 - BotKeeper
 
 一个用于管理 QQ 群聊的 AstrBot 插件，专为 HTS Team 设计。
 
@@ -13,13 +13,14 @@
 | 📝 消息管理 | 撤回指定用户消息 |
 | 🏷️ 群名片管理 | 修改群昵称、设置专属头衔 |
 | 🔧 权限控制 | 自动同步群内管理员角色，群主和管理员可操作 |
+| 🛡️ 兜底处理 | 未知指令自动提示，引导用户使用 `/bot help` |
 
 ---
 
 ## 📦 安装方式
 
-### 方式一：插件市场安装（现阶段未开放）
-在 AstrBot WebUI 的插件市场中搜索 **Group Keeper** 或 **Q群管理**，点击安装即可。
+### 方式一：插件市场安装（推荐）
+在 AstrBot WebUI 的插件市场中搜索 **BotKeeper** 或 **群控助手**，点击安装即可。
 
 ### 方式二：手动安装
 
@@ -34,7 +35,9 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 ### 指令前缀
 
-所有指令使用 `/bot` 或 `/机器人` 作为前缀。每个指令都支持中英文别名。
+所有指令统一使用 `/bot` 作为前缀。每个指令都支持中英文别名。
+
+> **注意**：`/机器人` 前缀已被移除，请统一使用 `/bot`。
 
 ### 指令列表
 
@@ -59,15 +62,15 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 ```bash
 # 开启新人欢迎
 /bot welcome on
-/机器人 欢迎 on
 
 # 禁言用户 5 分钟
 /bot mute @张三 300
-/机器人 禁言 @张三 300
 
 # 设置专属头衔
 /bot title @张三 优秀成员
-/机器人 头衔 @张三 优秀成员
+
+# 修改群名（支持带空格的名称）
+/bot set_group_name "HTS Team 官方群"
 ```
 
 ### 欢迎消息变量
@@ -80,8 +83,14 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 示例：设置自定义欢迎消息
 ```
-/bot welcome message 欢迎 {membername} 加入群聊！
-/机器人 欢迎 message 欢迎 {membername} 加入群聊！
+/bot welcome message 欢迎 {membername} 加入 HTS Utospace！
+```
+
+### 未知指令处理
+
+当用户输入不存在的 `/bot` 指令时，插件会自动提示：
+```
+❌ 指令不存在，请使用 /bot help 查看可用指令
 ```
 
 ---
@@ -110,6 +119,9 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 - **机器人消息语言**：通过配置文件中的 `locale` 选项切换（`zh_CN` / `en_US`），控制机器人在群聊中的回复语言。
 - **WebUI 配置页语言**：通过 AstrBot WebUI 右上角的语言切换器切换，自动显示对应语言的配置描述。
+- **插件外显名称**：根据语言设置自动切换显示名称
+  - 中文：`群控助手 - BotKeeper`
+  - 英文：`BotKeeper - Group Manager`
 
 ---
 
@@ -121,7 +133,7 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 | 管理员 | 群内真实管理员 | 禁言、解禁、撤回、改名、设置头衔、提升/降级管理员 |
 | 群主 | 群创建者 | 所有管理员操作 |
 
-> ![NOTE]
+> **注意**
 > 权限自动同步群内真实的管理员角色，无需手动添加。
 
 ---
@@ -147,6 +159,12 @@ GNU Affero General Public License v3
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request！
+
+---
+
+## 📋 更新日志
+
+详见 [CHANGELOG.md](./CHANGELOG.md)
 
 ---
 
