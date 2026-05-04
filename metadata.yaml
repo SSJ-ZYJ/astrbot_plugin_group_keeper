@@ -1,4 +1,4 @@
-name: astrbot_plugin_group_keeper
+name: 群控助手 - BotKeeper
 display_name: 群控助手 - BotKeeper
 short_desc: 一个用来管理 QQ群聊 的插件，专为 HTS Team 设计。
 version: v1.0.12
