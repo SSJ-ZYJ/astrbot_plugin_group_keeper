@@ -1,45 +1,46 @@
 {
 	"locale": {
-		"description": "Language",
+		"description": "语言",
 		"type": "string",
 		"default": "zh_CN",
 		"options": ["zh_CN", "en_US"],
-		"hint": "Select plugin language"
+		"labels": ["简体中文", "English"],
+		"hint": "选择插件显示语言"
 	},
 	"default_mute_duration": {
-		"description": "Default mute duration (seconds)",
+		"description": "默认禁言时长（秒）",
 		"type": "int",
 		"default": 60,
-		"hint": "Used when no duration is specified in /bot mute"
+		"hint": "未指定时长时的默认禁言秒数"
 	},
 	"default_welcome_enabled": {
-		"description": "Welcome enabled by default",
+		"description": "新人欢迎默认开启",
 		"type": "bool",
 		"default": true,
-		"hint": "Whether welcome messages are enabled for new groups"
+		"hint": "新群是否默认开启欢迎消息"
 	},
 	"default_welcome_message": {
-		"description": "Default welcome message",
+		"description": "默认欢迎消息",
 		"type": "text",
 		"default": "",
-		"hint": "Leave empty to use i18n default"
+		"hint": "留空则使用语言包中的默认欢迎语"
 	},
 	"max_recall_count": {
-		"description": "Max recall count",
+		"description": "最大撤回条数",
 		"type": "int",
 		"default": 10,
-		"hint": "Maximum messages that can be recalled at once"
+		"hint": "单次最多撤回的消息条数"
 	},
 	"default_announce_confirm_required": {
-		"description": "Announcement requires confirmation",
+		"description": "公告需要群成员确认",
 		"type": "bool",
 		"default": false,
-		"hint": "Whether announcements require group members to confirm"
+		"hint": "发布的公告是否需要群成员确认"
 	},
 	"default_announce_pinned": {
-		"description": "Pin announcement",
+		"description": "置顶公告",
 		"type": "bool",
 		"default": false,
-		"hint": "Whether announcements are pinned"
+		"hint": "发布的公告是否置顶"
 	}
 }

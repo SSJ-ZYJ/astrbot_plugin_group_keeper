@@ -7,6 +7,7 @@
 ### 修复
 - 🐛 修复语言切换无效问题：`locale` 改为每次调用 `_t()` 时动态读取配置，不再缓存
 - 🐛 修复公告置顶配置不生效问题：`notice_handler.publish()` 始终传递 `pinned` 和 `confirm_required` 参数
+- 🐛 修复配置页始终显示英文问题：`_conf_schema.json` 改为中文描述，i18n 文件提供英文覆盖
 
 ### 新增
 - ✨ 所有指令新增中文别名：帮助、欢迎、禁言、解禁、全员禁言、封禁、撤回、改名、头衔、提升、降级、设置群名、公告
@@ -20,6 +21,7 @@
 - ♻️ `title`、`promote`、`demote` 指令新增 `_is_plugin_admin` 权限检查
 - ♻️ 移除 `NoticeHandler.get_from_group()` 未使用的方法
 - ♻️ 配置值（禁言时长、最大撤回条数等）改为动态读取，不再缓存
+- ♻️ 更新 README.md 反映当前功能状态
 
 ---
 
@@ -135,6 +137,7 @@
 ### Fixed
 - 🐛 Fix locale switching not working: `locale` is now read dynamically from config on each `_t()` call instead of being cached
 - 🐛 Fix announcement pinned config not taking effect: `notice_handler.publish()` now always passes `pinned` and `confirm_required` parameters
+- 🐛 Fix config page always showing English: `_conf_schema.json` now uses Chinese descriptions, i18n files provide English overrides
 
 ### Added
 - ✨ Add Chinese aliases for all commands: 帮助、欢迎、禁言、解禁、全员禁言、封禁、撤回、改名、头衔、提升、降级、设置群名、公告
@@ -148,6 +151,7 @@
 - ♻️ Add `_is_plugin_admin` permission check to `title`, `promote`, `demote` commands
 - ♻️ Remove unused `NoticeHandler.get_from_group()` method
 - ♻️ Config values (mute duration, max recall count, etc.) are now read dynamically instead of cached
+- ♻️ Update README.md to reflect current feature state
 
 ---
 

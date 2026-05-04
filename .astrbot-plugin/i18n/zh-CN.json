@@ -7,7 +7,8 @@
   "config": {
     "locale": {
       "description": "语言",
-      "hint": "选择插件语言"
+      "hint": "选择插件显示语言",
+      "labels": ["简体中文", "English"]
     },
     "default_mute_duration": {
       "description": "默认禁言时长（秒）",

@@ -7,7 +7,8 @@
   "config": {
     "locale": {
       "description": "Language",
-      "hint": "Select plugin language"
+      "hint": "Select plugin display language",
+      "labels": ["Chinese", "English"]
     },
     "default_mute_duration": {
       "description": "Default mute duration (seconds)",
