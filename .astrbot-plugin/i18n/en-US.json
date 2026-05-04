@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "display_name": "QQ Group Manager",
-    "short_desc": "HTS Team Group Management Tool",
+    "display_name": "BotKeeper - Group Manager",
+    "short_desc": "HTS Team Group Control Assistant",
     "desc": "An Astrbot plugin for managing QQ groups, designed for HTS Team management. Supports welcome messages, admin management and other features."
   },
   "config": {
@@ -31,7 +31,7 @@
     }
   },
   "messages": {
-    "help_title": "📖 QQ Group Manager - Help",
+    "help_title": "📖 BotKeeper - Group Manager - Help",
     "help_header": "Available commands:",
     "cmd_welcome": "/bot welcome [on|off|message <text>] - Welcome settings (supports {membername} variable)",
     "cmd_mute": "/bot mute <QQ> [seconds] - Mute member",
@@ -68,6 +68,7 @@
     "msg_promote_success": "✅ Promoted {user} to admin",
     "msg_demote_success": "✅ Demoted {user} from admin",
     "msg_group_name_success": "✅ Group name changed to \"{name}\"",
-    "msg_error_detail": "Error detail: {error}"
+    "msg_error_detail": "Error detail: {error}",
+    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands"
   }
 }

@@ -2,6 +2,22 @@
 
 ---
 
+## [1.0.12] - 2026-05-04
+
+### 修改
+- ♻️ 插件更名为 **群控助手 - BotKeeper**
+- ♻️ 更新所有相关文件中的插件名称引用（metadata.yaml、i18n 文件、main.py 类注释和日志）
+
+---
+
+## [1.0.11] - 2026-05-04
+
+### 新增
+- ✨ 添加兜底处理机制：当用户输入的 `/bot` 指令不存在或格式错误时，自动提示"指令不存在，请使用 /bot help 查看可用指令"
+- ✨ 新增 `msg_command_not_found` 国际化翻译 key（中英文）
+
+---
+
 ## [1.0.10] - 2026-05-04
 
 ### 修改
@@ -154,6 +170,22 @@
 ---
 
 # Changelog
+
+---
+
+## [1.0.12] - 2026-05-04
+
+### Changed
+- ♻️ Plugin renamed to **BotKeeper - Group Manager**
+- ♻️ Updated all plugin name references in metadata.yaml, i18n files, main.py class docstrings and logs
+
+---
+
+## [1.0.11] - 2026-05-04
+
+### Added
+- ✨ Add fallback handler: When user inputs an unknown or invalid `/bot` command, automatically prompt "Command not found, use /bot help to see available commands"
+- ✨ Add `msg_command_not_found` i18n translation key (Chinese and English)
 
 ---
 

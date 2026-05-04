@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "display_name": "QQ群管理插件",
-    "short_desc": "HTS Team 群管理工具",
+    "display_name": "群控助手 - BotKeeper",
+    "short_desc": "HTS Team 群控助手",
     "desc": "一个用来管理 QQ群聊 的 Astrbot 插件，用于管理 HTS Team，满足 HTS 管理需求。支持新人欢迎、管理员管理等功能。"
   },
   "config": {
@@ -31,7 +31,7 @@
     }
   },
   "messages": {
-    "help_title": "📖 QQ群管家 - 命令帮助",
+    "help_title": "📖 群控助手 - BotKeeper - 命令帮助",
     "help_header": "可用命令：",
     "cmd_welcome": "/bot 欢迎 [on|off|message <文本>] - 新人欢迎设置（支持 {membername} 变量）",
     "cmd_mute": "/bot 禁言 <QQ> [秒数] - 禁言群成员",
@@ -50,7 +50,7 @@
     "msg_welcome_status": "🎉 新人欢迎消息状态：{status}",
     "msg_welcome_enabled": "✅ 已开启新人欢迎",
     "msg_welcome_disabled": "✅ 已关闭新人欢迎",
-    "msg_welcome_message": "欢迎 {membername} 加入 HTS Utospace！请观看弹窗公告，设置合适的群昵称与群消息提醒方式。愿你在这里，聊得开心，玩的愉快！",
+    "msg_welcome_message": "🎉欢迎 {membername} 加入 HTS Utospace✨！请观看弹窗公告，设置合适的群昵称与群消息提醒方式。愿你在这里，聊得开心，玩的愉快！",
     "msg_parameter_error": "❌ 参数错误",
     "msg_welcome_message_too_long": "❌ 欢迎消息过长（最多200字符）",
     "msg_welcome_message_set": "✅ 欢迎消息已设置",
@@ -68,6 +68,7 @@
     "msg_promote_success": "✅ 已将 {user} 提升为管理员",
     "msg_demote_success": "✅ 已移除 {user} 的管理员权限",
     "msg_group_name_success": "✅ 群名已改为「{name}」",
-    "msg_error_detail": "错误详情：{error}"
+    "msg_error_detail": "错误详情：{error}",
+    "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令"
   }
 }

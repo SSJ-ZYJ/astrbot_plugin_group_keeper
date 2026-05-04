@@ -16,14 +16,14 @@ WELCOME_MESSAGE_MAX_LEN = 200
 @star.register(
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
-    desc="A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.10",
+    desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
+    version="1.0.12",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
-    """QQ Group Keeper - comprehensive group management plugin.
+    """BotKeeper - Group Control Assistant - comprehensive group management plugin.
 
-    QQ群管家 - 综合群管理插件。
+    群控助手 - 综合群管理插件。
     """
 
     def __init__(self, context: star.Context, config: AstrBotConfig):
@@ -41,13 +41,13 @@ class GroupKeeperPlugin(star.Star):
 
     async def initialize(self):
         """Load per-group data on plugin activation."""
-        logger.info("Group Keeper plugin initialized.")
+        logger.info("BotKeeper plugin initialized.")
 
     async def terminate(self):
         """Save all per-group data on plugin deactivation."""
         for group_id, cfg in self._group_configs.items():
             self._save_group_config(group_id, cfg)
-        logger.info("Group Keeper plugin terminated.")
+        logger.info("BotKeeper plugin terminated.")
 
     # ------------------------------------------------------------------ #
     #  Data persistence
@@ -655,6 +655,15 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_group_name_success", name=name)
         else:
             self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot <unknown> - 兜底处理：未匹配到任何指令时触发 ----
+
+    @bot_group.command("")
+    async def cmd_fallback(self, event: AstrMessageEvent):
+        """Handle unknown commands - triggered when no other command matches."""
+        msg_str = event.get_message_str().strip()
+        if msg_str.startswith("/bot"):
+            self._reply_key(event, "msg_command_not_found")
 
     # ------------------------------------------------------------------ #
     #  Event listener for member join / leave
