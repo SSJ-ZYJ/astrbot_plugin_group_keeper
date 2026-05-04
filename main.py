@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.7",
+    version="1.0.10",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -243,7 +243,7 @@ class GroupKeeperPlugin(star.Star):
         """Strip command prefix from message text, supporting multiple command name variants."""
         msg_str = event.get_message_str().strip()
         names_pattern = "|".join(re.escape(n) for n in cmd_names)
-        pattern = rf"^/?(bot|机器人)\s+({names_pattern})\s*"
+        pattern = rf"^/?bot\s+({names_pattern})\s*"
         return re.sub(pattern, "", msg_str, flags=re.IGNORECASE).strip()
 
     @staticmethod
@@ -265,7 +265,7 @@ class GroupKeeperPlugin(star.Star):
     #  Command group: /bot
     # ------------------------------------------------------------------ #
 
-    @filter.command_group("bot", alias={"机器人"})
+    @filter.command_group("bot")
     async def bot_group(self):
         pass
 

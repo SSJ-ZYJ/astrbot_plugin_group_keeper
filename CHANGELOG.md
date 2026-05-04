@@ -2,6 +2,28 @@
 
 ---
 
+## [1.0.10] - 2026-05-04
+
+### 修改
+- ♻️ 更新中文 i18n 文件，将所有指令示例中的 `/机器人` 改为 `/bot`
+
+---
+
+## [1.0.9] - 2026-05-04
+
+### 修改
+- ♻️ 移除指令组中文别名 `/机器人`，统一使用 `/bot` 作为唯一指令前缀
+- ♻️ 更新 `_strip_command_prefix()` 方法，仅支持 `/bot` 前缀解析
+
+---
+
+## [1.0.8] - 2026-05-04
+
+### 修改
+- ♻️ 统一指令前缀：中英文消息均需以 `/bot` 开头，确保指令唤醒的一致性和明确性
+
+---
+
 ## [1.0.7] - 2026-05-04
 
 ### 修复
@@ -132,6 +154,28 @@
 ---
 
 # Changelog
+
+---
+
+## [1.0.10] - 2026-05-04
+
+### Changed
+- ♻️ Updated Chinese i18n file, changed all command examples from `/机器人` to `/bot`
+
+---
+
+## [1.0.9] - 2026-05-04
+
+### Changed
+- ♻️ Removed command group Chinese alias `/机器人`, unified to use `/bot` as the only command prefix
+- ♻️ Updated `_strip_command_prefix()` method to only support `/bot` prefix parsing
+
+---
+
+## [1.0.8] - 2026-05-04
+
+### Changed
+- ♻️ Unified command prefix: Both Chinese and English messages must start with `/bot` to ensure consistent and clear command wake-up
 
 ---
 

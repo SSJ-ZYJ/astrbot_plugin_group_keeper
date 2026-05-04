@@ -50,7 +50,7 @@
     "msg_welcome_status": "🎉 Welcome message status: {status}",
     "msg_welcome_enabled": "✅ Welcome messages enabled",
     "msg_welcome_disabled": "✅ Welcome messages disabled",
-    "msg_welcome_message": "Welcome {membername} to the group!",
+    "msg_welcome_message": "Welcome {membername} to HTS Utospace! Please watch the popup announcement, set a suitable group nickname and message reminder. May you have a good time here!",
     "msg_parameter_error": "❌ Parameter error",
     "msg_welcome_message_too_long": "❌ Welcome message too long (max 200 chars)",
     "msg_welcome_message_set": "✅ Welcome message set",
