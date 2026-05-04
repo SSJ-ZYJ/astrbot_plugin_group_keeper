@@ -23,7 +23,7 @@
     },
     "default_welcome_message": {
       "description": "默认欢迎消息",
-      "hint": "留空则使用语言包中的默认欢迎语。支持变量：{membername} = 新成员昵称"
+      "hint": "留空则使用默认欢迎语。支持变量：{membername} = 新成员昵称"
     },
     "max_recall_count": {
       "description": "最大撤回条数",
