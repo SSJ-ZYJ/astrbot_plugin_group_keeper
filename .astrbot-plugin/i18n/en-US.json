@@ -28,14 +28,6 @@
     "max_recall_count": {
       "description": "Max recall count",
       "hint": "Maximum messages that can be recalled at once"
-    },
-    "default_announce_confirm_required": {
-      "description": "Announcement requires confirmation",
-      "hint": "Whether announcements require group members to confirm"
-    },
-    "default_announce_pinned": {
-      "description": "Pin announcement",
-      "hint": "Whether announcements are pinned"
     }
   },
   "messages": {
@@ -51,7 +43,6 @@
     "cmd_promote": "/bot promote <QQ> - Promote to admin",
     "cmd_demote": "/bot demote <QQ> - Demote admin",
     "cmd_set_group_name": "/bot set_group_name <name> - Change group name",
-    "cmd_announce": "/bot announce <content> - Publish announcement",
     "msg_not_in_group": "❌ Please use this command in a group chat",
     "msg_no_permission": "❌ You don't have permission to do this",
     "msg_status_on": "Enabled",
@@ -77,7 +68,6 @@
     "msg_promote_success": "✅ Promoted {user} to admin",
     "msg_demote_success": "✅ Demoted {user} from admin",
     "msg_group_name_success": "✅ Group name changed to \"{name}\"",
-    "msg_announce_success": "✅ Announcement published",
     "msg_error_detail": "Error detail: {error}"
   }
 }

@@ -7,7 +7,7 @@ from astrbot.api import AstrBotConfig, logger, star
 from astrbot.api.event import AstrMessageEvent, MessageEventResult, filter
 from astrbot.api.message_components import At, Plain
 
-from .handlers import GroupHandler, JoinHandler, NoticeHandler
+from .handlers import GroupHandler, JoinHandler
 from .i18n import I18nManager
 
 WELCOME_MESSAGE_MAX_LEN = 200
@@ -35,7 +35,6 @@ class GroupKeeperPlugin(star.Star):
 
         self.i18n = I18nManager()
         self.group_handler = GroupHandler()
-        self.notice_handler = NoticeHandler()
         self.join_handler = JoinHandler()
 
         self._group_configs: dict[str, dict] = {}
@@ -288,7 +287,6 @@ class GroupKeeperPlugin(star.Star):
             self._t("cmd_promote"),
             self._t("cmd_demote"),
             self._t("cmd_set_group_name"),
-            self._t("cmd_announce"),
         ]
         self._reply(event, "\n".join(lines))
 
@@ -655,45 +653,6 @@ class GroupKeeperPlugin(star.Star):
         success = await self.group_handler.set_group_name(bot, int(group_id), name)
         if success:
             self._reply_key(event, "msg_group_name_success", name=name)
-        else:
-            self._reply_key(event, "msg_operation_failed")
-
-    # ---- /bot announce <content> ----
-
-    @bot_group.command("announce", alias={"公告"})
-    async def cmd_announce(self, event: AstrMessageEvent):
-        if not self._is_group_chat(event):
-            self._reply_key(event, "msg_not_in_group")
-            return
-        group_id = event.get_group_id()
-        if not await self._is_plugin_admin(event, group_id):
-            self._reply_key(event, "msg_no_permission")
-            return
-
-        bot = self._get_bot(event)
-        if bot is None:
-            self._reply_key(event, "msg_platform_not_supported")
-            return
-
-        content = self._strip_command_prefix(event, "announce", "公告")
-
-        if not content:
-            self._reply_key(event, "msg_parameter_error")
-            return
-
-        confirm_required = self.config.get("default_announce_confirm_required", False)
-        pinned = self.config.get("default_announce_pinned", False)
-        success = await self.notice_handler.publish(
-            bot, int(group_id), content, confirm_required, pinned
-        )
-        if success:
-            cfg = self._get_group_config(group_id)
-            sender_name = event.get_sender_name() or event.get_sender_id()
-            cfg["announcements"] = self.notice_handler.add_to_local(
-                cfg.get("announcements", []), content, sender_name
-            )
-            self._save_group_config(group_id, cfg)
-            self._reply_key(event, "msg_announce_success")
         else:
             self._reply_key(event, "msg_operation_failed")
 

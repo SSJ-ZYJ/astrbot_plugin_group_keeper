@@ -36,17 +36,5 @@
 		"type": "int",
 		"default": 10,
 		"hint": "单次最多撤回的消息条数"
-	},
-	"default_announce_confirm_required": {
-		"description": "公告需要群成员确认",
-		"type": "bool",
-		"default": false,
-		"hint": "发布的公告是否需要群成员确认"
-	},
-	"default_announce_pinned": {
-		"description": "置顶公告",
-		"type": "bool",
-		"default": false,
-		"hint": "发布的公告是否置顶"
 	}
 }

@@ -28,14 +28,6 @@
     "max_recall_count": {
       "description": "最大撤回条数",
       "hint": "单次最多撤回的消息条数"
-    },
-    "default_announce_confirm_required": {
-      "description": "公告需要群成员确认",
-      "hint": "发布的公告是否需要群成员确认"
-    },
-    "default_announce_pinned": {
-      "description": "置顶公告",
-      "hint": "发布的公告是否置顶"
     }
   },
   "messages": {
@@ -51,7 +43,6 @@
     "cmd_promote": "/机器人 提升 <QQ> - 提升为管理员",
     "cmd_demote": "/机器人 降级 <QQ> - 移除管理员",
     "cmd_set_group_name": "/机器人 设置群名 <名称> - 修改群名",
-    "cmd_announce": "/机器人 公告 <内容> - 发布公告",
     "msg_not_in_group": "❌ 请在群聊中使用此命令",
     "msg_no_permission": "❌ 您没有权限执行此操作",
     "msg_status_on": "开启",
@@ -77,7 +68,6 @@
     "msg_promote_success": "✅ 已将 {user} 提升为管理员",
     "msg_demote_success": "✅ 已移除 {user} 的管理员权限",
     "msg_group_name_success": "✅ 群名已改为「{name}」",
-    "msg_announce_success": "✅ 公告发布成功",
     "msg_error_detail": "错误详情：{error}"
   }
 }
