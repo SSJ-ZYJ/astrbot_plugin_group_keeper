@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.12",
+    version="1.0.13",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -48,6 +48,31 @@ class GroupKeeperPlugin(star.Star):
         for group_id, cfg in self._group_configs.items():
             self._save_group_config(group_id, cfg)
         logger.info("BotKeeper plugin terminated.")
+
+    # ------------------------------------------------------------------ #
+    #  Metadata helpers for i18n display name switching
+    # ------------------------------------------------------------------ #
+
+    @property
+    def display_name(self) -> str:
+        """Return the plugin display name based on current locale."""
+        return self.i18n.get_metadata("display_name", self._locale) or "BotKeeper"
+
+    @property
+    def short_desc(self) -> str:
+        """Return the plugin short description based on current locale."""
+        return (
+            self.i18n.get_metadata("short_desc", self._locale)
+            or "A QQ group management plugin for HTS Team."
+        )
+
+    @property
+    def desc(self) -> str:
+        """Return the plugin description based on current locale."""
+        return (
+            self.i18n.get_metadata("desc", self._locale)
+            or "A QQ group management plugin for AstrBot, designed for HTS Team."
+        )
 
     # ------------------------------------------------------------------ #
     #  Data persistence

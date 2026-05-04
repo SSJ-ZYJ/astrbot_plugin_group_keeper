@@ -2,6 +2,16 @@
 
 ---
 
+## [1.0.13] - 2026-05-04
+
+### 修复
+- 🐛 修复外显名称（display_name、short_desc、desc）中英文切换无效的问题
+- 🐛 `I18nManager` 现在正确加载 `metadata` 部分，并新增 `get_metadata()` 方法
+- 🐛 `main.py` 新增 `display_name`、`short_desc`、`desc` 属性，根据当前 locale 动态返回对应语言的元数据
+- 🐛 `metadata.yaml` 恢复标准格式（name 使用英文标识符，display_name 使用英文）
+
+---
+
 ## [1.0.12] - 2026-05-04
 
 ### 修改
@@ -170,6 +180,16 @@
 ---
 
 # Changelog
+
+---
+
+## [1.0.13] - 2026-05-04
+
+### Fixed
+- 🐛 Fix display_name, short_desc, desc i18n switching not working
+- 🐛 `I18nManager` now correctly loads `metadata` section, added `get_metadata()` method
+- 🐛 `main.py` added `display_name`, `short_desc`, `desc` properties that return locale-specific metadata
+- 🐛 `metadata.yaml` restored to standard format (name uses English identifier, display_name uses English)
 
 ---
 
