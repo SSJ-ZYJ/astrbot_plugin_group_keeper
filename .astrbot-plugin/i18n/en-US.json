@@ -13,6 +13,14 @@
         "English"
       ]
     },
+    "whitelist_enabled": {
+      "description": "Enable group whitelist",
+      "hint": "When enabled, only groups in the whitelist can use plugin features"
+    },
+    "group_whitelist": {
+      "description": "Group whitelist",
+      "hint": "Enter group IDs, one per line. When whitelist is enabled, only listed groups can use plugin features"
+    },
     "default_mute_duration": {
       "description": "Default mute duration (seconds)",
       "hint": "Default mute duration when not specified"
@@ -69,6 +77,7 @@
     "msg_demote_success": "✅ Demoted {user} from admin",
     "msg_group_name_success": "✅ Group name changed to \"{name}\"",
     "msg_error_detail": "Error detail: {error}",
-    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands"
+    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands",
+    "msg_whitelist_not_allowed": "❌ Current group is not in the whitelist, this feature is not available"
   }
 }

@@ -13,6 +13,18 @@
 		],
 		"hint": "选择插件显示语言"
 	},
+	"whitelist_enabled": {
+		"description": "启用群白名单",
+		"type": "bool",
+		"default": false,
+		"hint": "启用后，只有白名单内的群号才能使用插件功能"
+	},
+	"group_whitelist": {
+		"description": "群白名单",
+		"type": "list",
+		"default": [],
+		"hint": "输入群号，多个群号用换行分隔。启用白名单后，只有列表中的群才能使用插件功能"
+	},
 	"default_mute_duration": {
 		"description": "默认禁言时长（秒）",
 		"type": "int",

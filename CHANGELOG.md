@@ -2,6 +2,25 @@
 
 ---
 
+## [1.0.16] - 2026-05-04
+
+### 新增
+- ✨ 添加群白名单功能：可配置白名单群号，启用后只有白名单内的群才能使用插件功能
+- ✨ 新增配置项 `whitelist_enabled`：启用/禁用群白名单
+- ✨ 新增配置项 `group_whitelist`：群白名单列表，支持多个群号
+- ✨ 新增国际化翻译 `msg_whitelist_not_allowed`：白名单限制提示消息
+
+---
+
+## [1.0.15] - 2026-05-04
+
+### 修复
+- 🐛 修复兜底处理机制无效的问题
+- 🐛 移除无效的 `@bot_group.command("")` 方式，改用 `@filter.event_message_type` 事件监听器
+- 🐛 新增 `on_unknown_command` 方法，监听所有消息事件，检查 `/bot` 前缀但子指令不在有效列表中时提示"指令不存在"
+
+---
+
 ## [1.0.14] - 2026-05-04
 
 ### 修改
@@ -189,6 +208,25 @@
 ---
 
 # Changelog
+
+---
+
+## [1.0.16] - 2026-05-04
+
+### Added
+- ✨ Add group whitelist feature: configure whitelist group IDs, when enabled only whitelisted groups can use plugin features
+- ✨ Add config option `whitelist_enabled`: enable/disable group whitelist
+- ✨ Add config option `group_whitelist`: group whitelist list, supports multiple group IDs
+- ✨ Add i18n translation `msg_whitelist_not_allowed`: whitelist restriction prompt message
+
+---
+
+## [1.0.15] - 2026-05-04
+
+### Fixed
+- 🐛 Fix fallback handler not working for unknown commands
+- 🐛 Remove invalid `@bot_group.command("")` approach, use `@filter.event_message_type` event listener instead
+- 🐛 Add `on_unknown_command` method to listen all message events, check if `/bot` prefix is present but sub-command is not in valid list, then prompt "Command not found"
 
 ---
 
