@@ -30,6 +30,12 @@
     "default": 10,
     "hint": "Maximum messages that can be recalled at once / 单次最多撤回的消息条数"
   },
+  "default_admin_list": {
+    "description": "Default admin list / 默认管理员QQ号列表",
+    "type": "list",
+    "default": [],
+    "hint": "QQ numbers that can manage the bot, one per item. Leave empty for all members / 可管理机器人的QQ号，为空则所有成员均可操作"
+  },
   "default_announce_confirm_required": {
     "description": "Announcement requires confirmation / 公告需要群成员确认",
     "type": "bool",

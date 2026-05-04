@@ -22,7 +22,7 @@ CST = timezone(timedelta(hours=8))
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.3",
+    version="1.0.5",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -40,6 +40,7 @@ class GroupKeeperPlugin(star.Star):
         self.default_welcome_enabled = self.config.get("default_welcome_enabled", True)
         self.default_welcome_message = self.config.get("default_welcome_message", "")
         self.max_recall_count = max(1, self.config.get("max_recall_count", 10))
+        self.default_admin_list = self.config.get("default_admin_list", [])
         self.default_announce_confirm_required = self.config.get(
             "default_announce_confirm_required", False
         )
@@ -81,7 +82,7 @@ class GroupKeeperPlugin(star.Star):
             cfg = {}
         cfg.setdefault("welcome_enabled", self.default_welcome_enabled)
         cfg.setdefault("welcome_message", "")
-        cfg.setdefault("admin_list", [])
+        cfg.setdefault("admin_list", list(self.default_admin_list))
         cfg.setdefault("announcements", [])
         self._group_configs[group_id] = cfg
         return cfg
@@ -126,12 +127,15 @@ class GroupKeeperPlugin(star.Star):
     def _is_group_chat(event: AstrMessageEvent) -> bool:
         return bool(event.get_group_id())
 
-    def _is_plugin_admin(self, event: AstrMessageEvent, group_id: str) -> bool:
+    async def _is_plugin_admin(self, event: AstrMessageEvent, group_id: str) -> bool:
         cfg = self._get_group_config(group_id)
         admin_list = cfg.get("admin_list", [])
-        if not admin_list:
+        sender_id = event.get_sender_id()
+        if admin_list and sender_id in admin_list:
             return True
-        return event.get_sender_id() in admin_list
+        if admin_list:
+            return await self._check_group_role(event, group_id, "admin")
+        return True
 
     @staticmethod
     async def _check_group_role(
@@ -232,7 +236,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 
@@ -269,7 +273,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_parameter_error")
 
-    # ---- /bot add_admin <QQ号> ----
+    # ---- /bot add_admin <QQå? ----
 
     @bot_group.command("add_admin")
     async def cmd_add_admin(self, event: AstrMessageEvent, qq: str = ""):
@@ -277,7 +281,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
         if not qq or not qq.isdigit():
@@ -294,7 +298,7 @@ class GroupKeeperPlugin(star.Star):
         self._save_group_config(group_id, cfg)
         self._reply_key(event, "msg_admin_added", qq=qq)
 
-    # ---- /bot remove_admin <QQ号> ----
+    # ---- /bot remove_admin <QQå? ----
 
     @bot_group.command("remove_admin")
     async def cmd_remove_admin(self, event: AstrMessageEvent, qq: str = ""):
@@ -302,7 +306,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
         if not qq or not qq.isdigit():
@@ -335,7 +339,7 @@ class GroupKeeperPlugin(star.Star):
         admin_str = "\n".join(f"- {a}" for a in admin_list)
         self._reply_key(event, "msg_admins_list", list=admin_str)
 
-    # ---- /bot mute <QQ号> [seconds] ----
+    # ---- /bot mute <QQå? [seconds] ----
 
     @bot_group.command("mute")
     async def cmd_mute(self, event: AstrMessageEvent):
@@ -343,7 +347,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 
@@ -370,7 +374,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot unmute <QQ号> ----
+    # ---- /bot unmute <QQå? ----
 
     @bot_group.command("unmute")
     async def cmd_unmute(self, event: AstrMessageEvent):
@@ -378,7 +382,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 
@@ -406,7 +410,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 
@@ -430,7 +434,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot ban <QQ号> ----
+    # ---- /bot ban <QQå? ----
 
     @bot_group.command("ban")
     async def cmd_ban(self, event: AstrMessageEvent):
@@ -438,7 +442,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 
@@ -458,7 +462,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot recall <QQ号> [count] ----
+    # ---- /bot recall <QQå? [count] ----
 
     @bot_group.command("recall")
     async def cmd_recall(self, event: AstrMessageEvent):
@@ -466,7 +470,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 
@@ -505,7 +509,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_recall_no_messages")
 
-    # ---- /bot rename <QQ号> <name> ----
+    # ---- /bot rename <QQå? <name> ----
 
     @bot_group.command("rename")
     async def cmd_rename(self, event: AstrMessageEvent):
@@ -513,7 +517,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 
@@ -540,7 +544,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot title <QQ号> <title> ----
+    # ---- /bot title <QQå? <title> ----
 
     @bot_group.command("title")
     async def cmd_title(self, event: AstrMessageEvent):
@@ -577,7 +581,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_error_with_detail(event, "msg_operation_failed", error_msg)
 
-    # ---- /bot promote <QQ号> ----
+    # ---- /bot promote <QQå? ----
 
     @bot_group.command("promote")
     async def cmd_promote(self, event: AstrMessageEvent):
@@ -607,7 +611,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot demote <QQ号> ----
+    # ---- /bot demote <QQå? ----
 
     @bot_group.command("demote")
     async def cmd_demote(self, event: AstrMessageEvent):
@@ -645,7 +649,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 
@@ -684,7 +688,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_plugin_admin(event, group_id):
+        if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
 

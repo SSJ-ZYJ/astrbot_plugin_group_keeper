@@ -7,6 +7,20 @@
 
 ---
 
+## [1.0.5] - 2026-05-03
+
+### 新增
+- ✨ 新增配置项 `default_admin_list`：在 WebUI 中设置全局默认管理员 QQ 号列表
+
+---
+
+## [1.0.4] - 2026-05-03
+
+### 修复
+- 🐛 修复插件无法识别群主和群管理员权限的问题，`_is_plugin_admin` 现在会同时检查本地管理员列表和 QQ 群内真实角色
+
+---
+
 ## [1.0.3] - 2026-05-03
 
 ### 修复
@@ -81,6 +95,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [1.0.5] - 2026-05-03
+
+### Added
+- ✨ Add `default_admin_list` config: set global default admin QQ numbers via WebUI
+
+---
+
+## [1.0.4] - 2026-05-03
+
+### Fixed
+- 🐛 Fix plugin unable to recognize group owner and admin roles; `_is_plugin_admin` now checks both local admin list and QQ group roles
 
 ---
 
