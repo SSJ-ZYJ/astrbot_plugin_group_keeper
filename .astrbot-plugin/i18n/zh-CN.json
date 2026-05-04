@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "display_name": "QQ群管理插件",
+    "short_desc": "HTS Team 群管理工具",
+    "desc": "一个用来管理 QQ群聊 的 Astrbot 插件，用于管理 HTS Team，满足 HTS 管理需求。支持新人欢迎、管理员管理等功能。"
+  },
+  "config": {
+    "locale": {
+      "description": "语言",
+      "hint": "选择插件语言"
+    },
+    "default_mute_duration": {
+      "description": "默认禁言时长（秒）",
+      "hint": "不指定时长时的默认禁言秒数"
+    },
+    "default_welcome_enabled": {
+      "description": "新人欢迎默认开启",
+      "hint": "新群是否默认开启欢迎消息"
+    },
+    "default_welcome_message": {
+      "description": "默认欢迎消息",
+      "hint": "留空则使用语言包中的默认欢迎语"
+    },
+    "max_recall_count": {
+      "description": "最大撤回条数",
+      "hint": "单次最多撤回的消息条数"
+    },
+    "default_announce_confirm_required": {
+      "description": "公告需要群成员确认",
+      "hint": "发布的公告是否需要群成员确认"
+    },
+    "default_announce_pinned": {
+      "description": "置顶公告",
+      "hint": "发布的公告是否置顶"
+    }
+  },
+  "messages": {
+    "help_title": "📖 QQ群管家 - 命令帮助",
+    "help_header": "可用命令：",
+    "cmd_welcome": "/bot welcome [on|off|message <text>] - 新人欢迎设置",
+    "cmd_add_admin": "/bot add_admin <QQ> - 添加管理员",
+    "cmd_remove_admin": "/bot remove_admin <QQ> - 移除管理员",
+    "cmd_list_admins": "/bot list_admins - 查看管理员列表",
+    "cmd_mute": "/bot mute <QQ> [秒数] - 禁言群成员",
+    "cmd_unmute": "/bot unmute <QQ> - 解除禁言",
+    "cmd_global_mute": "/bot global_mute on|off - 全员禁言",
+    "cmd_ban": "/bot ban <QQ> - 踢出并封禁",
+    "cmd_recall": "/bot recall <QQ> [条数] - 撤回消息",
+    "cmd_rename": "/bot rename <QQ> <昵称> - 修改群昵称",
+    "cmd_title": "/bot title <QQ> <头衔> - 设置专属头衔",
+    "cmd_promote": "/bot promote <QQ> - 提升为管理员",
+    "cmd_demote": "/bot demote <QQ> - 移除管理员",
+    "cmd_set_group_name": "/bot set_group_name <名称> - 修改群名",
+    "cmd_announce": "/bot announce <内容> - 发布公告",
+    "cmd_list_announcements": "/bot list_announcements - 查看公告列表",
+    "msg_not_in_group": "❌ 请在群聊中使用此命令",
+    "msg_no_permission": "❌ 您没有权限执行此操作",
+    "msg_status_on": "开启",
+    "msg_status_off": "关闭",
+    "msg_welcome_status": "🎉 新人欢迎消息状态：{status}",
+    "msg_welcome_enabled": "✅ 已开启新人欢迎",
+    "msg_welcome_disabled": "✅ 已关闭新人欢迎",
+    "msg_welcome_message": "欢迎新成员 {user} 加入群聊！",
+    "msg_parameter_error": "❌ 参数错误",
+    "msg_welcome_message_too_long": "❌ 欢迎消息过长（最多200字符）",
+    "msg_welcome_message_set": "✅ 欢迎消息已设置",
+    "msg_admin_already_exists": "❌ QQ号 {qq} 已是管理员",
+    "msg_admin_added": "✅ 已将 {qq} 添加为管理员",
+    "msg_admin_not_exists": "❌ QQ号 {qq} 不在管理员列表中",
+    "msg_admin_removed": "✅ 已移除管理员 {qq}",
+    "msg_no_admins": "📋 当前无管理员",
+    "msg_admins_list": "📋 管理员列表：\n{list}",
+    "msg_platform_not_supported": "❌ 当前平台不支持此功能",
+    "msg_operation_failed": "❌ 操作失败，请稍后再试",
+    "msg_mute_success": "✅ 已禁言 {user}，时长 {duration}",
+    "msg_unmute_success": "✅ 已解除 {user} 的禁言",
+    "msg_global_mute_enabled": "✅ 已开启全员禁言",
+    "msg_global_mute_disabled": "✅ 已关闭全员禁言",
+    "msg_ban_success": "✅ 已封禁 {user}",
+    "msg_recall_success": "✅ 成功撤回 {count} 条消息",
+    "msg_recall_no_messages": "❌ 无可撤回的消息",
+    "msg_rename_success": "✅ 已将 {user} 的群昵称改为 {new_name}",
+    "msg_owner_required": "❌ 需要群主权限",
+    "msg_title_success": "✅ 已为 {user} 设置头衔「{title}」",
+    "msg_promote_success": "✅ 已将 {user} 提升为管理员",
+    "msg_demote_success": "✅ 已移除 {user} 的管理员权限",
+    "msg_group_name_success": "✅ 群名已改为「{name}」",
+    "msg_announce_success": "✅ 公告发布成功",
+    "msg_announcement_list_header": "📢 公告列表",
+    "msg_no_announcements": "📋 当前无公告",
+    "msg_tag_pinned": "🔖置顶",
+    "msg_tag_confirm": "✓需确认",
+    "msg_error_detail": "错误详情：{error}"
+  }
+}

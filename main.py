@@ -3,16 +3,14 @@ from __future__ import annotations
 import json
 import re
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 
-from astrbot.api import logger, star
+from astrbot.api import AstrBotConfig, logger, star
 from astrbot.api.event import AstrMessageEvent, MessageEventResult, filter
 from astrbot.api.message_components import At, Plain
 
 from .handlers import GroupHandler, JoinHandler, NoticeHandler
 from .i18n import I18nManager
 
-PLUGIN_BASE_DIR = Path(__file__).parent
 WELCOME_MESSAGE_MAX_LEN = 200
 
 CST = timezone(timedelta(hours=8))
@@ -22,15 +20,18 @@ CST = timezone(timedelta(hours=8))
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.5",
+    version="1.0.6",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
-    """QQ Group Keeper - comprehensive group management plugin."""
+    """QQ Group Keeper - comprehensive group management plugin.
 
-    def __init__(self, context: star.Context, config: dict | None = None):
+    QQ群管家 - 综合群管理插件。
+    """
+
+    def __init__(self, context: star.Context, config: AstrBotConfig):
         super().__init__(context)
-        self.config = config or {}
+        self.config = config
         self.data_path = star.StarTools.get_data_dir("astrbot_plugin_group_keeper")
         self.groups_path = self.data_path / "groups"
         self.groups_path.mkdir(parents=True, exist_ok=True)
@@ -40,13 +41,12 @@ class GroupKeeperPlugin(star.Star):
         self.default_welcome_enabled = self.config.get("default_welcome_enabled", True)
         self.default_welcome_message = self.config.get("default_welcome_message", "")
         self.max_recall_count = max(1, self.config.get("max_recall_count", 10))
-        self.default_admin_list = self.config.get("default_admin_list", [])
         self.default_announce_confirm_required = self.config.get(
             "default_announce_confirm_required", False
         )
         self.default_announce_pinned = self.config.get("default_announce_pinned", False)
 
-        self.i18n = I18nManager(PLUGIN_BASE_DIR / "locales")
+        self.i18n = I18nManager()
         self.group_handler = GroupHandler()
         self.notice_handler = NoticeHandler()
         self.join_handler = JoinHandler()
@@ -82,7 +82,7 @@ class GroupKeeperPlugin(star.Star):
             cfg = {}
         cfg.setdefault("welcome_enabled", self.default_welcome_enabled)
         cfg.setdefault("welcome_message", "")
-        cfg.setdefault("admin_list", list(self.default_admin_list))
+        cfg.setdefault("admin_list", [])
         cfg.setdefault("announcements", [])
         self._group_configs[group_id] = cfg
         return cfg
@@ -99,25 +99,49 @@ class GroupKeeperPlugin(star.Star):
     #  Helpers
     # ------------------------------------------------------------------ #
 
-    def _t(self, key: str, event: AstrMessageEvent | None = None, **kwargs) -> str:
+    def _t(self, key: str, **kwargs) -> str:
         return self.i18n.get(key, self.locale, **kwargs)
 
     def _reply(self, event: AstrMessageEvent, text: str):
         event.set_result(MessageEventResult().message(text))
 
     def _reply_key(self, event: AstrMessageEvent, key: str, **kwargs):
-        self._reply(event, self._t(key, event, **kwargs))
+        self._reply(event, self._t(key, **kwargs))
 
     def _reply_error_with_detail(
         self, event: AstrMessageEvent, key: str, detail: str, **kwargs
     ):
-        base = self._t(key, event, **kwargs)
+        base = self._t(key, **kwargs)
         if detail:
-            self._reply(
-                event, f"{base}\n{self._t('msg_error_detail', event, error=detail)}"
-            )
+            self._reply(event, f"{base}\n{self._t('msg_error_detail', error=detail)}")
         else:
             self._reply(event, base)
+
+    @staticmethod
+    def _extract_text_after_target(event: AstrMessageEvent, target: str) -> str:
+        """Extract the text portion after the target user identifier.
+
+        Handles both At-based and plain-text-based target references.
+        """
+        messages = event.get_messages()
+        found_target = False
+        text_parts = []
+        for comp in messages:
+            if isinstance(comp, At) and str(comp.qq) == target:
+                found_target = True
+                continue
+            if found_target and isinstance(comp, Plain):
+                text_parts.append(comp.text)
+        if text_parts:
+            return " ".join(text_parts).strip()
+
+        msg_str = event.get_message_str().strip()
+        parts = msg_str.split(None, 2)
+        if len(parts) >= 3:
+            remainder = parts[2]
+            remainder = re.sub(r"^\d{5,15}\s*", "", remainder, count=1).strip()
+            return remainder
+        return ""
 
     @staticmethod
     def _get_bot(event: AstrMessageEvent):
@@ -128,14 +152,7 @@ class GroupKeeperPlugin(star.Star):
         return bool(event.get_group_id())
 
     async def _is_plugin_admin(self, event: AstrMessageEvent, group_id: str) -> bool:
-        cfg = self._get_group_config(group_id)
-        admin_list = cfg.get("admin_list", [])
-        sender_id = event.get_sender_id()
-        if admin_list and sender_id in admin_list:
-            return True
-        if admin_list:
-            return await self._check_group_role(event, group_id, "admin")
-        return True
+        return await self._check_group_role(event, group_id, "admin")
 
     @staticmethod
     async def _check_group_role(
@@ -165,18 +182,57 @@ class GroupKeeperPlugin(star.Star):
             if required_role == "admin":
                 return role in ("owner", "admin")
             return True
-        except Exception:
+        except Exception as e:
+            logger.warning(
+                f"Failed to check group role for {event.get_sender_id()}: {e}"
+            )
+            return False
+
+    @staticmethod
+    async def _check_bot_role(
+        event: AstrMessageEvent, group_id: str, required_role: str
+    ) -> bool:
+        """Check if the bot itself has the required role in the QQ group.
+
+        Args:
+            required_role: "owner" or "admin".
+
+        Returns:
+            True if the bot meets the requirement.
+        """
+        bot = getattr(event, "bot", None)
+        if bot is None:
+            return False
+        try:
+            info = await bot.call_action(
+                "get_group_member_info",
+                group_id=int(group_id),
+                user_id=int(event.get_self_id()),
+                no_cache=True,
+            )
+            role = info.get("role", "member")
+            if required_role == "owner":
+                return role == "owner"
+            if required_role == "admin":
+                return role in ("owner", "admin")
+            return True
+        except Exception as e:
+            logger.warning(f"Failed to check bot role in group {group_id}: {e}")
             return False
 
     def _extract_target_user(self, event: AstrMessageEvent) -> str | None:
         """Extract the target user ID from an At component or message text."""
+        self_id = str(event.get_self_id())
         for comp in event.get_messages():
             if isinstance(comp, At):
-                return str(comp.qq)
+                qq = str(comp.qq)
+                if qq != self_id and qq != "all":
+                    return qq
         msg_str = event.get_message_str().strip()
         numbers = re.findall(r"\b(\d{5,15})\b", msg_str)
-        if numbers:
-            return numbers[0]
+        for num in numbers:
+            if num != self_id:
+                return num
         return None
 
     def _parse_int_from_text(
@@ -202,27 +258,26 @@ class GroupKeeperPlugin(star.Star):
 
     @bot_group.command("help")
     async def cmd_help(self, event: AstrMessageEvent):
-        t = self._t
         lines = [
-            t("help_title", event),
+            self._t("help_title"),
             "",
-            t("help_header", event),
-            t("cmd_welcome", event),
-            t("cmd_add_admin", event),
-            t("cmd_remove_admin", event),
-            t("cmd_list_admins", event),
-            t("cmd_mute", event),
-            t("cmd_unmute", event),
-            t("cmd_global_mute", event),
-            t("cmd_ban", event),
-            t("cmd_recall", event),
-            t("cmd_rename", event),
-            t("cmd_title", event),
-            t("cmd_promote", event),
-            t("cmd_demote", event),
-            t("cmd_set_group_name", event),
-            t("cmd_announce", event),
-            t("cmd_list_announcements", event),
+            self._t("help_header"),
+            self._t("cmd_welcome"),
+            self._t("cmd_add_admin"),
+            self._t("cmd_remove_admin"),
+            self._t("cmd_list_admins"),
+            self._t("cmd_mute"),
+            self._t("cmd_unmute"),
+            self._t("cmd_global_mute"),
+            self._t("cmd_ban"),
+            self._t("cmd_recall"),
+            self._t("cmd_rename"),
+            self._t("cmd_title"),
+            self._t("cmd_promote"),
+            self._t("cmd_demote"),
+            self._t("cmd_set_group_name"),
+            self._t("cmd_announce"),
+            self._t("cmd_list_announcements"),
         ]
         self._reply(event, "\n".join(lines))
 
@@ -244,9 +299,9 @@ class GroupKeeperPlugin(star.Star):
 
         if not arg1:
             status = (
-                self._t("msg_status_on", event)
+                self._t("msg_status_on")
                 if cfg["welcome_enabled"]
-                else self._t("msg_status_off", event)
+                else self._t("msg_status_off")
             )
             self._reply_key(event, "msg_welcome_status", status=status)
             return
@@ -260,7 +315,10 @@ class GroupKeeperPlugin(star.Star):
             self._save_group_config(group_id, cfg)
             self._reply_key(event, "msg_welcome_disabled")
         elif arg1.lower() == "message":
-            new_msg = arg2.strip()
+            msg_str = event.get_message_str().strip()
+            new_msg = re.sub(
+                r"^/?bot\s+welcome\s+message\s*", "", msg_str, flags=re.IGNORECASE
+            ).strip()
             if not new_msg:
                 self._reply_key(event, "msg_parameter_error")
                 return
@@ -273,7 +331,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_parameter_error")
 
-    # ---- /bot add_admin <QQå? ----
+    # ---- /bot add_admin <QQ> ----
 
     @bot_group.command("add_admin")
     async def cmd_add_admin(self, event: AstrMessageEvent, qq: str = ""):
@@ -298,7 +356,7 @@ class GroupKeeperPlugin(star.Star):
         self._save_group_config(group_id, cfg)
         self._reply_key(event, "msg_admin_added", qq=qq)
 
-    # ---- /bot remove_admin <QQå? ----
+    # ---- /bot remove_admin <QQ> ----
 
     @bot_group.command("remove_admin")
     async def cmd_remove_admin(self, event: AstrMessageEvent, qq: str = ""):
@@ -339,7 +397,7 @@ class GroupKeeperPlugin(star.Star):
         admin_str = "\n".join(f"- {a}" for a in admin_list)
         self._reply_key(event, "msg_admins_list", list=admin_str)
 
-    # ---- /bot mute <QQå? [seconds] ----
+    # ---- /bot mute <QQ> [seconds] ----
 
     @bot_group.command("mute")
     async def cmd_mute(self, event: AstrMessageEvent):
@@ -374,7 +432,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot unmute <QQå? ----
+    # ---- /bot unmute <QQ> ----
 
     @bot_group.command("unmute")
     async def cmd_unmute(self, event: AstrMessageEvent):
@@ -419,6 +477,9 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_platform_not_supported")
             return
 
+        if not status:
+            self._reply_key(event, "msg_parameter_error")
+            return
         if status.lower() == "on":
             enable = True
         elif status.lower() == "off":
@@ -434,7 +495,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot ban <QQå? ----
+    # ---- /bot ban <QQ> ----
 
     @bot_group.command("ban")
     async def cmd_ban(self, event: AstrMessageEvent):
@@ -462,7 +523,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot recall <QQå? [count] ----
+    # ---- /bot recall <QQ> [count] ----
 
     @bot_group.command("recall")
     async def cmd_recall(self, event: AstrMessageEvent):
@@ -496,7 +557,7 @@ class GroupKeeperPlugin(star.Star):
             for msg in messages:
                 sender = msg.get("sender", {})
                 if str(sender.get("user_id", "")) == target:
-                    ok = await self.group_handler.recall(bot, msg["message_id"])
+                    ok = await self.group_handler.recall(bot, int(msg["message_id"]))
                     if ok:
                         recalled += 1
                     if recalled >= count:
@@ -509,7 +570,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_recall_no_messages")
 
-    # ---- /bot rename <QQå? <name> ----
+    # ---- /bot rename <QQ> <name> ----
 
     @bot_group.command("rename")
     async def cmd_rename(self, event: AstrMessageEvent):
@@ -544,7 +605,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot title <QQå? <title> ----
+    # ---- /bot title <QQ> <title> ----
 
     @bot_group.command("title")
     async def cmd_title(self, event: AstrMessageEvent):
@@ -553,14 +614,14 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
-        is_owner = await self._check_group_role(event, group_id, "owner")
-        if not is_owner:
-            self._reply_key(event, "msg_owner_required")
-            return
-
         bot = self._get_bot(event)
         if bot is None:
             self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        is_bot_owner = await self._check_bot_role(event, group_id, "owner")
+        if not is_bot_owner:
+            self._reply_key(event, "msg_owner_required")
             return
 
         target = self._extract_target_user(event)
@@ -581,7 +642,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_error_with_detail(event, "msg_operation_failed", error_msg)
 
-    # ---- /bot promote <QQå? ----
+    # ---- /bot promote <QQ> ----
 
     @bot_group.command("promote")
     async def cmd_promote(self, event: AstrMessageEvent):
@@ -590,14 +651,14 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
-        is_owner = await self._check_group_role(event, group_id, "owner")
-        if not is_owner:
-            self._reply_key(event, "msg_owner_required")
-            return
-
         bot = self._get_bot(event)
         if bot is None:
             self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        is_bot_owner = await self._check_bot_role(event, group_id, "owner")
+        if not is_bot_owner:
+            self._reply_key(event, "msg_owner_required")
             return
 
         target = self._extract_target_user(event)
@@ -611,7 +672,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot demote <QQå? ----
+    # ---- /bot demote <QQ> ----
 
     @bot_group.command("demote")
     async def cmd_demote(self, event: AstrMessageEvent):
@@ -620,14 +681,14 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
-        is_owner = await self._check_group_role(event, group_id, "owner")
-        if not is_owner:
-            self._reply_key(event, "msg_owner_required")
-            return
-
         bot = self._get_bot(event)
         if bot is None:
             self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        is_bot_owner = await self._check_bot_role(event, group_id, "owner")
+        if not is_bot_owner:
+            self._reply_key(event, "msg_owner_required")
             return
 
         target = self._extract_target_user(event)
@@ -741,7 +802,7 @@ class GroupKeeperPlugin(star.Star):
             )
 
         if remote_announcements:
-            lines = [self._t("msg_announcement_list_header", event)]
+            lines = [self._t("msg_announcement_list_header")]
             for i, ann in enumerate(remote_announcements[:10], 1):
                 ts = ann.get("time", ann.get("timestamp", 0))
                 dt = (
@@ -754,9 +815,9 @@ class GroupKeeperPlugin(star.Star):
                 confirm_flag = ann.get("confirm_required", False)
                 tags = []
                 if pinned_flag:
-                    tags.append(self._t("msg_tag_pinned", event))
+                    tags.append(self._t("msg_tag_pinned"))
                 if confirm_flag:
-                    tags.append(self._t("msg_tag_confirm", event))
+                    tags.append(self._t("msg_tag_confirm"))
                 tag_str = f" [{', '.join(tags)}]" if tags else ""
                 lines.append(f"{i}. [{dt}]{tag_str} {content}")
             self._reply(event, "\n".join(lines))
@@ -768,7 +829,7 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_no_announcements")
             return
 
-        lines = [self._t("msg_announcement_list_header", event)]
+        lines = [self._t("msg_announcement_list_header")]
         for i, ann in enumerate(announcements[-10:], 1):
             ts = ann.get("timestamp", 0)
             dt = (
@@ -811,7 +872,7 @@ class GroupKeeperPlugin(star.Star):
 
         notice_type = raw.get("notice_type", "")
         group_id = str(raw.get("group_id", ""))
-        if not group_id:
+        if not group_id or group_id == "0":
             return
 
         cfg = self._get_group_config(group_id)
@@ -824,37 +885,7 @@ class GroupKeeperPlugin(star.Star):
             if not custom_msg:
                 custom_msg = self.default_welcome_message
             if not custom_msg:
-                custom_msg = self._t("welcome_message", event)
+                custom_msg = self._t("msg_welcome_message")
             await self.join_handler.send_welcome(
                 bot, int(group_id), int(user_id), custom_msg
             )
-
-    # ------------------------------------------------------------------ #
-    #  Text extraction helpers
-    # ------------------------------------------------------------------ #
-
-    @staticmethod
-    def _extract_text_after_target(event: AstrMessageEvent, target: str) -> str:
-        """Extract the text portion after the target user identifier.
-
-        Handles both At-based and plain-text-based target references.
-        """
-        messages = event.get_messages()
-        found_target = False
-        text_parts = []
-        for comp in messages:
-            if isinstance(comp, At) and str(comp.qq) == target:
-                found_target = True
-                continue
-            if found_target and isinstance(comp, Plain):
-                text_parts.append(comp.text)
-        if text_parts:
-            return " ".join(text_parts).strip()
-
-        msg_str = event.get_message_str().strip()
-        parts = msg_str.split(None, 2)
-        if len(parts) >= 3:
-            remainder = parts[2]
-            remainder = re.sub(r"^\d{5,15}\s*", "", remainder, count=1).strip()
-            return remainder
-        return ""

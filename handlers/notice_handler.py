@@ -7,7 +7,10 @@ from astrbot.api import logger
 
 
 class NoticeHandler:
-    """Handles group announcement operations."""
+    """Handles group announcement operations.
+
+    处理群公告操作。
+    """
 
     @staticmethod
     async def publish(
@@ -19,15 +22,23 @@ class NoticeHandler:
     ) -> bool:
         """Publish a group announcement (notice).
 
+        发布群公告。
+
         Args:
             bot: The CQHttp bot instance.
+                 CQHttp 机器人实例。
             group_id: The group ID.
+                      群ID。
             content: The announcement content.
+                     公告内容。
             confirm_required: Whether group members need to confirm.
+                             是否需要群成员确认。
             pinned: Whether the announcement is pinned.
+                    是否置顶。
 
         Returns:
             True if successful, False otherwise.
+            成功返回 True，失败返回 False。
         """
         try:
             params: dict[str, Any] = {
@@ -48,12 +59,17 @@ class NoticeHandler:
     async def get_from_group(bot: Any, group_id: int) -> list[dict]:
         """Fetch announcements from the QQ group via API.
 
+        通过 API 从QQ群获取公告。
+
         Args:
             bot: The CQHttp bot instance.
+                 CQHttp 机器人实例。
             group_id: The group ID.
+                      群ID。
 
         Returns:
             List of announcement dicts, or empty list on failure.
+            公告字典列表，失败返回空列表。
         """
         try:
             result = await bot.call_action("_get_group_notice", group_id=group_id)
@@ -74,13 +90,19 @@ class NoticeHandler:
     ) -> list[dict]:
         """Add an announcement to the local storage list.
 
+        将公告添加到本地存储列表。
+
         Args:
             announcements: The existing announcements list.
+                           现有的公告列表。
             content: The announcement content.
+                     公告内容。
             sender_name: The name of the sender.
+                         发送者名称。
 
         Returns:
             Updated announcements list.
+            更新后的公告列表。
         """
         announcements.append(
             {

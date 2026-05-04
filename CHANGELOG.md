@@ -7,6 +7,27 @@
 
 ---
 
+## [1.0.6] - 2026-05-04
+
+### 修复
+- 🐛 修复 `cmd_help` 传递多余 `event` 参数给 `_t()` 导致 basedpyright 报错
+- 🐛 修复 `cmd_global_mute` 空参数时 `status.lower()` 崩溃
+- 🐛 修复 `_check_group_role` 异常静默无日志
+- 🐛 修复 `on_event` 中 `group_id=0` 被当作有效群号
+- 🐛 修复 main.py 中 9 处注释乱码（`<QQå?>`）
+
+### 修改
+- ♻️ 移除 `default_admin_list` 配置项，权限检测改为直接查询 QQ 群内真实角色
+- ♻️ 统一国际化文件至 `.astrbot-plugin/i18n/` 目录，移除旧的 `locales/` 和 `i18n.py` 硬编码翻译
+- ♻️ 重构 `__init__` 签名，使用 `AstrBotConfig` 类型
+- ♻️ 重构 `_t()` 方法，移除未使用的 `event` 参数
+- ♻️ 将 `_extract_text_after_target` 移至 Helpers 区
+- ♻️ 所有方法添加中英文双语 docstrings
+- ♻️ 补全缺失的 i18n 翻译 key（help/cmd/mute_success 等 20+ 个）
+- ♻️ 严格按照 AstrBot 插件文档规范重构项目结构
+
+---
+
 ## [1.0.5] - 2026-05-03
 
 ### 新增
@@ -95,6 +116,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [1.0.6] - 2026-05-04
+
+### Fixed
+- 🐛 Fix `cmd_help` passing unused `event` parameter to `_t()` causing basedpyright errors
+- 🐛 Fix `cmd_global_mute` crash when status argument is empty
+- 🐛 Fix `_check_group_role` silent exception handling (added logging)
+- 🐛 Fix `on_event` accepting `group_id=0` as valid
+- 🐛 Fix 9 garbled comments in main.py (`<QQå?>`)
+
+### Changed
+- ♻️ Remove `default_admin_list` config, use real QQ group role detection instead
+- ♻️ Unify i18n to `.astrbot-plugin/i18n/` directory, remove old `locales/` and `i18n.py` hardcoded translations
+- ♻️ Refactor `__init__` signature to use `AstrBotConfig` type
+- ♻️ Refactor `_t()` method, remove unused `event` parameter
+- ♻️ Move `_extract_text_after_target` to Helpers section
+- ♻️ Add bilingual (Chinese/English) docstrings to all methods
+- ♻️ Add missing i18n translation keys (help/cmd/mute_success etc. 20+ keys)
+- ♻️ Refactor project structure to comply with AstrBot plugin documentation standards
 
 ---
 

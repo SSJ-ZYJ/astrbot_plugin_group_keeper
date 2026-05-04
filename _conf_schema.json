@@ -1,51 +1,45 @@
 {
-  "locale": {
-    "description": "Language / 语言",
-    "type": "string",
-    "default": "zh_CN",
-    "options": ["zh_CN", "en_US"],
-    "hint": "Select plugin language / 选择插件语言"
-  },
-  "default_mute_duration": {
-    "description": "Default mute duration (seconds) / 默认禁言时长（秒）",
-    "type": "int",
-    "default": 60,
-    "hint": "Used when no duration is specified in /bot mute / 不指定时长时的默认禁言秒数"
-  },
-  "default_welcome_enabled": {
-    "description": "Welcome enabled by default / 新人欢迎默认开启",
-    "type": "bool",
-    "default": true,
-    "hint": "Whether welcome messages are enabled for new groups / 新群是否默认开启欢迎消息"
-  },
-  "default_welcome_message": {
-    "description": "Default welcome message / 默认欢迎消息",
-    "type": "text",
-    "default": "",
-    "hint": "Leave empty to use i18n default / 留空则使用语言包中的默认欢迎语"
-  },
-  "max_recall_count": {
-    "description": "Max recall count / 最大撤回条数",
-    "type": "int",
-    "default": 10,
-    "hint": "Maximum messages that can be recalled at once / 单次最多撤回的消息条数"
-  },
-  "default_admin_list": {
-    "description": "Default admin list / 默认管理员QQ号列表",
-    "type": "list",
-    "default": [],
-    "hint": "QQ numbers that can manage the bot, one per item. Leave empty for all members / 可管理机器人的QQ号，为空则所有成员均可操作"
-  },
-  "default_announce_confirm_required": {
-    "description": "Announcement requires confirmation / 公告需要群成员确认",
-    "type": "bool",
-    "default": false,
-    "hint": "Whether announcements require group members to confirm / 发布的公告是否需要群成员确认"
-  },
-  "default_announce_pinned": {
-    "description": "Pin announcement / 置顶公告",
-    "type": "bool",
-    "default": false,
-    "hint": "Whether announcements are pinned / 发布的公告是否置顶"
-  }
+	"locale": {
+		"description": "Language",
+		"type": "string",
+		"default": "zh_CN",
+		"options": ["zh_CN", "en_US"],
+		"hint": "Select plugin language"
+	},
+	"default_mute_duration": {
+		"description": "Default mute duration (seconds)",
+		"type": "int",
+		"default": 60,
+		"hint": "Used when no duration is specified in /bot mute"
+	},
+	"default_welcome_enabled": {
+		"description": "Welcome enabled by default",
+		"type": "bool",
+		"default": true,
+		"hint": "Whether welcome messages are enabled for new groups"
+	},
+	"default_welcome_message": {
+		"description": "Default welcome message",
+		"type": "text",
+		"default": "",
+		"hint": "Leave empty to use i18n default"
+	},
+	"max_recall_count": {
+		"description": "Max recall count",
+		"type": "int",
+		"default": 10,
+		"hint": "Maximum messages that can be recalled at once"
+	},
+	"default_announce_confirm_required": {
+		"description": "Announcement requires confirmation",
+		"type": "bool",
+		"default": false,
+		"hint": "Whether announcements require group members to confirm"
+	},
+	"default_announce_pinned": {
+		"description": "Pin announcement",
+		"type": "bool",
+		"default": false,
+		"hint": "Whether announcements are pinned"
+	}
 }
