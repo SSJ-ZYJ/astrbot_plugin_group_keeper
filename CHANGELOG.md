@@ -2,6 +2,24 @@
 
 ---
 
+## [1.1.0] - 2026-05-04
+
+### 新增
+- ✨ 添加群白名单功能：可配置白名单群号，启用后只有白名单内的群才能使用插件功能
+- ✨ 新增配置项 `whitelist_enabled`：启用/禁用群白名单
+- ✨ 新增配置项 `group_whitelist`：群白名单列表，支持多个群号
+- ✨ 新增国际化翻译 `msg_whitelist_not_allowed`：白名单限制提示消息
+
+### 修复
+- 🐛 修复未知命令（如 `/bot list`）不提示"指令不存在"的问题
+
+### 修改
+- ♻️ 重构命令拦截机制：使用高优先级事件监听器 `whitelist_guard` 统一处理白名单检查和未知命令拦截
+- ♻️ 移除各子命令中冗余的白名单检查代码，统一在拦截器中处理
+- ♻️ 删除 `on_unknown_command` 函数，其功能已整合到 `whitelist_guard` 中
+
+---
+
 ## [1.0.16] - 2026-05-04
 
 ### 新增
@@ -208,6 +226,24 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.0] - 2026-05-04
+
+### Added
+- ✨ Add group whitelist feature: configure whitelist group IDs, when enabled only whitelisted groups can use plugin features
+- ✨ Add config option `whitelist_enabled`: enable/disable group whitelist
+- ✨ Add config option `group_whitelist`: group whitelist list, supports multiple group IDs
+- ✨ Add i18n translation `msg_whitelist_not_allowed`: whitelist restriction prompt message
+
+### Fixed
+- 🐛 Fix unknown commands (e.g. `/bot list`) not showing "Command not found" message
+
+### Changed
+- ♻️ Refactor command interception mechanism: use high-priority event listener `whitelist_guard` to handle whitelist check and unknown command interception
+- ♻️ Remove redundant whitelist check code from sub-commands, unified in the interceptor
+- ♻️ Remove `on_unknown_command` function, its functionality has been integrated into `whitelist_guard`
 
 ---
 

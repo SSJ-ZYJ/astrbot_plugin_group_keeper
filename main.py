@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.0.16",
+    version="1.1.0",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -302,6 +302,55 @@ class GroupKeeperPlugin(star.Star):
     #  Command group: /bot
     # ------------------------------------------------------------------ #
 
+    VALID_COMMANDS = {
+        "help",
+        "帮助",
+        "welcome",
+        "欢迎",
+        "mute",
+        "禁言",
+        "unmute",
+        "解禁",
+        "global_mute",
+        "全员禁言",
+        "recall",
+        "撤回",
+        "rename",
+        "改名",
+        "title",
+        "头衔",
+        "promote",
+        "提升",
+        "demote",
+        "降级",
+        "set_group_name",
+        "设置群名",
+    }
+
+    @filter.event_message_type(filter.EventMessageType.GROUP_MESSAGE, priority=1)
+    async def whitelist_guard(self, event: AstrMessageEvent):
+        """Intercept all group messages and check whitelist before any command executes."""
+        msg_str = event.get_message_str().strip()
+        if not msg_str.startswith("/bot"):
+            return
+
+        group_id = event.get_group_id()
+        if not self._is_group_allowed(group_id):
+            self._reply_key(event, "msg_whitelist_not_allowed")
+            event.stop_event()
+            return
+
+        parts = msg_str.split(None, 1)
+        if len(parts) < 2:
+            self._reply_key(event, "msg_command_not_found")
+            event.stop_event()
+            return
+
+        sub_cmd = parts[1].split(None, 1)[0].lower()
+        if sub_cmd not in self.VALID_COMMANDS:
+            self._reply_key(event, "msg_command_not_found")
+            event.stop_event()
+
     @filter.command_group("bot")
     async def bot_group(self):
         pass
@@ -337,9 +386,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -386,9 +432,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -426,9 +469,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -457,9 +497,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -495,9 +532,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -545,9 +579,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -583,9 +614,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -626,9 +654,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -662,9 +687,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -698,9 +720,6 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_not_in_group")
             return
         group_id = event.get_group_id()
-        if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
         if not await self._is_plugin_admin(event, group_id):
             self._reply_key(event, "msg_no_permission")
             return
@@ -786,58 +805,3 @@ class GroupKeeperPlugin(star.Star):
             await self.join_handler.send_welcome(
                 bot, int(group_id), int(user_id), custom_msg, member_name
             )
-
-    # ------------------------------------------------------------------ #
-    #  Fallback handler for unknown /bot commands
-    # ------------------------------------------------------------------ #
-
-    @filter.event_message_type(filter.EventMessageType.ALL)
-    async def on_unknown_command(self, event: AstrMessageEvent):
-        """Handle unknown /bot commands by checking if the message starts with /bot
-        but doesn't match any registered sub-command.
-        """
-        msg_str = event.get_message_str().strip()
-        if not msg_str.startswith("/bot"):
-            return
-
-        group_id = event.get_group_id()
-        if group_id and not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
-            return
-
-        parts = msg_str.split(None, 1)
-        if len(parts) < 2:
-            # Just "/bot" with no sub-command
-            self._reply_key(event, "msg_command_not_found")
-            return
-
-        sub_cmd = parts[1].split(None, 1)[0].lower()
-
-        # List of valid sub-commands
-        valid_commands = {
-            "help",
-            "帮助",
-            "welcome",
-            "欢迎",
-            "mute",
-            "禁言",
-            "unmute",
-            "解禁",
-            "global_mute",
-            "全员禁言",
-            "recall",
-            "撤回",
-            "rename",
-            "改名",
-            "title",
-            "头衔",
-            "promote",
-            "提升",
-            "demote",
-            "降级",
-            "set_group_name",
-            "设置群名",
-        }
-
-        if sub_cmd not in valid_commands:
-            self._reply_key(event, "msg_command_not_found")

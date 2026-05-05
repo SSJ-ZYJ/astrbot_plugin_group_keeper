@@ -14,6 +14,7 @@
 | 🏷️ 群名片管理 | 修改群昵称、设置专属头衔 |
 | 🔧 权限控制 | 自动同步群内管理员角色，群主和管理员可操作 |
 | 🛡️ 兜底处理 | 未知指令自动提示，引导用户使用 `/bot help` |
+| 📋 群白名单 | 支持配置白名单群号，仅白名单内的群可使用插件功能 |
 
 ---
 
@@ -100,6 +101,8 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 | 配置项 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | `locale` | 选择 | zh_CN | 插件显示语言（简体中文 / English） |
+| `whitelist_enabled` | 布尔 | false | 启用群白名单，启用后只有白名单内的群可使用插件 |
+| `group_whitelist` | 列表 | [] | 群白名单列表，输入群号，多个群号用换行分隔 |
 | `default_mute_duration` | 整数 | 60 | 默认禁言时长（秒） |
 | `default_welcome_enabled` | 布尔 | true | 新人欢迎默认开启 |
 | `default_welcome_message` | 文本 | (空) | 默认欢迎消息，留空使用语言包。支持 `{membername}` 变量 |
