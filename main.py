@@ -363,8 +363,9 @@ class GroupKeeperPlugin(star.Star):
                 if isinstance(msg, At) and str(msg.qq) == str(self_id):
                     found_at_bot = True
                     for j in range(i + 1, len(messages)):
-                        if isinstance(messages[j], Plain):
-                            text_after_at += messages[j].text or ""
+                        comp = messages[j]
+                        if isinstance(comp, Plain):
+                            text_after_at += comp.text or ""
                     break
 
             text_after_at = text_after_at.strip()
