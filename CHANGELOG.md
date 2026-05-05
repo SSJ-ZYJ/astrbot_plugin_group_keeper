@@ -2,6 +2,14 @@
 
 ---
 
+## [1.1.3] - 2026-05-05
+
+### 修复
+- 🐛 修复白名单和无效命令截断功能失效的问题
+- 🐛 改进拦截逻辑：区分无效命令和正常 LLM 对话，只有当没有其他 handler 被激活时才拦截
+
+---
+
 ## [1.1.2] - 2026-05-05
 
 ### 修复
@@ -244,6 +252,14 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.3] - 2026-05-05
+
+### Fixed
+- 🐛 Fix whitelist and unknown command interception not working
+- 🐛 Improve interception logic: distinguish between invalid commands and normal LLM conversations, only intercept when no other handlers are activated
 
 ---
 
