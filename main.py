@@ -885,11 +885,29 @@ class GroupKeeperPlugin(star.Star):
     #  Sentinel watchdog & commands
     # ------------------------------------------------------------------ #
 
+    def _get_sentinel_settings(self) -> dict:
+        return self.config.get("sentinel_settings", {})
+
+    def _get_sentinel_cmd_whitelist(self) -> list[str]:
+        sentinel_settings = self._get_sentinel_settings()
+        cmd_group = sentinel_settings.get("sentinel_command_group", {})
+        return [str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])]
+
+    async def _check_sentinel_cmd_permission(
+        self, event: AstrMessageEvent, group_id: str
+    ) -> bool:
+        sender_id = event.get_sender_id()
+        cmd_whitelist = self._get_sentinel_cmd_whitelist()
+        if await self._is_plugin_admin(event, group_id) or sender_id in cmd_whitelist:
+            return True
+        self._reply_key(event, "msg_no_permission")
+        return False
+
     @filter.regex(r"^.*$", priority=2)
     @filter.event_message_type(filter.EventMessageType.GROUP_MESSAGE)
     async def sentinel_watchdog(self, event: AstrMessageEvent):
         """Intercept group messages and check sentinel rules."""
-        sentinel_settings = self.config.get("sentinel_settings", {})
+        sentinel_settings = self._get_sentinel_settings()
         if not sentinel_settings.get("sentinel_enabled", False):
             return
 
@@ -985,19 +1003,10 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
-        sentinel_settings = self.config.get("sentinel_settings", {})
-        cmd_group = sentinel_settings.get("sentinel_command_group", {})
-        cmd_whitelist = [
-            str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])
-        ]
-        sender_id = event.get_sender_id()
-        if (
-            not await self._is_plugin_admin(event, group_id)
-            and sender_id not in cmd_whitelist
-        ):
-            self._reply_key(event, "msg_no_permission")
+        if not await self._check_sentinel_cmd_permission(event, group_id):
             return
 
+        sender_id = event.get_sender_id()
         rest = self._strip_command_prefix(event, "monitor", "监控")
         at_users = self._extract_sentinel_at_users(event)
 
@@ -1030,17 +1039,7 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
-        sentinel_settings = self.config.get("sentinel_settings", {})
-        cmd_group = sentinel_settings.get("sentinel_command_group", {})
-        cmd_whitelist = [
-            str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])
-        ]
-        sender_id = event.get_sender_id()
-        if (
-            not await self._is_plugin_admin(event, group_id)
-            and sender_id not in cmd_whitelist
-        ):
-            self._reply_key(event, "msg_no_permission")
+        if not await self._check_sentinel_cmd_permission(event, group_id):
             return
 
         rest = self._strip_command_prefix(event, "unmonitor", "取消监控")
@@ -1107,17 +1106,7 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
-        sentinel_settings = self.config.get("sentinel_settings", {})
-        cmd_group = sentinel_settings.get("sentinel_command_group", {})
-        cmd_whitelist = [
-            str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])
-        ]
-        sender_id = event.get_sender_id()
-        if (
-            not await self._is_plugin_admin(event, group_id)
-            and sender_id not in cmd_whitelist
-        ):
-            self._reply_key(event, "msg_no_permission")
+        if not await self._check_sentinel_cmd_permission(event, group_id):
             return
 
         data = self.sentinel_handler.load_command_rules(group_id)

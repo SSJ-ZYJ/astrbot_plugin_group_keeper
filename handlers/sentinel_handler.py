@@ -503,7 +503,7 @@ class SentinelHandler:
                 keywords = rule.get("keywords", [])
                 if keywords:
                     keyword_info = f" | 关键词: {','.join(keywords)}"
-            text = f"⚠️ 哨兵监控命中 | 群: {group_id} | 用户: {user_name}({user_id}){keyword_info}"
+            text = f"⚠️ 巡检监控命中 | 群: {group_id} | 用户: {user_name}({user_id}){keyword_info}"
             for admin in admins:
                 try:
                     await bot.call_action(
@@ -532,7 +532,7 @@ class SentinelHandler:
                 keywords = rule.get("keywords", [])
                 if keywords:
                     keyword_info = f" | 关键词: {','.join(keywords)}"
-            text = f"⚠️ 哨兵监控命中 | 群: {group_id} | 用户: {user_name}({user_id}){keyword_info}"
+            text = f"⚠️ 巡检监控命中 | 群: {group_id} | 用户: {user_name}({user_id}){keyword_info}"
             admins = await bot.call_action(
                 "get_group_member_list", group_id=int(group_id)
             )

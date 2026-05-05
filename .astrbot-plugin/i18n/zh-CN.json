@@ -269,7 +269,7 @@
     "msg_essence_no_reply": "❌ 请先引用（回复）需要操作的消息，再使用此指令",
     "msg_error_detail": "错误详情：{error}",
     "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令",
-    "help_sentinel_header": "🛡️ 哨兵监控：",
+    "help_sentinel_header": "🛡️ 巡检监控：",
     "cmd_monitor": "/bot 监控 <关键词> [@某人...] - 添加监控规则",
     "cmd_unmonitor": "/bot 取消监控 <规则ID|关键词> [@某人...] - 删除监控规则",
     "cmd_monitorlist": "/bot 监控列表 - 查看当前群监控规则",

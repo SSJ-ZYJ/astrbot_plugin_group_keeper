@@ -2,6 +2,23 @@
 
 ---
 
+## [1.2.4] - 2026-05-05
+
+### Changed
+- ♻️ Global rename sentinel term to "巡检" across CHANGELOG.md, README.md, zh-CN.json, sentinel_handler.py
+
+---
+
+## [1.2.3] - 2026-05-05
+
+### 修改
+- ♻️ 统一 `main.py` 中巡检模块的配置变量，提取 `_get_sentinel_settings()`、`_get_sentinel_cmd_whitelist()`、`_check_sentinel_cmd_permission()` 辅助方法，消除 `cmd_monitor`、`cmd_unmonitor`、`cmd_monitorlist` 中的重复代码
+
+### 文档
+- 📝 更新 README.md，新增巡检监控功能说明、监控指令列表和巡检模块配置说明
+
+---
+
 ## [1.2.2] - 2026-05-05
 
 ### 新增
@@ -10,13 +27,13 @@
 - ✨ 新增 `type_rule` 模板：消息类型检测（图片/语音/视频等）
 
 ### 修改
-- ♻️ 重构哨兵配置结构，使用 `object` 类型进行分组：
-  - `sentinel_settings`（哨兵模块设置）
+- ♻️ 重构巡检配置结构，使用 `object` 类型进行分组：
+  - `sentinel_settings`（巡检模块设置）
     - `sentinel_enabled`、`sentinel_group_blacklist`、`sentinel_user_whitelist`
     - `sentinel_rules_group`（检测规则配置）→ `sentinel_rules`
     - `sentinel_command_group`（指令模块配置）→ 指令规则相关配置
 - ♻️ `_conf_schema.json` 全面遵循 i18n 规范，所有 `description`/`hint` 字段改为英文回退文本
-- ♻️ `zh-CN.json` 和 `en-US.json` 新增所有哨兵配置项的中英文翻译
+- ♻️ `zh-CN.json` 和 `en-US.json` 新增所有巡检配置项的中英文翻译
 - ♻️ 移除硬编码分割线，改用 `template_list` 实现规则分组
 - ♻️ 更新 `metadata.yaml` 最低 AstrBot 版本要求至 `>=4.10.4`（支持 `template_list` 类型）
 
@@ -30,7 +47,7 @@
 ## [1.2.1] - 2026-05-05
 
 ### 新增
-- ✨ 添加哨兵监控功能：群聊关键词/消息类型自动检测与违规处理
+- ✨ 添加巡检监控功能：群聊关键词/消息类型自动检测与违规处理
 - ✨ 新增指令 `/bot 监控 <关键词> [@某人...]` (`/bot monitor <keyword> [@someone...]`)：添加指令监控规则
 - ✨ 新增指令 `/bot 取消监控 <规则ID|关键词> [@某人...]` (`/bot unmonitor <rule_id|keyword> [@someone...]`)：删除指令监控规则
 - ✨ 新增指令 `/bot 监控列表` (`/bot monitorlist`)：查看当前群指令监控规则
@@ -44,8 +61,8 @@
 - ✨ 新增 `handlers/time_parser.py` 和 `handlers/sentinel_handler.py` 模块
 
 ### 修改
-- ♻️ 更新帮助菜单，新增哨兵监控指令分组
-- ♻️ `_conf_schema.json` 新增哨兵监控配置区块（以分隔线隔开），含全局开关、群黑名单、用户白名单、检测规则列表、指令规则配置等 15 项配置
+- ♻️ 更新帮助菜单，新增巡检监控指令分组
+- ♻️ `_conf_schema.json` 新增巡检监控配置区块（以分隔线隔开），含全局开关、群黑名单、用户白名单、检测规则列表、指令规则配置等 15 项配置
 
 ### 文档
 - 📝 更新 `metadata.yaml` 版本号至 v1.2.1
@@ -364,6 +381,16 @@
 ---
 
 # Changelog
+
+---
+
+## [1.2.3] - 2026-05-05
+
+### Changed
+- ♻️ Unify sentinel config variables in `main.py`, extract `_get_sentinel_settings()`, `_get_sentinel_cmd_whitelist()`, `_check_sentinel_cmd_permission()` helper methods, eliminate duplicate code in `cmd_monitor`, `cmd_unmonitor`, `cmd_monitorlist`
+
+### Documentation
+- 📝 Update README.md, add sentinel monitoring feature description, monitoring command list and sentinel module configuration description
 
 ---
 
