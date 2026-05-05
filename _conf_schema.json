@@ -1,6 +1,6 @@
 {
 	"locale": {
-		"description": "语言",
+		"description": "Language",
 		"type": "string",
 		"default": "zh_CN",
 		"options": [
@@ -8,305 +8,305 @@
 			"en_US"
 		],
 		"labels": [
-			"简体中文",
+			"Chinese",
 			"English"
 		],
-		"hint": "选择插件显示语言"
+		"hint": "Select plugin display language"
 	},
 	"whitelist_enabled": {
-		"description": "启用群白名单",
+		"description": "Enable group whitelist",
 		"type": "bool",
 		"default": false,
-		"hint": "启用后，只有白名单内的群号才能使用插件功能"
+		"hint": "When enabled, only groups in the whitelist can use plugin features"
 	},
 	"group_whitelist": {
-		"description": "群白名单",
+		"description": "Group whitelist",
 		"type": "list",
 		"default": [],
-		"hint": "输入群号，多个群号用换行分隔。启用白名单后，只有列表中的群才能使用插件功能"
+		"hint": "Enter group IDs, one per line. When whitelist is enabled, only listed groups can use plugin features"
 	},
 	"welcome_global_enabled": {
-		"description": "启用新人欢迎（全局）",
+		"description": "Enable welcome message (Global)",
 		"type": "bool",
 		"default": true,
-		"hint": "全局总开关，关闭后所有群的新人欢迎功能都将禁用"
+		"hint": "Global master switch. When disabled, welcome messages will be disabled for all groups"
 	},
 	"welcome_default_enabled": {
-		"description": "新群默认开启欢迎",
+		"description": "Enable welcome for new groups by default",
 		"type": "bool",
 		"default": true,
-		"hint": "新群首次触发时是否默认开启欢迎消息"
+		"hint": "Whether to enable welcome messages by default when a new group triggers for the first time"
 	},
 	"default_mute_duration": {
-		"description": "默认禁言时长（秒）",
+		"description": "Default mute duration (seconds)",
 		"type": "int",
 		"default": 60,
-		"hint": "未指定时长时的默认禁言秒数"
+		"hint": "Default mute duration when not specified"
 	},
 	"default_welcome_message": {
-		"description": "默认欢迎消息",
+		"description": "Default welcome message",
 		"type": "text",
 		"default": "",
-		"hint": "留空则使用语言包中的默认欢迎语。支持变量：{membername} = 新成员昵称"
+		"hint": "Leave empty to use i18n default. Supported variables: {membername} = new member's name"
 	},
 	"max_recall_count": {
-		"description": "最大撤回条数",
+		"description": "Max recall count",
 		"type": "int",
 		"default": 10,
-		"hint": "单次最多撤回的消息条数"
+		"hint": "Maximum messages that can be recalled at once"
 	},
 	"sentinel_enabled": {
-		"description": "启用哨兵监控",
+		"description": "Enable Sentinel Monitor",
 		"type": "bool",
 		"default": false,
-		"hint": "全局总开关，开启后哨兵将自动检测群消息并执行规则"
+		"hint": "Global master switch. When enabled, Sentinel will automatically detect group messages and apply rules"
 	},
 	"sentinel_group_blacklist": {
-		"description": "哨兵群聊黑名单",
+		"description": "Sentinel group blacklist",
 		"type": "list",
 		"default": [],
-		"hint": "名单中的群不进行哨兵检测，输入群号，多个群号用换行分隔"
+		"hint": "Groups in this list will not be monitored by Sentinel. Enter group IDs, one per line"
 	},
 	"sentinel_user_whitelist": {
-		"description": "哨兵全局用户白名单",
+		"description": "Sentinel global user whitelist",
 		"type": "list",
 		"default": [],
-		"hint": "名单中的用户不会触发哨兵检测，输入QQ号，多个用换行分隔"
+		"hint": "Users in this list will not trigger Sentinel detection. Enter QQ numbers, one per line"
 	},
 	"sentinel_rules": {
-		"description": "哨兵检测规则",
+		"description": "Sentinel detection rules",
 		"type": "template_list",
 		"default": [],
-		"hint": "点击「添加」按钮选择规则模板，支持关键词规则和消息类型规则",
+		"hint": "Click the Add button to select a rule template. Supports keyword rules and message type rules",
 		"templates": {
 			"keyword_rule": {
-				"name": "关键词规则",
-				"hint": "基于关键词/正则表达式匹配检测文本内容",
+				"name": "Keyword Rule",
+				"hint": "Detect text content based on keyword/regex matching",
 				"items": {
 					"keywords": {
-						"description": "关键词列表",
+						"description": "Keyword list",
 						"type": "list",
 						"default": [],
-						"hint": "支持正则表达式，每行一个关键词"
+						"hint": "Supports regular expressions, one keyword per line"
 					},
 					"time_range": {
-						"description": "生效时段",
+						"description": "Active time range",
 						"type": "string",
 						"default": "",
-						"hint": "如 Mon-Fri 09:00-18:00 或 22:00-02:00，留空表示全天"
+						"hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
 					},
 					"groups": {
-						"description": "生效群号",
+						"description": "Target group IDs",
 						"type": "list",
 						"default": [],
-						"hint": "留空表示全部群"
+						"hint": "Leave empty to apply to all groups"
 					},
 					"mute_duration": {
-						"description": "禁言秒数",
+						"description": "Mute duration (seconds)",
 						"type": "string",
 						"default": "60",
-						"hint": "0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
+						"hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
 					},
 					"recall_delay": {
-						"description": "延迟撤回时间（秒）",
+						"description": "Recall delay (seconds)",
 						"type": "int",
 						"default": 0,
-						"hint": "0 表示立即撤回"
+						"hint": "0 means recall immediately"
 					},
 					"reply_message": {
-						"description": "命中回复",
+						"description": "Reply on hit",
 						"type": "list",
 						"default": [],
-						"hint": "随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
+						"hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
 					},
 					"ignore_admin": {
-						"description": "忽略管理员",
+						"description": "Ignore admins",
 						"type": "bool",
 						"default": true,
-						"hint": "开启后管理员消息不会触发此规则"
+						"hint": "When enabled, admin messages will not trigger this rule"
 					},
 					"ignore_owner": {
-						"description": "忽略群主",
+						"description": "Ignore group owner",
 						"type": "bool",
 						"default": true,
-						"hint": "开启后群主消息不会触发此规则"
+						"hint": "When enabled, group owner messages will not trigger this rule"
 					},
 					"notify_group_admin": {
-						"description": "通知群管理员",
+						"description": "Notify group admins",
 						"type": "bool",
 						"default": false,
-						"hint": "开启后命中时私聊通知群内管理员"
+						"hint": "When enabled, group admins will be notified via private message on hit"
 					},
 					"notify_bot_admin": {
-						"description": "通知Bot管理员",
+						"description": "Notify bot admin",
 						"type": "bool",
 						"default": false,
-						"hint": "开启后命中时私聊通知Bot管理员"
+						"hint": "When enabled, bot admin will be notified via private message on hit"
 					},
 					"show_rule_in_notification": {
-						"description": "通知中显示关键词",
+						"description": "Show keywords in notification",
 						"type": "bool",
 						"default": false,
-						"hint": "开启后通知消息中会显示触发的关键词内容"
+						"hint": "When enabled, triggered keywords will be shown in notification messages"
 					},
 					"rule_user_whitelist": {
-						"description": "规则用户白名单",
+						"description": "Rule-level user whitelist",
 						"type": "list",
 						"default": [],
-						"hint": "名单用户不会触发此规则，输入QQ号，多个用换行分隔"
+						"hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
 					},
 					"rule_user_monitor_list": {
-						"description": "规则监控名单",
+						"description": "Rule-level monitor list",
 						"type": "list",
 						"default": [],
-						"hint": "留空表示监控全体成员"
+						"hint": "Leave empty to monitor all members"
 					},
 					"kick_threshold": {
-						"description": "累计踢出阈值",
+						"description": "Cumulative kick threshold",
 						"type": "int",
 						"default": 0,
-						"hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
+						"hint": "Kick user when hit count reaches this threshold. 0=disabled"
 					},
 					"kick_message": {
-						"description": "踢出提示",
+						"description": "Kick message",
 						"type": "list",
 						"default": [],
-						"hint": "随机提示列表，支持变量：{id}、{name}、{date}、{time}"
+						"hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
 					}
 				}
 			},
 			"type_rule": {
-				"name": "消息类型规则",
-				"hint": "基于消息类型（图片/语音/视频等）检测",
+				"name": "Message Type Rule",
+				"hint": "Detect based on message type (image/voice/video etc.)",
 				"items": {
 					"msg_types": {
-						"description": "消息类型列表",
+						"description": "Message type list",
 						"type": "list",
 						"default": [],
-						"hint": "可选值：text / image / voice / video / file / face / forward / json，每行一个"
+						"hint": "Options: text / image / voice / video / file / face / forward / json, one per line"
 					},
 					"time_range": {
-						"description": "生效时段",
+						"description": "Active time range",
 						"type": "string",
 						"default": "",
-						"hint": "如 Mon-Fri 09:00-18:00 或 22:00-02:00，留空表示全天"
+						"hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
 					},
 					"groups": {
-						"description": "生效群号",
+						"description": "Target group IDs",
 						"type": "list",
 						"default": [],
-						"hint": "留空表示全部群"
+						"hint": "Leave empty to apply to all groups"
 					},
 					"mute_duration": {
-						"description": "禁言秒数",
+						"description": "Mute duration (seconds)",
 						"type": "string",
 						"default": "60",
-						"hint": "0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
+						"hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
 					},
 					"recall_delay": {
-						"description": "延迟撤回时间（秒）",
+						"description": "Recall delay (seconds)",
 						"type": "int",
 						"default": 0,
-						"hint": "0 表示立即撤回"
+						"hint": "0 means recall immediately"
 					},
 					"reply_message": {
-						"description": "命中回复",
+						"description": "Reply on hit",
 						"type": "list",
 						"default": [],
-						"hint": "随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
+						"hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
 					},
 					"ignore_admin": {
-						"description": "忽略管理员",
+						"description": "Ignore admins",
 						"type": "bool",
 						"default": true,
-						"hint": "开启后管理员消息不会触发此规则"
+						"hint": "When enabled, admin messages will not trigger this rule"
 					},
 					"ignore_owner": {
-						"description": "忽略群主",
+						"description": "Ignore group owner",
 						"type": "bool",
 						"default": true,
-						"hint": "开启后群主消息不会触发此规则"
+						"hint": "When enabled, group owner messages will not trigger this rule"
 					},
 					"notify_group_admin": {
-						"description": "通知群管理员",
+						"description": "Notify group admins",
 						"type": "bool",
 						"default": false,
-						"hint": "开启后命中时私聊通知群内管理员"
+						"hint": "When enabled, group admins will be notified via private message on hit"
 					},
 					"notify_bot_admin": {
-						"description": "通知Bot管理员",
+						"description": "Notify bot admin",
 						"type": "bool",
 						"default": false,
-						"hint": "开启后命中时私聊通知Bot管理员"
+						"hint": "When enabled, bot admin will be notified via private message on hit"
 					},
 					"rule_user_whitelist": {
-						"description": "规则用户白名单",
+						"description": "Rule-level user whitelist",
 						"type": "list",
 						"default": [],
-						"hint": "名单用户不会触发此规则，输入QQ号，多个用换行分隔"
+						"hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
 					},
 					"rule_user_monitor_list": {
-						"description": "规则监控名单",
+						"description": "Rule-level monitor list",
 						"type": "list",
 						"default": [],
-						"hint": "留空表示监控全体成员"
+						"hint": "Leave empty to monitor all members"
 					},
 					"kick_threshold": {
-						"description": "累计踢出阈值",
+						"description": "Cumulative kick threshold",
 						"type": "int",
 						"default": 0,
-						"hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
+						"hint": "Kick user when hit count reaches this threshold. 0=disabled"
 					},
 					"kick_message": {
-						"description": "踢出提示",
+						"description": "Kick message",
 						"type": "list",
 						"default": [],
-						"hint": "随机提示列表，支持变量：{id}、{name}、{date}、{time}"
+						"hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
 					}
 				}
 			}
 		}
 	},
 	"sentinel_command_user_whitelist": {
-		"description": "哨兵指令白名单用户",
+		"description": "Sentinel command whitelist users",
 		"type": "list",
 		"default": [],
-		"hint": "该列表用户不会触发指令规则检测，输入QQ号，多个用换行分隔"
+		"hint": "Users in this list will not trigger command rule detection. Enter QQ numbers, one per line"
 	},
 	"sentinel_command_mute_duration": {
-		"description": "指令规则禁言时长（秒）",
+		"description": "Command rule mute duration (seconds)",
 		"type": "string",
 		"default": "60",
-		"hint": "指令规则命中后的禁言秒数，0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
+		"hint": "Mute duration for command rule hits. 0=no mute, -1=no recall no mute. Supports range like 60~300"
 	},
 	"sentinel_command_reply_message": {
-		"description": "指令规则命中回复",
+		"description": "Command rule reply on hit",
 		"type": "list",
 		"default": [],
-		"hint": "指令规则命中后随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
+		"hint": "Random reply list for command rule hits. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
 	},
 	"sentinel_command_ignore_admin": {
-		"description": "指令规则忽略管理员",
+		"description": "Command rule ignore admins",
 		"type": "bool",
 		"default": true,
-		"hint": "开启后管理员消息不会触发指令规则"
+		"hint": "When enabled, admin messages will not trigger command rules"
 	},
 	"sentinel_command_kick_threshold": {
-		"description": "指令规则累计踢出阈值",
+		"description": "Command rule cumulative kick threshold",
 		"type": "int",
 		"default": 0,
-		"hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
+		"hint": "Kick user when hit count reaches this threshold. 0=disabled"
 	},
 	"sentinel_command_kick_message": {
-		"description": "指令规则踢出提示",
+		"description": "Command rule kick message",
 		"type": "list",
 		"default": [],
-		"hint": "踢出后随机提示列表，支持变量：{id}、{name}、{date}、{time}"
+		"hint": "Random kick message list. Variables: {id}, {name}, {date}, {time}"
 	},
 	"sentinel_command_notify_creator": {
-		"description": "指令规则命中通知创建者",
+		"description": "Notify command rule creator on hit",
 		"type": "bool",
 		"default": true,
-		"hint": "开启后指令规则命中时私聊通知规则创建者"
+		"hint": "When enabled, the rule creator will be notified via private message when a command rule is triggered"
 	}
 }

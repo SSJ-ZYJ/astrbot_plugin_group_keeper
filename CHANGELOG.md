@@ -2,6 +2,21 @@
 
 ---
 
+## [1.2.2] - 2026-05-05
+
+### 新增
+- ✨ `sentinel_rules` 配置项改用 `template_list` 类型，支持 WebUI 动态添加关键词规则和消息类型规则
+- ✨ 新增 `keyword_rule` 模板：关键词/正则匹配检测
+- ✨ 新增 `type_rule` 模板：消息类型检测（图片/语音/视频等）
+
+### 修改
+- ♻️ `_conf_schema.json` 全面遵循 i18n 规范，所有 `description`/`hint` 字段改为英文回退文本
+- ♻️ `zh-CN.json` 和 `en-US.json` 新增所有哨兵配置项的中英文翻译
+- ♻️ 移除硬编码分割线，改用 `template_list` 实现规则分组
+- ♻️ 更新 `metadata.yaml` 最低 AstrBot 版本要求至 `>=4.10.4`（支持 `template_list` 类型）
+
+---
+
 ## [1.2.1] - 2026-05-05
 
 ### 新增
@@ -339,6 +354,21 @@
 ---
 
 # Changelog
+
+---
+
+## [1.2.2] - 2026-05-05
+
+### Added
+- ✨ `sentinel_rules` config now uses `template_list` type, supporting dynamic addition of keyword rules and message type rules in WebUI
+- ✨ Add `keyword_rule` template: keyword/regex matching detection
+- ✨ Add `type_rule` template: message type detection (image/voice/video etc.)
+
+### Changed
+- ♻️ `_conf_schema.json` fully complies with i18n standards, all `description`/`hint` fields now use English fallback text
+- ♻️ `zh-CN.json` and `en-US.json` add Chinese and English translations for all sentinel config items
+- ♻️ Remove hardcoded dividers, use `template_list` for rule grouping
+- ♻️ Update `metadata.yaml` minimum AstrBot version requirement to `>=4.10.4` (supports `template_list` type)
 
 ---
 
