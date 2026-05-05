@@ -2,6 +2,14 @@
 
 ---
 
+## [1.1.8] - 2026-05-05
+
+### 修复
+- 🐛 修复未知命令拦截逻辑：改为检查是否有命令 handler（以 `cmd_` 开头）被激活，而不是检查任何 handler
+- 🐛 之前 `on_event` 等 handler 也会被计入，导致无法正确判断是否为未知命令
+
+---
+
 ## [1.1.7] - 2026-05-05
 
 ### 修复
@@ -293,6 +301,14 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.8] - 2026-05-05
+
+### Fixed
+- 🐛 Fix unknown command interception logic: check if any command handler (starting with `cmd_`) is activated, instead of checking any handler
+- 🐛 Previously `on_event` and other handlers were also counted, causing incorrect judgment of unknown commands
 
 ---
 

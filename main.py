@@ -18,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.7",
+    version="1.1.8",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -357,16 +357,16 @@ class GroupKeeperPlugin(star.Star):
         logger.info(
             f"[GroupKeeper] activated_handlers: {[h.handler_name for h in activated_handlers]}"
         )
-        plugin_handlers = [
+        plugin_cmd_handlers = [
             h
             for h in activated_handlers
             if h.handler_module_path == self.__module__
-            and h.handler_name != "whitelist_guard"
+            and h.handler_name.startswith("cmd_")
         ]
         logger.info(
-            f"[GroupKeeper] plugin_handlers: {[h.handler_name for h in plugin_handlers]}"
+            f"[GroupKeeper] plugin_cmd_handlers: {[h.handler_name for h in plugin_cmd_handlers]}"
         )
-        if not plugin_handlers:
+        if not plugin_cmd_handlers:
             logger.info("[GroupKeeper] No valid command handler found")
             yield event.plain_result(self._t("msg_command_not_found"))
             event.stop_event()
