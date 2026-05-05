@@ -85,6 +85,20 @@
     "msg_set_essence_success": "✅ 已将 {user} 的消息设为群精华",
     "msg_remove_essence_success": "✅ 已移除 {user} 的群精华消息",
     "msg_error_detail": "错误详情：{error}",
-    "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令"
+    "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令",
+    "help_sentinel_header": "🛡️ 哨兵监控：",
+    "cmd_monitor": "/bot 监控 <关键词> [@某人...] - 添加监控规则",
+    "cmd_unmonitor": "/bot 取消监控 <规则ID|关键词> [@某人...] - 删除监控规则",
+    "cmd_monitorlist": "/bot 监控列表 - 查看当前群监控规则",
+    "msg_monitor_added": "✅ 已添加监控规则 #{rule_id}：{keyword}",
+    "msg_monitor_removed": "✅ 已删除监控规则 {rule_id}",
+    "msg_monitor_removed_count": "✅ 已删除 {count} 条监控规则",
+    "msg_monitor_removed_keyword": "✅ 已删除关键词「{keyword}」的监控规则",
+    "msg_monitor_list_title": "📋 当前群监控规则：",
+    "msg_monitor_list_empty": "📭 当前群无监控规则",
+    "msg_monitor_list_item": "  #{rule_id} 关键词：{keyword} | 监控：{users} | 创建者：{creator}",
+    "msg_monitor_all_members": "全体成员",
+    "msg_monitor_keyword_numeric": "❌ 关键词不允许纯数字",
+    "msg_monitor_not_found": "❌ 未找到匹配的监控规则"
   }
 }

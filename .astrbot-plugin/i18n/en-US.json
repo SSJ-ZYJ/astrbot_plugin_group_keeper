@@ -85,6 +85,20 @@
     "msg_set_essence_success": "✅ Set {user}'s message as group essence",
     "msg_remove_essence_success": "✅ Removed {user}'s group essence message",
     "msg_error_detail": "Error detail: {error}",
-    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands"
+    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands",
+    "help_sentinel_header": "🛡️ Sentinel Monitor:",
+    "cmd_monitor": "/bot monitor <keyword> [@someone...] - Add monitoring rule",
+    "cmd_unmonitor": "/bot unmonitor <rule_id|keyword> [@someone...] - Remove monitoring rule",
+    "cmd_monitorlist": "/bot monitorlist - View current group monitoring rules",
+    "msg_monitor_added": "✅ Added monitoring rule #{rule_id}: {keyword}",
+    "msg_monitor_removed": "✅ Removed monitoring rule {rule_id}",
+    "msg_monitor_removed_count": "✅ Removed {count} monitoring rule(s)",
+    "msg_monitor_removed_keyword": "✅ Removed monitoring rule for keyword \"{keyword}\"",
+    "msg_monitor_list_title": "📋 Current group monitoring rules:",
+    "msg_monitor_list_empty": "📭 No monitoring rules in this group",
+    "msg_monitor_list_item": "  #{rule_id} Keyword: {keyword} | Monitor: {users} | Creator: {creator}",
+    "msg_monitor_all_members": "All members",
+    "msg_monitor_keyword_numeric": "❌ Keyword cannot be pure numbers",
+    "msg_monitor_not_found": "❌ No matching monitoring rule found"
   }
 }

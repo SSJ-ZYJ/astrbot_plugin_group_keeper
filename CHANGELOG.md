@@ -2,6 +2,31 @@
 
 ---
 
+## [1.2.1] - 2026-05-05
+
+### 新增
+- ✨ 添加哨兵监控功能：群聊关键词/消息类型自动检测与违规处理
+- ✨ 新增指令 `/bot 监控 <关键词> [@某人...]` (`/bot monitor <keyword> [@someone...]`)：添加指令监控规则
+- ✨ 新增指令 `/bot 取消监控 <规则ID|关键词> [@某人...]` (`/bot unmonitor <rule_id|keyword> [@someone...]`)：删除指令监控规则
+- ✨ 新增指令 `/bot 监控列表` (`/bot monitorlist`)：查看当前群指令监控规则
+- ✨ 新增 `sentinel_watchdog` 消息拦截器，支持正则关键词匹配、消息类型检测、时间段控制
+- ✨ 新增配置页检测规则（`sentinel_rules`）：支持关键词/正则、多模态消息类型、生效时段（含跨天）、规则级白名单与监控名单
+- ✨ 新增累计违规踢出机制：支持按规则命中次数累计并自动踢出
+- ✨ 新增变量模板：`{id}`、`{name}`、`{date}`、`{time}`，可用于回复和踢出提示消息
+- ✨ 新增命中通知：支持通知群管理员、Bot 管理员、指令规则创建者
+- ✨ 新增全局/群级/规则级/指令级多层白名单与群黑名单
+- ✨ 新增时间段解析器（`TimeParser`），支持日期+星期+时间组合、跨天时段配置
+- ✨ 新增 `handlers/time_parser.py` 和 `handlers/sentinel_handler.py` 模块
+
+### 修改
+- ♻️ 更新帮助菜单，新增哨兵监控指令分组
+- ♻️ `_conf_schema.json` 新增哨兵监控配置区块（以分隔线隔开），含全局开关、群黑名单、用户白名单、检测规则列表、指令规则配置等 15 项配置
+
+### 文档
+- 📝 更新 `metadata.yaml` 版本号至 v1.2.1
+
+---
+
 ## [1.2.0] - 2026-05-05
 
 ### 新增
@@ -314,6 +339,31 @@
 ---
 
 # Changelog
+
+---
+
+## [1.2.1] - 2026-05-05
+
+### Added
+- ✨ Add sentinel monitoring: automatic keyword/message-type detection and violation handling for group chats
+- ✨ Add command `/bot 监控 <关键词> [@某人...]` (`/bot monitor <keyword> [@someone...]`): add a command monitoring rule
+- ✨ Add command `/bot 取消监控 <规则ID|关键词> [@某人...]` (`/bot unmonitor <rule_id|keyword> [@someone...]`): remove a command monitoring rule
+- ✨ Add command `/bot 监控列表` (`/bot monitorlist`): view current group command monitoring rules
+- ✨ Add `sentinel_watchdog` message interceptor with regex keyword matching, message-type detection, and time-range control
+- ✨ Add config-page detection rules (`sentinel_rules`): keyword/regex, multimodal message types, time ranges (including cross-day), rule-level whitelist and monitor list
+- ✨ Add cumulative violation kick: auto-kick users when hit count reaches threshold
+- ✨ Add variable templates: `{id}`, `{name}`, `{date}`, `{time}` usable in reply and kick messages
+- ✨ Add hit notifications: support notifying group admins, bot admin, and command rule creators
+- ✨ Add multi-level whitelists and group blacklists (global / group / rule / command level)
+- ✨ Add `TimeParser` module supporting combined date + weekday + time-range expressions with cross-day support
+- ✨ Add `handlers/time_parser.py` and `handlers/sentinel_handler.py` modules
+
+### Changed
+- ♻️ Update help menu with new sentinel monitoring command group
+- ♻️ `_conf_schema.json`: add sentinel monitoring config section (separated by divider), including 15 config items: global switch, group blacklist, user whitelist, detection rules, command rules
+
+### Documentation
+- 📝 Update `metadata.yaml` version to v1.2.1
 
 ---
 

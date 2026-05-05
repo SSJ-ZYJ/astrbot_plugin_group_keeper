@@ -54,5 +54,83 @@
 		"type": "int",
 		"default": 10,
 		"hint": "单次最多撤回的消息条数"
+	},
+	"──────────────────── 哨兵监控配置 ────────────────────": {
+		"description": "════════════════════  哨兵监控（Sentinel）配置  ════════════════════",
+		"type": "str",
+		"default": "",
+		"hint": "以下为哨兵监控功能配置，启用后可自动检测并处理违规消息"
+	},
+	"sentinel_enabled": {
+		"description": "启用哨兵监控",
+		"type": "bool",
+		"default": false,
+		"hint": "全局总开关，开启后哨兵将自动检测群消息并执行规则"
+	},
+	"sentinel_group_blacklist": {
+		"description": "哨兵群聊黑名单",
+		"type": "list",
+		"default": [],
+		"hint": "名单中的群不进行哨兵检测，输入群号，多个群号用换行分隔"
+	},
+	"sentinel_user_whitelist": {
+		"description": "哨兵全局用户白名单",
+		"type": "list",
+		"default": [],
+		"hint": "名单中的用户不会触发哨兵检测，输入QQ号，多个用换行分隔"
+	},
+	"sentinel_rules": {
+		"description": "哨兵检测规则列表",
+		"type": "list",
+		"default": [],
+		"hint": "配置页规则，每条规则支持关键词/消息类型/时间段等。规则项：keywords(关键词列表,支持正则)、msg_types(消息类型列表:text/image/voice/video/file/face/forward/json)、time_range(生效时段)、groups(生效群号,空=全部)、mute_duration(禁言秒数,0=不禁言,-1=不撤回不禁言)、recall_delay(延迟撤回秒数)、reply_message(命中随机回复列表)、ignore_admin(忽略管理员)、ignore_owner(忽略群主)、notify_group_admin(通知群管理员)、notify_bot_admin(通知Bot管理员)、show_rule_in_notification(通知中显示关键词)、rule_user_whitelist(规则用户白名单)、rule_user_monitor_list(规则监控名单,空=全体)、kick_threshold(累计踢出阈值,0=不踢)、kick_message(踢出随机提示列表)"
+	},
+	"──────────────────── 哨兵指令规则配置 ────────────────────": {
+		"description": "════════════════════  哨兵指令规则配置  ════════════════════",
+		"type": "str",
+		"default": "",
+		"hint": "通过 /bot 监控 指令添加的规则统一使用以下配置"
+	},
+	"sentinel_command_user_whitelist": {
+		"description": "哨兵指令白名单用户",
+		"type": "list",
+		"default": [],
+		"hint": "该列表用户不会触发指令规则检测，输入QQ号，多个用换行分隔"
+	},
+	"sentinel_command_mute_duration": {
+		"description": "指令规则禁言时长（秒）",
+		"type": "string",
+		"default": "60",
+		"hint": "指令规则命中后的禁言秒数，0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
+	},
+	"sentinel_command_reply_message": {
+		"description": "指令规则命中回复",
+		"type": "list",
+		"default": [],
+		"hint": "指令规则命中后随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
+	},
+	"sentinel_command_ignore_admin": {
+		"description": "指令规则忽略管理员",
+		"type": "bool",
+		"default": true,
+		"hint": "开启后管理员消息不会触发指令规则"
+	},
+	"sentinel_command_kick_threshold": {
+		"description": "指令规则累计踢出阈值",
+		"type": "int",
+		"default": 0,
+		"hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
+	},
+	"sentinel_command_kick_message": {
+		"description": "指令规则踢出提示",
+		"type": "list",
+		"default": [],
+		"hint": "踢出后随机提示列表，支持变量：{id}、{name}、{date}、{time}"
+	},
+	"sentinel_command_notify_creator": {
+		"description": "指令规则命中通知创建者",
+		"type": "bool",
+		"default": true,
+		"hint": "开启后指令规则命中时私聊通知规则创建者"
 	}
 }
