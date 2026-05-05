@@ -5,7 +5,7 @@ import re
 
 from astrbot.api import AstrBotConfig, logger, star
 from astrbot.api.event import AstrMessageEvent, MessageEventResult, filter
-from astrbot.api.message_components import At, Plain
+from astrbot.api.message_components import At, Plain, Reply
 from astrbot.core.platform import MessageType
 
 from .handlers import GroupHandler, JoinHandler, SentinelHandler
@@ -273,6 +273,20 @@ class GroupKeeperPlugin(star.Star):
         for num in numbers:
             if num != self_id:
                 return num
+        return None
+
+    @staticmethod
+    def _extract_replied_message_id(event: AstrMessageEvent) -> int | None:
+        """Extract the message_id of the replied/quoting message.
+
+        Returns the id of the Reply component if present, None otherwise.
+        """
+        for comp in event.get_messages():
+            if isinstance(comp, Reply):
+                try:
+                    return int(comp.id)
+                except (ValueError, TypeError):
+                    return None
         return None
 
     def _parse_int_from_text(
@@ -819,7 +833,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot set_essence <QQ> ----
+    # ---- /bot set_essence (reply to a message) ----
 
     @bot_group.command("set_essence", alias={"设精"})
     async def cmd_set_essence(self, event: AstrMessageEvent):
@@ -836,35 +850,18 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_platform_not_supported")
             return
 
-        target = self._extract_target_user(event)
-        if not target:
-            self._reply_key(event, "msg_parameter_error")
+        message_id = self._extract_replied_message_id(event)
+        if message_id is None:
+            self._reply_key(event, "msg_essence_no_reply")
             return
 
-        essence_set = False
-        try:
-            history = await bot.call_action(
-                "get_group_msg_history", group_id=int(group_id), count=10
-            )
-            messages = history.get("messages", []) if history else []
-            for msg in messages:
-                sender = msg.get("sender", {})
-                if str(sender.get("user_id", "")) == target:
-                    ok = await self.group_handler.set_essence_msg(
-                        bot, int(msg["message_id"])
-                    )
-                    if ok:
-                        essence_set = True
-                    break
-        except Exception as e:
-            logger.error(f"Failed to set essence message: {e}")
-
-        if essence_set:
-            self._reply_key(event, "msg_set_essence_success", user=target)
+        success = await self.group_handler.set_essence_msg(bot, message_id)
+        if success:
+            self._reply_key(event, "msg_set_essence_success")
         else:
             self._reply_key(event, "msg_operation_failed")
 
-    # ---- /bot remove_essence <QQ> ----
+    # ---- /bot remove_essence (reply to a message) ----
 
     @bot_group.command("remove_essence", alias={"移精"})
     async def cmd_remove_essence(self, event: AstrMessageEvent):
@@ -881,33 +878,14 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_platform_not_supported")
             return
 
-        target = self._extract_target_user(event)
-        if not target:
-            self._reply_key(event, "msg_parameter_error")
+        message_id = self._extract_replied_message_id(event)
+        if message_id is None:
+            self._reply_key(event, "msg_essence_no_reply")
             return
 
-        essence_removed = False
-        try:
-            essence_list, error_msg = await self.group_handler.get_essence_msg_list(
-                bot, int(group_id)
-            )
-            if essence_list:
-                for essence in essence_list:
-                    if (
-                        str(essence.get("sender_id", "")) == target
-                        or str(essence.get("sender", {}).get("user_id", "")) == target
-                    ):
-                        ok = await self.group_handler.delete_essence_msg(
-                            bot, int(essence["message_id"])
-                        )
-                        if ok:
-                            essence_removed = True
-                        break
-        except Exception as e:
-            logger.error(f"Failed to remove essence message: {e}")
-
-        if essence_removed:
-            self._reply_key(event, "msg_remove_essence_success", user=target)
+        success = await self.group_handler.delete_essence_msg(bot, message_id)
+        if success:
+            self._reply_key(event, "msg_remove_essence_success")
         else:
             self._reply_key(event, "msg_operation_failed")
 

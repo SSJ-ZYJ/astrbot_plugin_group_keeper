@@ -7,4 +7,4 @@ author: SSJ-ZYJ
 repo: https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper
 support_platforms:
   - aiocqhttp
-astrbot_version: ">=4.5.0"
+astrbot_version: ">=4.10.4"

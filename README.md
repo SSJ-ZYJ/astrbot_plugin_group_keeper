@@ -58,8 +58,8 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 | `/bot promote <QQ>` | `/bot 提升` | 提升为管理员 | 管理员 |
 | `/bot demote <QQ>` | `/bot 降级` | 移除管理员 | 管理员 |
 | `/bot set_group_name <名称>` | `/bot 设置群名` | 修改群名称 | 管理员 |
-| `/bot set_essence <QQ>` | `/bot 设精` | 设为群精华消息 | 管理员 |
-| `/bot remove_essence <QQ>` | `/bot 移精` | 移除群精华消息 | 管理员 |
+| `/bot set_essence` | `/bot 设精` | 设置引用的消息为群精华 | 管理员 |
+| `/bot remove_essence` | `/bot 移精` | 移除引用的群精华消息 | 管理员 |
 
 > **注意**: `<QQ>` 参数支持 @提及 或直接输入 QQ 号。
 
@@ -70,19 +70,19 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 /bot welcome on
 
 # 禁言用户 5 分钟
-/bot mute @张三 300
+/bot mute @SSJ 300
 
 # 设置专属头衔
-/bot title @张三 优秀成员
+/bot title @SSJ 神秘头衔
 
 # 修改群名（支持带空格的名称）
-/bot set_group_name "HTS Team 官方群"
+/bot set_group_name "HTS Team | 2026"
 
-# 设置群精华消息
-/bot set_essence @张三
+# 设置群精华消息（先引用/回复需要操作的消息，再发送指令）
+/bot set_essence
 
-# 移除群精华消息
-/bot remove_essence @张三
+# 移除群精华消息（先引用/回复需要操作的消息，再发送指令）
+/bot remove_essence
 ```
 
 ### 欢迎消息变量
@@ -187,7 +187,7 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 ## 📌 版本要求
 
-- AstrBot >= v4.5.0
+- AstrBot >= v4.10.4
 
 ---
 
