@@ -2,6 +2,16 @@
 
 ---
 
+## [1.1.3] - 2026-05-04
+
+### 修复
+- 🐛 将调试日志级别从 `debug` 改为 `info`，便于诊断白名单和命令拦截问题
+
+### 新增
+- ✨ 添加详细的日志输出，帮助诊断配置读取和事件处理问题
+
+---
+
 ## [1.1.2] - 2026-05-04
 
 ### 修复
@@ -250,6 +260,16 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.3] - 2026-05-04
+
+### Fixed
+- 🐛 Change log level from `debug` to `info` for easier diagnosis of whitelist and command interception issues
+
+### Added
+- ✨ Add detailed log output to help diagnose config reading and event handling issues
 
 ---
 

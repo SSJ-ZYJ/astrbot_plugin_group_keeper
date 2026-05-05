@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.2",
+    version="1.1.3",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -175,13 +175,16 @@ class GroupKeeperPlugin(star.Star):
             True if the group is allowed to use plugin features.
         """
         whitelist_enabled = self.config.get("whitelist_enabled", False)
+        whitelist = self.config.get("group_whitelist", [])
+        logger.info(
+            f"[GroupKeeper] Config: whitelist_enabled={whitelist_enabled}, group_whitelist={whitelist}"
+        )
         if not whitelist_enabled:
             return True
-        whitelist = self.config.get("group_whitelist", [])
         whitelist_str = [str(g) for g in whitelist]
         is_allowed = str(group_id) in whitelist_str
-        logger.debug(
-            f"Whitelist check: group_id={group_id}, whitelist={whitelist_str}, allowed={is_allowed}"
+        logger.info(
+            f"[GroupKeeper] Whitelist check: group_id={group_id}, whitelist={whitelist_str}, allowed={is_allowed}"
         )
         return is_allowed
 
@@ -340,24 +343,26 @@ class GroupKeeperPlugin(star.Star):
             return
 
         group_id = event.get_group_id()
-        logger.debug(f"whitelist_guard triggered: group_id={group_id}, msg={msg_str}")
+        logger.info(
+            f"[GroupKeeper] whitelist_guard triggered: group_id={group_id}, msg={msg_str}"
+        )
 
         if not self._is_group_allowed(group_id):
-            logger.debug(f"Group {group_id} not in whitelist, blocking")
+            logger.info(f"[GroupKeeper] Group {group_id} not in whitelist, blocking")
             yield event.plain_result(self._t("msg_whitelist_not_allowed"))
             event.stop_event()
             return
 
         parts = msg_str.split(None, 1)
         if len(parts) < 2:
-            logger.debug(f"No sub-command found in: {msg_str}")
+            logger.info(f"[GroupKeeper] No sub-command found in: {msg_str}")
             yield event.plain_result(self._t("msg_command_not_found"))
             event.stop_event()
             return
 
         sub_cmd = parts[1].split(None, 1)[0].lower()
         if sub_cmd not in self.VALID_COMMANDS:
-            logger.debug(f"Unknown command: {sub_cmd}")
+            logger.info(f"[GroupKeeper] Unknown command: {sub_cmd}")
             yield event.plain_result(self._t("msg_command_not_found"))
             event.stop_event()
 
