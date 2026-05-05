@@ -2,6 +2,22 @@
 
 ---
 
+## [1.1.6] - 2026-05-05
+
+### 修复
+- 🐛 修复非白名单群聊中 `@机器人 /bot xxx` 格式命令未被正确拦截的问题
+- 🐛 修复 `stop_event()` 后缺少 `yield` 导致事件未被正确阻止的问题
+
+---
+
+## [1.1.6] - 2026-05-05
+
+### Fixed
+- 🐛 Fix `@bot /bot xxx` format commands not being correctly intercepted in non-whitelist groups
+- 🐛 Fix missing `yield` after `stop_event()` causing events not being properly blocked
+
+---
+
 ## [1.1.5] - 2026-05-05
 
 ### 新增

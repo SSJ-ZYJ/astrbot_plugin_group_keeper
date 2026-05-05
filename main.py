@@ -18,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.5",
+    version="1.1.6",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -401,6 +401,7 @@ class GroupKeeperPlugin(star.Star):
                 f"[GroupKeeper] Group {group_id} not in whitelist, blocking silently"
             )
             event.stop_event()
+            yield
             return
 
         if not plugin_cmd_handlers:
