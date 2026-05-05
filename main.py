@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.4",
+    version="1.1.5",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -176,14 +176,14 @@ class GroupKeeperPlugin(star.Star):
         """
         whitelist_enabled = self.config.get("whitelist_enabled", False)
         whitelist = self.config.get("group_whitelist", [])
-        logger.info(
+        logger.debug(
             f"[GroupKeeper] Config: whitelist_enabled={whitelist_enabled}, group_whitelist={whitelist}"
         )
         if not whitelist_enabled:
             return True
         whitelist_str = [str(g) for g in whitelist]
         is_allowed = str(group_id) in whitelist_str
-        logger.info(
+        logger.debug(
             f"[GroupKeeper] Whitelist check: group_id={group_id}, whitelist={whitelist_str}, allowed={is_allowed}"
         )
         return is_allowed
@@ -342,11 +342,24 @@ class GroupKeeperPlugin(star.Star):
             return
 
         group_id = event.get_group_id()
-        logger.info(f"[GroupKeeper] whitelist_guard triggered: group_id={group_id}")
+        logger.debug(f"[GroupKeeper] whitelist_guard triggered: group_id={group_id}")
 
         if not self._is_group_allowed(group_id):
-            logger.info(f"[GroupKeeper] Group {group_id} not in whitelist, blocking")
+            logger.debug(f"[GroupKeeper] Group {group_id} not in whitelist, blocking")
             yield event.plain_result(self._t("msg_whitelist_not_allowed"))
+            event.stop_event()
+            return
+
+        activated_handlers = event.get_extra("activated_handlers", [])
+        plugin_handlers = [
+            h
+            for h in activated_handlers
+            if h.handler_module_path == self.__module__
+            and h.handler_name != "whitelist_guard"
+        ]
+        if not plugin_handlers:
+            logger.debug("[GroupKeeper] No valid command handler found")
+            yield event.plain_result(self._t("msg_command_not_found"))
             event.stop_event()
 
     @filter.command_group("bot")

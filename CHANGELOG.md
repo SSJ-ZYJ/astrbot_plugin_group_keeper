@@ -2,6 +2,17 @@
 
 ---
 
+## [1.1.5] - 2026-05-05
+
+### 修复
+- 🐛 修复未知命令（如 `/bot list`）没有提示"指令不存在"的问题
+- 🐛 通过检查 `activated_handlers` 判断是否有有效命令被激活
+
+### 修改
+- 🔧 将调试日志等级从 `info` 还原为 `debug`
+
+---
+
 ## [1.1.4] - 2026-05-05
 
 ### 修复
@@ -268,6 +279,17 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.5] - 2026-05-05
+
+### Fixed
+- 🐛 Fix unknown commands (e.g. `/bot list`) not showing "Command not found" message
+- 🐛 Check `activated_handlers` to determine if a valid command is activated
+
+### Changed
+- 🔧 Revert log level from `info` back to `debug`
 
 ---
 
