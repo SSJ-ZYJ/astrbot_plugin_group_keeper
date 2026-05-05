@@ -23,6 +23,7 @@
 ### 修复
 - 🐛 修复 `template_list` 规则模板 i18n 结构错误：从扁平键名改为嵌套结构，匹配前端 `getByPath` 解析逻辑
 - 🐛 修复子配置项 i18n 路径错误：移除多余的 `items` 层级，路径应为 `templates.keyword_rule.keywords` 而非 `templates.keyword_rule.items.keywords`
+- 🐛 修复 `object` 类型分组配置的 i18n 路径错误：移除所有 `items` 中间层级，路径应为 `sentinel_settings.sentinel_enabled` 而非 `sentinel_settings.items.sentinel_enabled`
 
 ---
 
@@ -387,6 +388,7 @@
 ### Fixed
 - 🐛 Fix `template_list` template i18n structure error: changed from flat key names to nested structure to match frontend `getByPath` parsing logic
 - 🐛 Fix sub-config item i18n path error: removed extra `items` layer, path should be `templates.keyword_rule.keywords` not `templates.keyword_rule.items.keywords`
+- 🐛 Fix `object` type grouped config i18n path error: removed all `items` intermediate layers, path should be `sentinel_settings.sentinel_enabled` not `sentinel_settings.items.sentinel_enabled`
 
 ---
 

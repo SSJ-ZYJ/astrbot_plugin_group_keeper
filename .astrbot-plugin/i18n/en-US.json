@@ -44,188 +44,182 @@
     "sentinel_settings": {
       "description": "Sentinel Module Settings",
       "hint": "Configure sentinel monitoring, detection rules, and command module",
-      "items": {
-        "sentinel_enabled": {
-          "description": "Enable Sentinel Monitor",
-          "hint": "Global master switch. When enabled, Sentinel will automatically detect group messages and apply rules"
-        },
-        "sentinel_group_blacklist": {
-          "description": "Sentinel group blacklist",
-          "hint": "Groups in this list will not be monitored by Sentinel. Enter group IDs, one per line"
-        },
-        "sentinel_user_whitelist": {
-          "description": "Sentinel global user whitelist",
-          "hint": "Users in this list will not trigger Sentinel detection. Enter QQ numbers, one per line"
-        },
-        "sentinel_rules_group": {
-          "description": "Detection Rules Config",
-          "hint": "Configure detection rules for keyword and message type monitoring",
-          "items": {
-            "sentinel_rules": {
-              "description": "Sentinel detection rules",
-              "hint": "Click the Add button to select a rule template. Supports keyword rules and message type rules",
-              "templates": {
-                "keyword_rule": {
-                  "name": "Keyword Rule",
-                  "hint": "Detect text content based on keyword/regex matching",
-                  "keywords": {
-                    "description": "Keyword list",
-                    "hint": "Supports regular expressions, one keyword per line"
-                  },
-                  "time_range": {
-                    "description": "Active time range",
-                    "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
-                  },
-                  "groups": {
-                    "description": "Target group IDs",
-                    "hint": "Leave empty to apply to all groups"
-                  },
-                  "mute_duration": {
-                    "description": "Mute duration (seconds)",
-                    "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
-                  },
-                  "recall_delay": {
-                    "description": "Recall delay (seconds)",
-                    "hint": "0 means recall immediately"
-                  },
-                  "reply_message": {
-                    "description": "Reply on hit",
-                    "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
-                  },
-                  "ignore_admin": {
-                    "description": "Ignore admins",
-                    "hint": "When enabled, admin messages will not trigger this rule"
-                  },
-                  "ignore_owner": {
-                    "description": "Ignore group owner",
-                    "hint": "When enabled, group owner messages will not trigger this rule"
-                  },
-                  "notify_group_admin": {
-                    "description": "Notify group admins",
-                    "hint": "When enabled, group admins will be notified via private message on hit"
-                  },
-                  "notify_bot_admin": {
-                    "description": "Notify bot admin",
-                    "hint": "When enabled, bot admin will be notified via private message on hit"
-                  },
-                  "show_rule_in_notification": {
-                    "description": "Show keywords in notification",
-                    "hint": "When enabled, triggered keywords will be shown in notification messages"
-                  },
-                  "rule_user_whitelist": {
-                    "description": "Rule-level user whitelist",
-                    "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
-                  },
-                  "rule_user_monitor_list": {
-                    "description": "Rule-level monitor list",
-                    "hint": "Leave empty to monitor all members"
-                  },
-                  "kick_threshold": {
-                    "description": "Cumulative kick threshold",
-                    "hint": "Kick user when hit count reaches this threshold. 0=disabled"
-                  },
-                  "kick_message": {
-                    "description": "Kick message",
-                    "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
-                  }
-                },
-                "type_rule": {
-                  "name": "Message Type Rule",
-                  "hint": "Detect based on message type (image/voice/video etc.)",
-                  "msg_types": {
-                    "description": "Message type list",
-                    "hint": "Options: text / image / voice / video / file / face / forward / json, one per line"
-                  },
-                  "time_range": {
-                    "description": "Active time range",
-                    "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
-                  },
-                  "groups": {
-                    "description": "Target group IDs",
-                    "hint": "Leave empty to apply to all groups"
-                  },
-                  "mute_duration": {
-                    "description": "Mute duration (seconds)",
-                    "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
-                  },
-                  "recall_delay": {
-                    "description": "Recall delay (seconds)",
-                    "hint": "0 means recall immediately"
-                  },
-                  "reply_message": {
-                    "description": "Reply on hit",
-                    "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
-                  },
-                  "ignore_admin": {
-                    "description": "Ignore admins",
-                    "hint": "When enabled, admin messages will not trigger this rule"
-                  },
-                  "ignore_owner": {
-                    "description": "Ignore group owner",
-                    "hint": "When enabled, group owner messages will not trigger this rule"
-                  },
-                  "notify_group_admin": {
-                    "description": "Notify group admins",
-                    "hint": "When enabled, group admins will be notified via private message on hit"
-                  },
-                  "notify_bot_admin": {
-                    "description": "Notify bot admin",
-                    "hint": "When enabled, bot admin will be notified via private message on hit"
-                  },
-                  "rule_user_whitelist": {
-                    "description": "Rule-level user whitelist",
-                    "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
-                  },
-                  "rule_user_monitor_list": {
-                    "description": "Rule-level monitor list",
-                    "hint": "Leave empty to monitor all members"
-                  },
-                  "kick_threshold": {
-                    "description": "Cumulative kick threshold",
-                    "hint": "Kick user when hit count reaches this threshold. 0=disabled"
-                  },
-                  "kick_message": {
-                    "description": "Kick message",
-                    "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
-                  }
-                }
+      "sentinel_enabled": {
+        "description": "Enable Sentinel Monitor",
+        "hint": "Global master switch. When enabled, Sentinel will automatically detect group messages and apply rules"
+      },
+      "sentinel_group_blacklist": {
+        "description": "Sentinel group blacklist",
+        "hint": "Groups in this list will not be monitored by Sentinel. Enter group IDs, one per line"
+      },
+      "sentinel_user_whitelist": {
+        "description": "Sentinel global user whitelist",
+        "hint": "Users in this list will not trigger Sentinel detection. Enter QQ numbers, one per line"
+      },
+      "sentinel_rules_group": {
+        "description": "Detection Rules Config",
+        "hint": "Configure detection rules for keyword and message type monitoring",
+        "sentinel_rules": {
+          "description": "Sentinel detection rules",
+          "hint": "Click the Add button to select a rule template. Supports keyword rules and message type rules",
+          "templates": {
+            "keyword_rule": {
+              "name": "Keyword Rule",
+              "hint": "Detect text content based on keyword/regex matching",
+              "keywords": {
+                "description": "Keyword list",
+                "hint": "Supports regular expressions, one keyword per line"
+              },
+              "time_range": {
+                "description": "Active time range",
+                "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
+              },
+              "groups": {
+                "description": "Target group IDs",
+                "hint": "Leave empty to apply to all groups"
+              },
+              "mute_duration": {
+                "description": "Mute duration (seconds)",
+                "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
+              },
+              "recall_delay": {
+                "description": "Recall delay (seconds)",
+                "hint": "0 means recall immediately"
+              },
+              "reply_message": {
+                "description": "Reply on hit",
+                "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
+              },
+              "ignore_admin": {
+                "description": "Ignore admins",
+                "hint": "When enabled, admin messages will not trigger this rule"
+              },
+              "ignore_owner": {
+                "description": "Ignore group owner",
+                "hint": "When enabled, group owner messages will not trigger this rule"
+              },
+              "notify_group_admin": {
+                "description": "Notify group admins",
+                "hint": "When enabled, group admins will be notified via private message on hit"
+              },
+              "notify_bot_admin": {
+                "description": "Notify bot admin",
+                "hint": "When enabled, bot admin will be notified via private message on hit"
+              },
+              "show_rule_in_notification": {
+                "description": "Show keywords in notification",
+                "hint": "When enabled, triggered keywords will be shown in notification messages"
+              },
+              "rule_user_whitelist": {
+                "description": "Rule-level user whitelist",
+                "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
+              },
+              "rule_user_monitor_list": {
+                "description": "Rule-level monitor list",
+                "hint": "Leave empty to monitor all members"
+              },
+              "kick_threshold": {
+                "description": "Cumulative kick threshold",
+                "hint": "Kick user when hit count reaches this threshold. 0=disabled"
+              },
+              "kick_message": {
+                "description": "Kick message",
+                "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
+              }
+            },
+            "type_rule": {
+              "name": "Message Type Rule",
+              "hint": "Detect based on message type (image/voice/video etc.)",
+              "msg_types": {
+                "description": "Message type list",
+                "hint": "Options: text / image / voice / video / file / face / forward / json, one per line"
+              },
+              "time_range": {
+                "description": "Active time range",
+                "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
+              },
+              "groups": {
+                "description": "Target group IDs",
+                "hint": "Leave empty to apply to all groups"
+              },
+              "mute_duration": {
+                "description": "Mute duration (seconds)",
+                "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
+              },
+              "recall_delay": {
+                "description": "Recall delay (seconds)",
+                "hint": "0 means recall immediately"
+              },
+              "reply_message": {
+                "description": "Reply on hit",
+                "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
+              },
+              "ignore_admin": {
+                "description": "Ignore admins",
+                "hint": "When enabled, admin messages will not trigger this rule"
+              },
+              "ignore_owner": {
+                "description": "Ignore group owner",
+                "hint": "When enabled, group owner messages will not trigger this rule"
+              },
+              "notify_group_admin": {
+                "description": "Notify group admins",
+                "hint": "When enabled, group admins will be notified via private message on hit"
+              },
+              "notify_bot_admin": {
+                "description": "Notify bot admin",
+                "hint": "When enabled, bot admin will be notified via private message on hit"
+              },
+              "rule_user_whitelist": {
+                "description": "Rule-level user whitelist",
+                "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
+              },
+              "rule_user_monitor_list": {
+                "description": "Rule-level monitor list",
+                "hint": "Leave empty to monitor all members"
+              },
+              "kick_threshold": {
+                "description": "Cumulative kick threshold",
+                "hint": "Kick user when hit count reaches this threshold. 0=disabled"
+              },
+              "kick_message": {
+                "description": "Kick message",
+                "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
               }
             }
           }
+        }
+      },
+      "sentinel_command_group": {
+        "description": "Command Module Config",
+        "hint": "Configure command-based monitoring rules created via /bot monitor",
+        "sentinel_command_user_whitelist": {
+          "description": "Sentinel command whitelist users",
+          "hint": "Users in this list will not trigger command rule detection. Enter QQ numbers, one per line"
         },
-        "sentinel_command_group": {
-          "description": "Command Module Config",
-          "hint": "Configure command-based monitoring rules created via /bot monitor",
-          "items": {
-            "sentinel_command_user_whitelist": {
-              "description": "Sentinel command whitelist users",
-              "hint": "Users in this list will not trigger command rule detection. Enter QQ numbers, one per line"
-            },
-            "sentinel_command_mute_duration": {
-              "description": "Command rule mute duration (seconds)",
-              "hint": "Mute duration for command rule hits. 0=no mute, -1=no recall no mute. Supports range like 60~300"
-            },
-            "sentinel_command_reply_message": {
-              "description": "Command rule reply on hit",
-              "hint": "Random reply list for command rule hits. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
-            },
-            "sentinel_command_ignore_admin": {
-              "description": "Command rule ignore admins",
-              "hint": "When enabled, admin messages will not trigger command rules"
-            },
-            "sentinel_command_kick_threshold": {
-              "description": "Command rule cumulative kick threshold",
-              "hint": "Kick user when hit count reaches this threshold. 0=disabled"
-            },
-            "sentinel_command_kick_message": {
-              "description": "Command rule kick message",
-              "hint": "Random kick message list. Variables: {id}, {name}, {date}, {time}"
-            },
-            "sentinel_command_notify_creator": {
-              "description": "Notify command rule creator on hit",
-              "hint": "When enabled, the rule creator will be notified via private message when a command rule is triggered"
-            }
-          }
+        "sentinel_command_mute_duration": {
+          "description": "Command rule mute duration (seconds)",
+          "hint": "Mute duration for command rule hits. 0=no mute, -1=no recall no mute. Supports range like 60~300"
+        },
+        "sentinel_command_reply_message": {
+          "description": "Command rule reply on hit",
+          "hint": "Random reply list for command rule hits. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
+        },
+        "sentinel_command_ignore_admin": {
+          "description": "Command rule ignore admins",
+          "hint": "When enabled, admin messages will not trigger command rules"
+        },
+        "sentinel_command_kick_threshold": {
+          "description": "Command rule cumulative kick threshold",
+          "hint": "Kick user when hit count reaches this threshold. 0=disabled"
+        },
+        "sentinel_command_kick_message": {
+          "description": "Command rule kick message",
+          "hint": "Random kick message list. Variables: {id}, {name}, {date}, {time}"
+        },
+        "sentinel_command_notify_creator": {
+          "description": "Notify command rule creator on hit",
+          "hint": "When enabled, the rule creator will be notified via private message when a command rule is triggered"
         }
       }
     }
