@@ -16,7 +16,7 @@
 - ♻️ 更新 `metadata.yaml` 最低 AstrBot 版本要求至 `>=4.10.4`（支持 `template_list` 类型）
 
 ### 修复
-- 🐛 修复 `template_list` 规则模板 i18n 键名格式错误，现在正确使用 `sentinel_rules.templates.<template_key>` 路径
+- 🐛 修复 `template_list` 规则模板 i18n 结构错误：从扁平键名改为嵌套结构，匹配前端 `getByPath` 解析逻辑
 
 ---
 
@@ -374,7 +374,7 @@
 - ♻️ Update `metadata.yaml` minimum AstrBot version requirement to `>=4.10.4` (supports `template_list` type)
 
 ### Fixed
-- 🐛 Fix `template_list` template i18n key format error, now correctly uses `sentinel_rules.templates.<template_key>` path
+- 🐛 Fix `template_list` template i18n structure error: changed from flat key names to nested structure to match frontend `getByPath` parsing logic
 
 ---
 
