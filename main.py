@@ -18,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.6",
+    version="1.1.7",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -336,7 +336,7 @@ class GroupKeeperPlugin(star.Star):
         "设置群名",
     }
 
-    @filter.event_message_type(filter.EventMessageType.ALL, priority=1)
+    @filter.regex(r"^.*$", priority=1)
     async def whitelist_guard(self, event: AstrMessageEvent):
         """Intercept all group messages and check whitelist before any command executes."""
         if event.get_message_type() != MessageType.GROUP_MESSAGE:

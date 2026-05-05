@@ -2,6 +2,13 @@
 
 ---
 
+## [1.1.7] - 2026-05-05
+
+### 修复
+- 🐛 尝试使用 `regex` filter 替代 `event_message_type` filter 来捕获所有消息，解决 `whitelist_guard` 不被触发的问题
+
+---
+
 ## [1.1.6] - 2026-05-05
 
 ### 修复
@@ -286,6 +293,13 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.7] - 2026-05-05
+
+### Fixed
+- 🐛 Attempt to use `regex` filter instead of `event_message_type` filter to capture all messages, fixing `whitelist_guard` not being triggered
 
 ---
 
