@@ -21,13 +21,17 @@
       "description": "群白名单",
       "hint": "输入群号，多个群号用换行分隔。启用白名单后，只有列表中的群才能使用插件功能"
     },
+    "welcome_global_enabled": {
+      "description": "启用新人欢迎（全局）",
+      "hint": "全局总开关，关闭后所有群的新人欢迎功能都将禁用"
+    },
+    "welcome_default_enabled": {
+      "description": "新群默认开启欢迎",
+      "hint": "新群首次触发时是否默认开启欢迎消息"
+    },
     "default_mute_duration": {
       "description": "默认禁言时长（秒）",
       "hint": "不指定时长时的默认禁言秒数"
-    },
-    "default_welcome_enabled": {
-      "description": "新人欢迎默认开启",
-      "hint": "新群是否默认开启欢迎消息"
     },
     "default_welcome_message": {
       "description": "默认欢迎消息",

@@ -98,19 +98,40 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 插件配置通过 AstrBot WebUI 管理，包含以下选项：
 
+### 全局配置
+
 | 配置项 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | `locale` | 选择 | zh_CN | 插件显示语言（简体中文 / English） |
 | `whitelist_enabled` | 布尔 | false | 启用群白名单，启用后只有白名单内的群可使用插件 |
 | `group_whitelist` | 列表 | [] | 群白名单列表，输入群号，多个群号用换行分隔 |
+| `welcome_global_enabled` | 布尔 | true | 新人欢迎全局总开关，关闭后所有群的欢迎功能都将禁用 |
+| `welcome_default_enabled` | 布尔 | true | 新群首次触发时是否默认开启欢迎消息 |
 | `default_mute_duration` | 整数 | 60 | 默认禁言时长（秒） |
-| `default_welcome_enabled` | 布尔 | true | 新人欢迎默认开启 |
 | `default_welcome_message` | 文本 | (空) | 默认欢迎消息，留空使用语言包。支持 `{membername}` 变量 |
 | `max_recall_count` | 整数 | 10 | 单次最多撤回消息条数 |
 
-### 群组数据
+### 群级别配置
 
-每个群的独立配置（欢迎开关、欢迎消息）自动存储在 `data/astrbot_plugin_group_keeper/groups/` 目录下。
+每个群支持独立配置，通过指令或配置文件管理：
+
+| 配置项 | 说明 | 控制指令 |
+|--------|------|----------|
+| `welcome_enabled` | 当前群是否开启欢迎 | `/bot welcome on/off` |
+| `welcome_message` | 当前群的自定义欢迎消息 | `/bot welcome message <文本>` |
+
+群配置文件存储在 `data/astrbot_plugin_group_keeper/groups/group_<群号>.json`。
+
+### 配置优先级
+
+```
+全局白名单 → 全局欢迎开关 → 群级别欢迎开关
+    ↓              ↓               ↓
+ 非白名单群     全局关闭时      各群独立控制
+  禁用所有      全部禁用        欢迎开关
+```
+
+> **注意**：`welcome_global_enabled` 是总开关，关闭后所有群的欢迎功能都会禁用，无论群级别配置如何。
 
 ---
 

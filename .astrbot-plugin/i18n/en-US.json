@@ -21,13 +21,17 @@
       "description": "Group whitelist",
       "hint": "Enter group IDs, one per line. When whitelist is enabled, only listed groups can use plugin features"
     },
+    "welcome_global_enabled": {
+      "description": "Enable welcome message (Global)",
+      "hint": "Global master switch. When disabled, welcome messages will be disabled for all groups"
+    },
+    "welcome_default_enabled": {
+      "description": "Enable welcome for new groups by default",
+      "hint": "Whether to enable welcome messages by default when a new group triggers for the first time"
+    },
     "default_mute_duration": {
       "description": "Default mute duration (seconds)",
       "hint": "Default mute duration when not specified"
-    },
-    "default_welcome_enabled": {
-      "description": "Welcome enabled by default",
-      "hint": "Whether welcome messages are enabled for new groups"
     },
     "default_welcome_message": {
       "description": "Default welcome message",

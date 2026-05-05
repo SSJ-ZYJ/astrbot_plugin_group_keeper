@@ -2,6 +2,19 @@
 
 ---
 
+## [1.1.1] - 2026-05-04
+
+### 新增
+- ✨ 新增配置项 `welcome_global_enabled`：新人欢迎全局总开关，可一键关闭所有群的新人欢迎功能，默认开启
+
+### 修改
+- ♻️ 规范配置项命名，避免混淆：
+  - `welcome_enabled` → `welcome_global_enabled`（全局总开关）
+  - `default_welcome_enabled` → `welcome_default_enabled`（新群默认值）
+- 📝 更新 README.md，新增配置优先级说明和群级别配置说明
+
+---
+
 ## [1.1.0] - 2026-05-04
 
 ### 新增
@@ -226,6 +239,19 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.1] - 2026-05-04
+
+### Added
+- ✨ Add config option `welcome_global_enabled`: global master switch for welcome messages, can disable welcome messages for all groups with one click, enabled by default
+
+### Changed
+- ♻️ Standardize config option naming to avoid confusion:
+  - `welcome_enabled` → `welcome_global_enabled` (global master switch)
+  - `default_welcome_enabled` → `welcome_default_enabled` (default value for new groups)
+- 📝 Update README.md, add configuration priority explanation and group-level configuration description
 
 ---
 

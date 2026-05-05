@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.0",
+    version="1.1.1",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -92,7 +92,7 @@ class GroupKeeperPlugin(star.Star):
         else:
             cfg = {}
         cfg.setdefault(
-            "welcome_enabled", self.config.get("default_welcome_enabled", True)
+            "welcome_enabled", self.config.get("welcome_default_enabled", True)
         )
         cfg.setdefault("welcome_message", "")
         cfg.setdefault("announcements", [])
@@ -776,6 +776,9 @@ class GroupKeeperPlugin(star.Star):
             return
 
         if not self._is_group_allowed(group_id):
+            return
+
+        if not self.config.get("welcome_global_enabled", True):
             return
 
         cfg = self._get_group_config(group_id)
