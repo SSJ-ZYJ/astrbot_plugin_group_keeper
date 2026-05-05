@@ -2,96 +2,25 @@
 
 ---
 
-## [1.1.8] - 2026-05-05
-
-### 修复
-- 🐛 修复未知命令拦截逻辑：改为检查是否有命令 handler（以 `cmd_` 开头）被激活，而不是检查任何 handler
-- 🐛 之前 `on_event` 等 handler 也会被计入，导致无法正确判断是否为未知命令
-
----
-
-## [1.1.7] - 2026-05-05
-
-### 修复
-- 🐛 尝试使用 `regex` filter 替代 `event_message_type` filter 来捕获所有消息，解决 `whitelist_guard` 不被触发的问题
-
----
-
-## [1.1.6] - 2026-05-05
-
-### 修复
-- 🐛 尝试修复 `whitelist_guard` 不被触发的问题：改用 `EventMessageType.ALL` 并在 handler 内部检查消息类型
-
----
-
-## [1.1.5] - 2026-05-05
-
-### 修复
-- 🐛 修复未知命令（如 `/bot list`）没有提示"指令不存在"的问题
-- 🐛 通过检查 `activated_handlers` 判断是否有有效命令被激活
-
-### 修改
-- 🔧 将调试日志等级从 `info` 还原为 `debug`
-
----
-
-## [1.1.4] - 2026-05-05
-
-### 修复
-- 🐛 修复白名单拦截不生效的问题：`WakingCheckStage` 会去掉唤醒前缀，导致 `event.get_message_str()` 返回的消息不包含 `/bot`
-- 🐛 改用 `event.is_at_or_wake_command` 属性判断是否是唤醒消息，而不是检查消息字符串
-
----
-
-## [1.1.3] - 2026-05-04
-
-### 修复
-- 🐛 将调试日志级别从 `debug` 改为 `info`，便于诊断白名单和命令拦截问题
-
-### 新增
-- ✨ 添加详细的日志输出，帮助诊断配置读取和事件处理问题
-
----
-
-## [1.1.2] - 2026-05-04
-
-### 修复
-- 🐛 修复 `whitelist_guard` 未正确使用 `yield` 返回结果，导致事件拦截不生效的问题
-- 🐛 修复未知命令和 白名单拦截无法正常工作的问题
-
-### 新增
-- ✨ 添加调试日志，便于诊断白名单和新人欢迎功能的问题
-
----
-
-## [1.1.1] - 2026-05-04
-
-### 新增
-- ✨ 新增配置项 `welcome_global_enabled`：新人欢迎全局总开关，可一键关闭所有群的新人欢迎功能，默认开启
-
-### 修改
-- ♻️ 规范配置项命名，避免混淆：
-  - `welcome_enabled` → `welcome_global_enabled`（全局总开关）
-  - `default_welcome_enabled` → `welcome_default_enabled`（新群默认值）
-- 📝 更新 README.md，新增配置优先级说明和群级别配置说明
-
----
-
-## [1.1.0] - 2026-05-04
+## [1.1.0] - 2026-05-05
 
 ### 新增
 - ✨ 添加群白名单功能：可配置白名单群号，启用后只有白名单内的群才能使用插件功能
 - ✨ 新增配置项 `whitelist_enabled`：启用/禁用群白名单
 - ✨ 新增配置项 `group_whitelist`：群白名单列表，支持多个群号
+- ✨ 新增配置项 `welcome_global_enabled`：新人欢迎全局总开关，可一键关闭所有群的新人欢迎功能，默认开启
 - ✨ 新增国际化翻译 `msg_whitelist_not_allowed`：白名单限制提示消息
 
 ### 修复
 - 🐛 修复未知命令（如 `/bot list`）不提示"指令不存在"的问题
+- 🐛 修复白名单拦截不生效的问题：`WakingCheckStage` 会去掉唤醒前缀，导致消息不包含 `/bot`
+- 🐛 修复 `whitelist_guard` 未正确使用 `yield` 返回结果，导致事件拦截不生效的问题
+- 🐛 修复命令 handler 检测逻辑：改为检查是否有命令 handler（以 `cmd_` 开头）被激活
 
 ### 修改
 - ♻️ 重构命令拦截机制：使用高优先级事件监听器 `whitelist_guard` 统一处理白名单检查和未知命令拦截
-- ♻️ 移除各子命令中冗余的白名单检查代码，统一在拦截器中处理
-- ♻️ 删除 `on_unknown_command` 函数，其功能已整合到 `whitelist_guard` 中
+- ♻️ 规范配置项命名：`welcome_enabled` → `welcome_global_enabled`（全局总开关），`default_welcome_enabled` → `welcome_default_enabled`（新群默认值）
+- 📝 更新 README.md，新增配置优先级说明和群级别配置说明
 
 ---
 
@@ -304,96 +233,25 @@
 
 ---
 
-## [1.1.8] - 2026-05-05
-
-### Fixed
-- 🐛 Fix unknown command interception logic: check if any command handler (starting with `cmd_`) is activated, instead of checking any handler
-- 🐛 Previously `on_event` and other handlers were also counted, causing incorrect judgment of unknown commands
-
----
-
-## [1.1.7] - 2026-05-05
-
-### Fixed
-- 🐛 Attempt to use `regex` filter instead of `event_message_type` filter to capture all messages, fixing `whitelist_guard` not being triggered
-
----
-
-## [1.1.6] - 2026-05-05
-
-### Fixed
-- 🐛 Attempt to fix `whitelist_guard` not being triggered: use `EventMessageType.ALL` and check message type inside handler
-
----
-
-## [1.1.5] - 2026-05-05
-
-### Fixed
-- 🐛 Fix unknown commands (e.g. `/bot list`) not showing "Command not found" message
-- 🐛 Check `activated_handlers` to determine if a valid command is activated
-
-### Changed
-- 🔧 Revert log level from `info` back to `debug`
-
----
-
-## [1.1.4] - 2026-05-05
-
-### Fixed
-- 🐛 Fix whitelist interception not working: `WakingCheckStage` removes wake prefix, causing `event.get_message_str()` to return message without `/bot`
-- 🐛 Use `event.is_at_or_wake_command` attribute to check if it's a wake message, instead of checking message string
-
----
-
-## [1.1.3] - 2026-05-04
-
-### Fixed
-- 🐛 Change log level from `debug` to `info` for easier diagnosis of whitelist and command interception issues
-
-### Added
-- ✨ Add detailed log output to help diagnose config reading and event handling issues
-
----
-
-## [1.1.2] - 2026-05-04
-
-### Fixed
-- 🐛 Fix `whitelist_guard` not using `yield` to return results, causing event interception to not work
-- 🐛 Fix unknown command and whitelist interception not working properly
-
-### Added
-- ✨ Add debug logs for diagnosing whitelist and welcome message issues
-
----
-
-## [1.1.1] - 2026-05-04
-
-### Added
-- ✨ Add config option `welcome_global_enabled`: global master switch for welcome messages, can disable welcome messages for all groups with one click, enabled by default
-
-### Changed
-- ♻️ Standardize config option naming to avoid confusion:
-  - `welcome_enabled` → `welcome_global_enabled` (global master switch)
-  - `default_welcome_enabled` → `welcome_default_enabled` (default value for new groups)
-- 📝 Update README.md, add configuration priority explanation and group-level configuration description
-
----
-
-## [1.1.0] - 2026-05-04
+## [1.1.0] - 2026-05-05
 
 ### Added
 - ✨ Add group whitelist feature: configure whitelist group IDs, when enabled only whitelisted groups can use plugin features
 - ✨ Add config option `whitelist_enabled`: enable/disable group whitelist
 - ✨ Add config option `group_whitelist`: group whitelist list, supports multiple group IDs
+- ✨ Add config option `welcome_global_enabled`: global master switch for welcome messages, can disable welcome messages for all groups with one click, enabled by default
 - ✨ Add i18n translation `msg_whitelist_not_allowed`: whitelist restriction prompt message
 
 ### Fixed
 - 🐛 Fix unknown commands (e.g. `/bot list`) not showing "Command not found" message
+- 🐛 Fix whitelist interception not working: `WakingCheckStage` removes wake prefix, causing message to not contain `/bot`
+- 🐛 Fix `whitelist_guard` not using `yield` to return results, causing event interception to not work
+- 🐛 Fix command handler detection logic: check if any command handler (starting with `cmd_`) is activated
 
 ### Changed
 - ♻️ Refactor command interception mechanism: use high-priority event listener `whitelist_guard` to handle whitelist check and unknown command interception
-- ♻️ Remove redundant whitelist check code from sub-commands, unified in the interceptor
-- ♻️ Remove `on_unknown_command` function, its functionality has been integrated into `whitelist_guard`
+- ♻️ Standardize config option naming: `welcome_enabled` → `welcome_global_enabled` (global master switch), `default_welcome_enabled` → `welcome_default_enabled` (default value for new groups)
+- 📝 Update README.md, add configuration priority explanation and group-level configuration description
 
 ---
 
