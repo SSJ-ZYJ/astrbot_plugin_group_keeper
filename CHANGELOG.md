@@ -2,6 +2,17 @@
 
 ---
 
+## [1.1.2] - 2026-05-04
+
+### 修复
+- 🐛 修复 `whitelist_guard` 未正确使用 `yield` 返回结果，导致事件拦截不生效的问题
+- 🐛 修复未知命令和 白名单拦截无法正常工作的问题
+
+### 新增
+- ✨ 添加调试日志，便于诊断白名单和新人欢迎功能的问题
+
+---
+
 ## [1.1.1] - 2026-05-04
 
 ### 新增
@@ -239,6 +250,17 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.2] - 2026-05-04
+
+### Fixed
+- 🐛 Fix `whitelist_guard` not using `yield` to return results, causing event interception to not work
+- 🐛 Fix unknown command and whitelist interception not working properly
+
+### Added
+- ✨ Add debug logs for diagnosing whitelist and welcome message issues
 
 ---
 

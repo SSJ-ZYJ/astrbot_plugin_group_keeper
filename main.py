@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.1",
+    version="1.1.2",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -178,7 +178,12 @@ class GroupKeeperPlugin(star.Star):
         if not whitelist_enabled:
             return True
         whitelist = self.config.get("group_whitelist", [])
-        return str(group_id) in [str(g) for g in whitelist]
+        whitelist_str = [str(g) for g in whitelist]
+        is_allowed = str(group_id) in whitelist_str
+        logger.debug(
+            f"Whitelist check: group_id={group_id}, whitelist={whitelist_str}, allowed={is_allowed}"
+        )
+        return is_allowed
 
     async def _is_plugin_admin(self, event: AstrMessageEvent, group_id: str) -> bool:
         """Check if the sender is a real group owner or admin."""
@@ -335,20 +340,25 @@ class GroupKeeperPlugin(star.Star):
             return
 
         group_id = event.get_group_id()
+        logger.debug(f"whitelist_guard triggered: group_id={group_id}, msg={msg_str}")
+
         if not self._is_group_allowed(group_id):
-            self._reply_key(event, "msg_whitelist_not_allowed")
+            logger.debug(f"Group {group_id} not in whitelist, blocking")
+            yield event.plain_result(self._t("msg_whitelist_not_allowed"))
             event.stop_event()
             return
 
         parts = msg_str.split(None, 1)
         if len(parts) < 2:
-            self._reply_key(event, "msg_command_not_found")
+            logger.debug(f"No sub-command found in: {msg_str}")
+            yield event.plain_result(self._t("msg_command_not_found"))
             event.stop_event()
             return
 
         sub_cmd = parts[1].split(None, 1)[0].lower()
         if sub_cmd not in self.VALID_COMMANDS:
-            self._reply_key(event, "msg_command_not_found")
+            logger.debug(f"Unknown command: {sub_cmd}")
+            yield event.plain_result(self._t("msg_command_not_found"))
             event.stop_event()
 
     @filter.command_group("bot")
@@ -772,18 +782,25 @@ class GroupKeeperPlugin(star.Star):
 
         notice_type = raw.get("notice_type", "")
         group_id = str(raw.get("group_id", ""))
+        logger.debug(f"on_event: notice_type={notice_type}, group_id={group_id}")
+
         if not group_id or group_id == "0":
             return
 
         if not self._is_group_allowed(group_id):
+            logger.debug(f"Group {group_id} not in whitelist, skipping welcome")
             return
 
-        if not self.config.get("welcome_global_enabled", True):
+        welcome_global = self.config.get("welcome_global_enabled", True)
+        logger.debug(f"welcome_global_enabled={welcome_global}")
+        if not welcome_global:
             return
 
         cfg = self._get_group_config(group_id)
+        welcome_enabled = cfg.get("welcome_enabled", False)
+        logger.debug(f"Group {group_id} welcome_enabled={welcome_enabled}")
 
-        if notice_type == "group_increase" and cfg.get("welcome_enabled", False):
+        if notice_type == "group_increase" and welcome_enabled:
             user_id = str(raw.get("user_id", ""))
             if not user_id:
                 return
