@@ -18,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.0",
+    version="1.1.2",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -341,15 +341,18 @@ class GroupKeeperPlugin(star.Star):
         """Intercept all group messages and check whitelist before any command executes."""
         if event.get_message_type() != MessageType.GROUP_MESSAGE:
             return
-        if not event.is_at_or_wake_command:
+
+        message_str = event.get_message_str().strip()
+        if not message_str.startswith("/bot"):
             return
 
         group_id = event.get_group_id()
         logger.debug(f"[GroupKeeper] whitelist_guard triggered: group_id={group_id}")
 
         if not self._is_group_allowed(group_id):
-            logger.debug(f"[GroupKeeper] Group {group_id} not in whitelist, blocking")
-            yield event.plain_result(self._t("msg_whitelist_not_allowed"))
+            logger.debug(
+                f"[GroupKeeper] Group {group_id} not in whitelist, blocking silently"
+            )
             event.stop_event()
             return
 

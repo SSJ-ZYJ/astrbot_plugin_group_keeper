@@ -2,6 +2,20 @@
 
 ---
 
+## [1.1.2] - 2026-05-05
+
+### 修复
+- 🐛 修复无效指令截断影响正常 LLM 对话的问题：现在只截断以 `/bot` 开头的消息，不再干扰其他对话
+
+---
+
+## [1.1.1] - 2026-05-05
+
+### 修改
+- ♻️ 非白名单群聊中输入指令时改为静默处理，不再回复提示消息
+
+---
+
 ## [1.1.0] - 2026-05-05
 
 ### 新增
@@ -230,6 +244,20 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.2] - 2026-05-05
+
+### Fixed
+- 🐛 Fix unknown command interception affecting normal LLM conversations: now only intercepts messages starting with `/bot`, no longer interferes with other conversations
+
+---
+
+## [1.1.1] - 2026-05-05
+
+### Changed
+- ♻️ Non-whitelist groups now silently ignore commands instead of replying with a message
 
 ---
 
