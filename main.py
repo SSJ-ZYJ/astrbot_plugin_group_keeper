@@ -889,7 +889,8 @@ class GroupKeeperPlugin(star.Star):
     @filter.event_message_type(filter.EventMessageType.GROUP_MESSAGE)
     async def sentinel_watchdog(self, event: AstrMessageEvent):
         """Intercept group messages and check sentinel rules."""
-        if not self.config.get("sentinel_enabled", False):
+        sentinel_settings = self.config.get("sentinel_settings", {})
+        if not sentinel_settings.get("sentinel_enabled", False):
             return
 
         group_id = event.get_group_id()
@@ -984,8 +985,10 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
+        sentinel_settings = self.config.get("sentinel_settings", {})
+        cmd_group = sentinel_settings.get("sentinel_command_group", {})
         cmd_whitelist = [
-            str(u) for u in self.config.get("sentinel_command_user_whitelist", [])
+            str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])
         ]
         sender_id = event.get_sender_id()
         if (
@@ -1027,8 +1030,10 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
+        sentinel_settings = self.config.get("sentinel_settings", {})
+        cmd_group = sentinel_settings.get("sentinel_command_group", {})
         cmd_whitelist = [
-            str(u) for u in self.config.get("sentinel_command_user_whitelist", [])
+            str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])
         ]
         sender_id = event.get_sender_id()
         if (
@@ -1102,8 +1107,10 @@ class GroupKeeperPlugin(star.Star):
             return
         group_id = event.get_group_id()
 
+        sentinel_settings = self.config.get("sentinel_settings", {})
+        cmd_group = sentinel_settings.get("sentinel_command_group", {})
         cmd_whitelist = [
-            str(u) for u in self.config.get("sentinel_command_user_whitelist", [])
+            str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])
         ]
         sender_id = event.get_sender_id()
         if (

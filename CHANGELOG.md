@@ -10,6 +10,11 @@
 - ✨ 新增 `type_rule` 模板：消息类型检测（图片/语音/视频等）
 
 ### 修改
+- ♻️ 重构哨兵配置结构，使用 `object` 类型进行分组：
+  - `sentinel_settings`（哨兵模块设置）
+    - `sentinel_enabled`、`sentinel_group_blacklist`、`sentinel_user_whitelist`
+    - `sentinel_rules_group`（检测规则配置）→ `sentinel_rules`
+    - `sentinel_command_group`（指令模块配置）→ 指令规则相关配置
 - ♻️ `_conf_schema.json` 全面遵循 i18n 规范，所有 `description`/`hint` 字段改为英文回退文本
 - ♻️ `zh-CN.json` 和 `en-US.json` 新增所有哨兵配置项的中英文翻译
 - ♻️ 移除硬编码分割线，改用 `template_list` 实现规则分组
@@ -369,6 +374,11 @@
 - ✨ Add `type_rule` template: message type detection (image/voice/video etc.)
 
 ### Changed
+- ♻️ Refactor sentinel config structure using `object` type for grouping:
+  - `sentinel_settings` (Sentinel Module Settings)
+    - `sentinel_enabled`, `sentinel_group_blacklist`, `sentinel_user_whitelist`
+    - `sentinel_rules_group` (Detection Rules Config) → `sentinel_rules`
+    - `sentinel_command_group` (Command Module Config) → command rule related configs
 - ♻️ `_conf_schema.json` fully complies with i18n standards, all `description`/`hint` fields now use English fallback text
 - ♻️ `zh-CN.json` and `en-US.json` add Chinese and English translations for all sentinel config items
 - ♻️ Remove hardcoded dividers, use `template_list` for rule grouping

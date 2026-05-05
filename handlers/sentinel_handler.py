@@ -184,17 +184,23 @@ class SentinelHandler:
     ) -> list[dict]:
         matched: list[dict] = []
 
-        group_blacklist = [str(g) for g in config.get("sentinel_group_blacklist", [])]
+        sentinel_settings = config.get("sentinel_settings", {})
+        group_blacklist = [
+            str(g) for g in sentinel_settings.get("sentinel_group_blacklist", [])
+        ]
         if group_id in group_blacklist:
             return matched
 
-        user_whitelist = [str(u) for u in config.get("sentinel_user_whitelist", [])]
+        user_whitelist = [
+            str(u) for u in sentinel_settings.get("sentinel_user_whitelist", [])
+        ]
         if sender_id in user_whitelist:
             return matched
 
         sender_role = await self._get_sender_role(event, group_id, sender_id)
 
-        rules = config.get("sentinel_rules", [])
+        rules_group = sentinel_settings.get("sentinel_rules_group", {})
+        rules = rules_group.get("sentinel_rules", [])
         for idx, rule in enumerate(rules):
             if self._match_rule(
                 rule, group_id, sender_id, sender_role, message_str, message_types
@@ -202,15 +208,16 @@ class SentinelHandler:
                 matched.append({"type": "config", "index": idx, "rule": rule})
 
         cmd_rules_data = self.load_command_rules(group_id)
+        cmd_group = sentinel_settings.get("sentinel_command_group", {})
         cmd_config = {
-            "mute_duration": config.get("sentinel_command_mute_duration", "60"),
-            "reply_message": config.get("sentinel_command_reply_message", []),
-            "ignore_admin": config.get("sentinel_command_ignore_admin", True),
-            "kick_threshold": config.get("sentinel_command_kick_threshold", 0),
-            "kick_message": config.get("sentinel_command_kick_message", []),
-            "notify_creator": config.get("sentinel_command_notify_creator", True),
+            "mute_duration": cmd_group.get("sentinel_command_mute_duration", "60"),
+            "reply_message": cmd_group.get("sentinel_command_reply_message", []),
+            "ignore_admin": cmd_group.get("sentinel_command_ignore_admin", True),
+            "kick_threshold": cmd_group.get("sentinel_command_kick_threshold", 0),
+            "kick_message": cmd_group.get("sentinel_command_kick_message", []),
+            "notify_creator": cmd_group.get("sentinel_command_notify_creator", True),
             "command_user_whitelist": [
-                str(u) for u in config.get("sentinel_command_user_whitelist", [])
+                str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])
             ],
         }
 
