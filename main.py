@@ -6,6 +6,7 @@ import re
 from astrbot.api import AstrBotConfig, logger, star
 from astrbot.api.event import AstrMessageEvent, MessageEventResult, filter
 from astrbot.api.message_components import At, Plain
+from astrbot.core.platform import MessageType
 
 from .handlers import GroupHandler, JoinHandler
 from .i18n import I18nManager
@@ -17,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.5",
+    version="1.1.6",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -335,9 +336,11 @@ class GroupKeeperPlugin(star.Star):
         "设置群名",
     }
 
-    @filter.event_message_type(filter.EventMessageType.GROUP_MESSAGE, priority=1)
+    @filter.event_message_type(filter.EventMessageType.ALL, priority=1)
     async def whitelist_guard(self, event: AstrMessageEvent):
         """Intercept all group messages and check whitelist before any command executes."""
+        if event.get_message_type() != MessageType.GROUP_MESSAGE:
+            return
         if not event.is_at_or_wake_command:
             return
 

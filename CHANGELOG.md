@@ -2,6 +2,13 @@
 
 ---
 
+## [1.1.6] - 2026-05-05
+
+### 修复
+- 🐛 尝试修复 `whitelist_guard` 不被触发的问题：改用 `EventMessageType.ALL` 并在 handler 内部检查消息类型
+
+---
+
 ## [1.1.5] - 2026-05-05
 
 ### 修复
@@ -279,6 +286,13 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.6] - 2026-05-05
+
+### Fixed
+- 🐛 Attempt to fix `whitelist_guard` not being triggered: use `EventMessageType.ALL` and check message type inside handler
 
 ---
 
