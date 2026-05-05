@@ -18,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.7",
+    version="1.1.8",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):

@@ -2,17 +2,19 @@
 
 ---
 
-## [1.1.7] - 2026-05-05
+## [1.1.8] - 2026-05-05
 
-### 清理
-- 🗑️ 移除冗余的 i18n 翻译 key `msg_whitelist_not_allowed`（非白名单群聊已改为静默处理）
+### 文档
+- 📝 更新 README.md，完善命令拦截机制说明
+- 📝 新增 `@机器人 /bot xxx` 格式的使用说明
+- 📝 更新功能特性表格，说明非白名单群静默处理
 
 ---
 
 ## [1.1.7] - 2026-05-05
 
-### Cleanup
-- 🗑️ Remove redundant i18n translation key `msg_whitelist_not_allowed` (non-whitelist groups are now silently ignored)
+### 清理
+- 🗑️ 移除冗余的 i18n 翻译 key `msg_whitelist_not_allowed`（非白名单群聊已改为静默处理）
 
 ---
 
@@ -24,25 +26,10 @@
 
 ---
 
-## [1.1.6] - 2026-05-05
-
-### Fixed
-- 🐛 Fix `@bot /bot xxx` format commands not being correctly intercepted in non-whitelist groups
-- 🐛 Fix missing `yield` after `stop_event()` causing events not being properly blocked
-
----
-
 ## [1.1.5] - 2026-05-05
 
 ### 新增
 - ✨ 支持 `@机器人 /bot xxx` 格式的命令接管，与直接 `/bot xxx` 使用相同的拦截逻辑
-
----
-
-## [1.1.5] - 2026-05-05
-
-### Added
-- ✨ Support `@bot /bot xxx` format command interception, using the same logic as direct `/bot xxx`
 
 ---
 
@@ -57,20 +44,6 @@
   1. 接管所有以 `/bot` 开头的指令，无论群聊是否在白名单内
   2. 白名单内的群聊：有效命令正常回复，无效命令提示"命令不存在"
   3. 非白名单群聊：所有 `/bot` 命令静默处理，不回复
-
----
-
-## [1.1.4] - 2026-05-05
-
-### Fixed
-- 🐛 Refactor message judgment logic: determine if it's a `/bot` command by raw message, no longer interferes with other conversations
-- 🐛 Fix whitelist and unknown command interception not working
-
-### Changed
-- ♻️ Optimize interception logic:
-  1. Take over all commands starting with `/bot`, regardless of whether the group is in the whitelist
-  2. Groups in whitelist: valid commands get normal reply, invalid commands show "Command not found"
-  3. Groups not in whitelist: all `/bot` commands are silently ignored
 
 ---
 
@@ -103,7 +76,6 @@
 - ✨ 新增配置项 `whitelist_enabled`：启用/禁用群白名单
 - ✨ 新增配置项 `group_whitelist`：群白名单列表，支持多个群号
 - ✨ 新增配置项 `welcome_global_enabled`：新人欢迎全局总开关，可一键关闭所有群的新人欢迎功能，默认开启
-- ✨ 新增国际化翻译 `msg_whitelist_not_allowed`：白名单限制提示消息
 
 ### 修复
 - 🐛 修复未知命令（如 `/bot list`）不提示"指令不存在"的问题
@@ -286,6 +258,8 @@
 - ♻️ 将指令参数从 `@用户` 格式改为 `<QQ号>` 格式
 - ♻️ 规范本地化文件格式，统一使用 `<QQ号>` / `<QQ>` 格式
 
+---
+
 ## [1.0.1] - 2026-05-03
 
 ### 新增
@@ -306,6 +280,8 @@
 - 🐛 修复 register_star() 参数名错误
 - 🐛 修复 Context 对象无 data_dir 属性错误
 
+---
+
 ## [1.0.0] - 2026-05-03
 
 ### 新增
@@ -324,6 +300,51 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.8] - 2026-05-05
+
+### Documentation
+- 📝 Update README.md, improve command interception mechanism description
+- 📝 Add usage instructions for `@bot /bot xxx` format
+- 📝 Update feature table, describe silent handling for non-whitelist groups
+
+---
+
+## [1.1.7] - 2026-05-05
+
+### Cleanup
+- 🗑️ Remove redundant i18n translation key `msg_whitelist_not_allowed` (non-whitelist groups are now silently ignored)
+
+---
+
+## [1.1.6] - 2026-05-05
+
+### Fixed
+- 🐛 Fix `@bot /bot xxx` format commands not being correctly intercepted in non-whitelist groups
+- 🐛 Fix missing `yield` after `stop_event()` causing events not being properly blocked
+
+---
+
+## [1.1.5] - 2026-05-05
+
+### Added
+- ✨ Support `@bot /bot xxx` format command interception, using the same logic as direct `/bot xxx`
+
+---
+
+## [1.1.4] - 2026-05-05
+
+### Fixed
+- 🐛 Refactor message judgment logic: determine if it's a `/bot` command by raw message, no longer interferes with other conversations
+- 🐛 Fix whitelist and unknown command interception not working
+
+### Changed
+- ♻️ Optimize interception logic:
+  1. Take over all commands starting with `/bot`, regardless of whether the group is in the whitelist
+  2. Groups in whitelist: valid commands get normal reply, invalid commands show "Command not found"
+  3. Groups not in whitelist: all `/bot` commands are silently ignored
 
 ---
 
@@ -356,7 +377,6 @@
 - ✨ Add config option `whitelist_enabled`: enable/disable group whitelist
 - ✨ Add config option `group_whitelist`: group whitelist list, supports multiple group IDs
 - ✨ Add config option `welcome_global_enabled`: global master switch for welcome messages, can disable welcome messages for all groups with one click, enabled by default
-- ✨ Add i18n translation `msg_whitelist_not_allowed`: whitelist restriction prompt message
 
 ### Fixed
 - 🐛 Fix unknown commands (e.g. `/bot list`) not showing "Command not found" message
@@ -539,6 +559,8 @@
 - ♻️ Change command parameter format from `@用户` to `<QQ号>` / `<QQ>`
 - ♻️ Standardize locale file format, use consistent `<QQ号>` / `<QQ>` format
 
+---
+
 ## [1.0.1] - 2026-05-03
 
 ### Added
@@ -558,6 +580,8 @@
 ### Fixed
 - 🐛 Fix register_star() parameter name error (description → desc)
 - 🐛 Fix Context object has no data_dir attribute error
+
+---
 
 ## [1.0.0] - 2026-05-03
 
