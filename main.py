@@ -17,7 +17,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.3",
+    version="1.1.4",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -338,32 +338,15 @@ class GroupKeeperPlugin(star.Star):
     @filter.event_message_type(filter.EventMessageType.GROUP_MESSAGE, priority=1)
     async def whitelist_guard(self, event: AstrMessageEvent):
         """Intercept all group messages and check whitelist before any command executes."""
-        msg_str = event.get_message_str().strip()
-        if not msg_str.startswith("/bot"):
+        if not event.is_at_or_wake_command:
             return
 
         group_id = event.get_group_id()
-        logger.info(
-            f"[GroupKeeper] whitelist_guard triggered: group_id={group_id}, msg={msg_str}"
-        )
+        logger.info(f"[GroupKeeper] whitelist_guard triggered: group_id={group_id}")
 
         if not self._is_group_allowed(group_id):
             logger.info(f"[GroupKeeper] Group {group_id} not in whitelist, blocking")
             yield event.plain_result(self._t("msg_whitelist_not_allowed"))
-            event.stop_event()
-            return
-
-        parts = msg_str.split(None, 1)
-        if len(parts) < 2:
-            logger.info(f"[GroupKeeper] No sub-command found in: {msg_str}")
-            yield event.plain_result(self._t("msg_command_not_found"))
-            event.stop_event()
-            return
-
-        sub_cmd = parts[1].split(None, 1)[0].lower()
-        if sub_cmd not in self.VALID_COMMANDS:
-            logger.info(f"[GroupKeeper] Unknown command: {sub_cmd}")
-            yield event.plain_result(self._t("msg_command_not_found"))
             event.stop_event()
 
     @filter.command_group("bot")

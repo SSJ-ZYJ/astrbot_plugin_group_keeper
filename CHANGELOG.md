@@ -2,6 +2,14 @@
 
 ---
 
+## [1.1.4] - 2026-05-05
+
+### 修复
+- 🐛 修复白名单拦截不生效的问题：`WakingCheckStage` 会去掉唤醒前缀，导致 `event.get_message_str()` 返回的消息不包含 `/bot`
+- 🐛 改用 `event.is_at_or_wake_command` 属性判断是否是唤醒消息，而不是检查消息字符串
+
+---
+
 ## [1.1.3] - 2026-05-04
 
 ### 修复
@@ -260,6 +268,14 @@
 ---
 
 # Changelog
+
+---
+
+## [1.1.4] - 2026-05-05
+
+### Fixed
+- 🐛 Fix whitelist interception not working: `WakingCheckStage` removes wake prefix, causing `event.get_message_str()` to return message without `/bot`
+- 🐛 Use `event.is_at_or_wake_command` attribute to check if it's a wake message, instead of checking message string
 
 ---
 
