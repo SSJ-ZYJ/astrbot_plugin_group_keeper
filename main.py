@@ -18,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.8",
+    version="1.2.0",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -334,6 +334,10 @@ class GroupKeeperPlugin(star.Star):
         "降级",
         "set_group_name",
         "设置群名",
+        "set_essence",
+        "设精",
+        "remove_essence",
+        "移精",
     }
 
     @filter.regex(r"^.*$", priority=1)
@@ -432,6 +436,8 @@ class GroupKeeperPlugin(star.Star):
             self._t("cmd_promote"),
             self._t("cmd_demote"),
             self._t("cmd_set_group_name"),
+            self._t("cmd_set_essence"),
+            self._t("cmd_remove_essence"),
         ]
         self._reply(event, "\n".join(lines))
 
@@ -798,6 +804,98 @@ class GroupKeeperPlugin(star.Star):
         success = await self.group_handler.set_group_name(bot, int(group_id), name)
         if success:
             self._reply_key(event, "msg_group_name_success", name=name)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot set_essence <QQ> ----
+
+    @bot_group.command("set_essence", alias={"设精"})
+    async def cmd_set_essence(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not await self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        essence_set = False
+        try:
+            history = await bot.call_action(
+                "get_group_msg_history", group_id=int(group_id), count=10
+            )
+            messages = history.get("messages", []) if history else []
+            for msg in messages:
+                sender = msg.get("sender", {})
+                if str(sender.get("user_id", "")) == target:
+                    ok = await self.group_handler.set_essence_msg(
+                        bot, int(msg["message_id"])
+                    )
+                    if ok:
+                        essence_set = True
+                    break
+        except Exception as e:
+            logger.error(f"Failed to set essence message: {e}")
+
+        if essence_set:
+            self._reply_key(event, "msg_set_essence_success", user=target)
+        else:
+            self._reply_key(event, "msg_operation_failed")
+
+    # ---- /bot remove_essence <QQ> ----
+
+    @bot_group.command("remove_essence", alias={"移精"})
+    async def cmd_remove_essence(self, event: AstrMessageEvent):
+        if not self._is_group_chat(event):
+            self._reply_key(event, "msg_not_in_group")
+            return
+        group_id = event.get_group_id()
+        if not await self._is_plugin_admin(event, group_id):
+            self._reply_key(event, "msg_no_permission")
+            return
+
+        bot = self._get_bot(event)
+        if bot is None:
+            self._reply_key(event, "msg_platform_not_supported")
+            return
+
+        target = self._extract_target_user(event)
+        if not target:
+            self._reply_key(event, "msg_parameter_error")
+            return
+
+        essence_removed = False
+        try:
+            essence_list, error_msg = await self.group_handler.get_essence_msg_list(
+                bot, int(group_id)
+            )
+            if essence_list:
+                for essence in essence_list:
+                    if (
+                        str(essence.get("sender_id", "")) == target
+                        or str(essence.get("sender", {}).get("user_id", "")) == target
+                    ):
+                        ok = await self.group_handler.delete_essence_msg(
+                            bot, int(essence["message_id"])
+                        )
+                        if ok:
+                            essence_removed = True
+                        break
+        except Exception as e:
+            logger.error(f"Failed to remove essence message: {e}")
+
+        if essence_removed:
+            self._reply_key(event, "msg_remove_essence_success", user=target)
         else:
             self._reply_key(event, "msg_operation_failed")
 

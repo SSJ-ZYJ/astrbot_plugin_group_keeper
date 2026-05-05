@@ -2,6 +2,20 @@
 
 ---
 
+## [1.2.0] - 2026-05-05
+
+### 新增
+- ✨ 添加群精华消息管理功能：支持设置与移除群精华消息
+- ✨ 新增指令 `/bot set_essence <QQ>` (`/bot 设精 <QQ>`)：将指定用户的最新消息设为群精华
+- ✨ 新增指令 `/bot remove_essence <QQ>` (`/bot 移精 <QQ>`)：移除指定用户的群精华消息
+- ✨ 新增 `set_essence_msg`、`delete_essence_msg`、`get_essence_msg_list` API 调用方法
+- ✨ 新增国际化翻译 key `cmd_set_essence`、`cmd_remove_essence`、`msg_set_essence_success`、`msg_remove_essence_success`
+
+### 文档
+- 📝 更新 README.md，新增精华消息功能说明与使用示例
+
+---
+
 ## [1.1.8] - 2026-05-05
 
 ### 文档
@@ -300,6 +314,20 @@
 ---
 
 # Changelog
+
+---
+
+## [1.2.0] - 2026-05-05
+
+### Added
+- ✨ Add group essence message management: support setting and removing group essence messages
+- ✨ Add command `/bot set_essence <QQ>` (`/bot 设精 <QQ>`): set the latest message of a user as group essence
+- ✨ Add command `/bot remove_essence <QQ>` (`/bot 移精 <QQ>`): remove group essence message from a user
+- ✨ Add `set_essence_msg`, `delete_essence_msg`, `get_essence_msg_list` API methods
+- ✨ Add i18n keys `cmd_set_essence`, `cmd_remove_essence`, `msg_set_essence_success`, `msg_remove_essence_success`
+
+### Documentation
+- 📝 Update README.md, add essence message feature description and usage examples
 
 ---
 

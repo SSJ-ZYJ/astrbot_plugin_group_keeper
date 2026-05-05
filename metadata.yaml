@@ -2,7 +2,7 @@ name: astrbot_plugin_group_keeper
 display_name: BotKeeper
 short_desc: A QQ group management plugin for HTS Team.
 desc: A QQ group management plugin for AstrBot, designed for HTS Team.
-version: v1.1.8
+version: v1.2.0
 author: SSJ-ZYJ
 repo: https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper
 support_platforms:

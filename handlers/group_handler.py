@@ -295,6 +295,67 @@ class GroupHandler:
             bot, "set_group_name", group_id=group_id, group_name=name
         )
 
+    async def set_essence_msg(self, bot: Any, message_id: int) -> bool:
+        """Set a message as group essence.
+
+        设置群精华消息。
+
+        Args:
+            bot: The CQHttp bot instance.
+                 CQHttp 机器人实例。
+            message_id: The message ID to set as essence.
+                        要设为精华的消息ID。
+
+        Returns:
+            True if successful, False otherwise.
+            成功返回 True，失败返回 False。
+        """
+        return await self._execute_api(bot, "set_essence_msg", message_id=message_id)
+
+    async def delete_essence_msg(self, bot: Any, message_id: int) -> bool:
+        """Remove a message from group essence.
+
+        移除群精华消息。
+
+        Args:
+            bot: The CQHttp bot instance.
+                 CQHttp 机器人实例。
+            message_id: The message ID to remove from essence.
+                        要移除精华的消息ID。
+
+        Returns:
+            True if successful, False otherwise.
+            成功返回 True，失败返回 False。
+        """
+        return await self._execute_api(bot, "delete_essence_msg", message_id=message_id)
+
+    async def get_essence_msg_list(
+        self, bot: Any, group_id: int
+    ) -> tuple[list[dict] | None, str]:
+        """Get group essence message list.
+
+        获取群精华消息列表。
+
+        Args:
+            bot: The CQHttp bot instance.
+                 CQHttp 机器人实例。
+            group_id: The group ID.
+                      群ID。
+
+        Returns:
+            (list of essence messages, "") on success, or (None, error_message) on failure.
+            成功返回 (精华消息列表, "")，失败返回 (None, 错误信息)。
+        """
+        result, error_msg = await self._call_api_with_error(
+            bot, "get_essence_msg_list", group_id=group_id
+        )
+        if result is not None:
+            data = result if isinstance(result, list) else result.get("data", [])
+            if isinstance(data, list):
+                return data, ""
+            return [data] if data else [], ""
+        return None, error_msg
+
     async def get_member_info(
         self, bot: Any, group_id: int, user_id: int
     ) -> dict | None:

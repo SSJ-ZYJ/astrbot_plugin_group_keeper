@@ -55,6 +55,8 @@
     "cmd_promote": "/bot 提升 <QQ> - 提升为管理员",
     "cmd_demote": "/bot 降级 <QQ> - 移除管理员",
     "cmd_set_group_name": "/bot 设置群名 <名称> - 修改群名",
+    "cmd_set_essence": "/bot 设精 <QQ> - 设为群精华消息",
+    "cmd_remove_essence": "/bot 移精 <QQ> - 移除群精华消息",
     "msg_not_in_group": "❌ 请在群聊中使用此命令",
     "msg_no_permission": "❌ 您没有权限执行此操作",
     "msg_status_on": "开启",
@@ -62,7 +64,7 @@
     "msg_welcome_status": "🎉 新人欢迎消息状态：{status}",
     "msg_welcome_enabled": "✅ 已开启新人欢迎",
     "msg_welcome_disabled": "✅ 已关闭新人欢迎",
-    "msg_welcome_message": "🎉欢迎 {membername} 加入 HTS Utospace✨！请观看弹窗公告，设置合适的群昵称与群消息提醒方式。愿你在这里，聊得开心，玩的愉快！",
+    "msg_welcome_message": "🎉 欢迎 {membername} 加入群聊！✨",
     "msg_parameter_error": "❌ 参数错误",
     "msg_welcome_message_too_long": "❌ 欢迎消息过长（最多200字符）",
     "msg_welcome_message_set": "✅ 欢迎消息已设置",
@@ -80,6 +82,8 @@
     "msg_promote_success": "✅ 已将 {user} 提升为管理员",
     "msg_demote_success": "✅ 已移除 {user} 的管理员权限",
     "msg_group_name_success": "✅ 群名已改为「{name}」",
+    "msg_set_essence_success": "✅ 已将 {user} 的消息设为群精华",
+    "msg_remove_essence_success": "✅ 已移除 {user} 的群精华消息",
     "msg_error_detail": "错误详情：{error}",
     "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令"
   }

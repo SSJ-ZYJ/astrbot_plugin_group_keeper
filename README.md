@@ -12,6 +12,7 @@
 | 🔇 禁言管理 | 支持单个禁言、解禁、全员禁言 |
 | 📝 消息管理 | 撤回指定用户消息 |
 | 🏷️ 群名片管理 | 修改群昵称、设置专属头衔 |
+| 📌 精华消息 | 设置与移除群精华消息 |
 | 🔧 权限控制 | 自动同步群内管理员角色，群主和管理员可操作 |
 | 🛡️ 命令拦截 | 接管所有 `/bot` 开头的命令，无效命令自动提示，非白名单群静默处理 |
 | 📋 群白名单 | 支持配置白名单群号，仅白名单内的群可使用插件功能 |
@@ -57,6 +58,8 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 | `/bot promote <QQ>` | `/bot 提升` | 提升为管理员 | 管理员 |
 | `/bot demote <QQ>` | `/bot 降级` | 移除管理员 | 管理员 |
 | `/bot set_group_name <名称>` | `/bot 设置群名` | 修改群名称 | 管理员 |
+| `/bot set_essence <QQ>` | `/bot 设精` | 设为群精华消息 | 管理员 |
+| `/bot remove_essence <QQ>` | `/bot 移精` | 移除群精华消息 | 管理员 |
 
 > **注意**: `<QQ>` 参数支持 @提及 或直接输入 QQ 号。
 
@@ -74,6 +77,12 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 # 修改群名（支持带空格的名称）
 /bot set_group_name "HTS Team 官方群"
+
+# 设置群精华消息
+/bot set_essence @张三
+
+# 移除群精华消息
+/bot remove_essence @张三
 ```
 
 ### 欢迎消息变量

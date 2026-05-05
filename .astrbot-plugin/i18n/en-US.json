@@ -55,6 +55,8 @@
     "cmd_promote": "/bot promote <QQ> - Promote to admin",
     "cmd_demote": "/bot demote <QQ> - Demote admin",
     "cmd_set_group_name": "/bot set_group_name <name> - Change group name",
+    "cmd_set_essence": "/bot set_essence <QQ> - Set as group essence message",
+    "cmd_remove_essence": "/bot remove_essence <QQ> - Remove group essence message",
     "msg_not_in_group": "❌ Please use this command in a group chat",
     "msg_no_permission": "❌ You don't have permission to do this",
     "msg_status_on": "Enabled",
@@ -62,7 +64,7 @@
     "msg_welcome_status": "🎉 Welcome message status: {status}",
     "msg_welcome_enabled": "✅ Welcome messages enabled",
     "msg_welcome_disabled": "✅ Welcome messages disabled",
-    "msg_welcome_message": "Welcome {membername} to HTS Utospace! Please watch the popup announcement, set a suitable group nickname and message reminder. May you have a good time here!",
+    "msg_welcome_message": "🎉 Welcome {membername} to group chat! ✨",
     "msg_parameter_error": "❌ Parameter error",
     "msg_welcome_message_too_long": "❌ Welcome message too long (max 200 chars)",
     "msg_welcome_message_set": "✅ Welcome message set",
@@ -80,6 +82,8 @@
     "msg_promote_success": "✅ Promoted {user} to admin",
     "msg_demote_success": "✅ Demoted {user} from admin",
     "msg_group_name_success": "✅ Group name changed to \"{name}\"",
+    "msg_set_essence_success": "✅ Set {user}'s message as group essence",
+    "msg_remove_essence_success": "✅ Removed {user}'s group essence message",
     "msg_error_detail": "Error detail: {error}",
     "msg_command_not_found": "❌ Command not found, use /bot help to see available commands"
   }
