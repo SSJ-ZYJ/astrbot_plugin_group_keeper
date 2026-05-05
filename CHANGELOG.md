@@ -2,6 +2,20 @@
 
 ---
 
+## [1.1.5] - 2026-05-05
+
+### 新增
+- ✨ 支持 `@机器人 /bot xxx` 格式的命令接管，与直接 `/bot xxx` 使用相同的拦截逻辑
+
+---
+
+## [1.1.5] - 2026-05-05
+
+### Added
+- ✨ Support `@bot /bot xxx` format command interception, using the same logic as direct `/bot xxx`
+
+---
+
 ## [1.1.4] - 2026-05-05
 
 ### 修复

@@ -18,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.4",
+    version="1.1.5",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -352,6 +352,24 @@ class GroupKeeperPlugin(star.Star):
 
         raw_message_str = raw_message_str.strip()
         is_bot_command = raw_message_str.startswith("/bot")
+
+        if not is_bot_command:
+            messages = event.get_messages()
+            self_id = event.get_self_id()
+            found_at_bot = False
+            text_after_at = ""
+
+            for i, msg in enumerate(messages):
+                if isinstance(msg, At) and str(msg.qq) == str(self_id):
+                    found_at_bot = True
+                    for j in range(i + 1, len(messages)):
+                        if isinstance(messages[j], Plain):
+                            text_after_at += messages[j].text or ""
+                    break
+
+            text_after_at = text_after_at.strip()
+            if found_at_bot and text_after_at.startswith("/bot"):
+                is_bot_command = True
 
         logger.debug(
             f"[GroupKeeper] raw_message_str: {raw_message_str}, is_bot_command: {is_bot_command}"
