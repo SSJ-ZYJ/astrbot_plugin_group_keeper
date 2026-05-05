@@ -18,7 +18,7 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.1.3",
+    version="1.1.4",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
@@ -342,7 +342,22 @@ class GroupKeeperPlugin(star.Star):
         if event.get_message_type() != MessageType.GROUP_MESSAGE:
             return
 
-        if not event.is_at_or_wake_command:
+        raw_msg_obj = getattr(event.message_obj, "raw_message", None)
+        raw_message_str = ""
+        if raw_msg_obj:
+            if hasattr(raw_msg_obj, "raw_message"):
+                raw_message_str = str(raw_msg_obj.raw_message or "")
+            elif isinstance(raw_msg_obj, dict):
+                raw_message_str = str(raw_msg_obj.get("raw_message", ""))
+
+        raw_message_str = raw_message_str.strip()
+        is_bot_command = raw_message_str.startswith("/bot")
+
+        logger.debug(
+            f"[GroupKeeper] raw_message_str: {raw_message_str}, is_bot_command: {is_bot_command}"
+        )
+
+        if not is_bot_command:
             return
 
         group_id = event.get_group_id()
@@ -363,26 +378,17 @@ class GroupKeeperPlugin(star.Star):
             f"[GroupKeeper] plugin_cmd_handlers: {[h.handler_name for h in plugin_cmd_handlers]}"
         )
 
-        if plugin_cmd_handlers:
-            if not self._is_group_allowed(group_id):
-                logger.debug(
-                    f"[GroupKeeper] Group {group_id} not in whitelist, blocking silently"
-                )
-                event.stop_event()
-                return
-        else:
-            other_handlers = [
-                h
-                for h in activated_handlers
-                if h.handler_module_path != self.__module__
-            ]
+        if not self._is_group_allowed(group_id):
             logger.debug(
-                f"[GroupKeeper] other_handlers: {[h.handler_name for h in other_handlers]}"
+                f"[GroupKeeper] Group {group_id} not in whitelist, blocking silently"
             )
-            if not other_handlers:
-                logger.debug("[GroupKeeper] No valid command handler found")
-                yield event.plain_result(self._t("msg_command_not_found"))
-                event.stop_event()
+            event.stop_event()
+            return
+
+        if not plugin_cmd_handlers:
+            logger.debug("[GroupKeeper] No valid command handler found")
+            yield event.plain_result(self._t("msg_command_not_found"))
+            event.stop_event()
 
     @filter.command_group("bot")
     async def bot_group(self):

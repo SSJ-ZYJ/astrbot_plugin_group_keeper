@@ -2,6 +2,34 @@
 
 ---
 
+## [1.1.4] - 2026-05-05
+
+### 修复
+- 🐛 重构消息判断逻辑：通过原始消息判断是否为 `/bot` 命令，不再干扰其他对话
+- 🐛 修复白名单和无效命令截断功能失效的问题
+
+### 修改
+- ♻️ 优化拦截逻辑：
+  1. 接管所有以 `/bot` 开头的指令，无论群聊是否在白名单内
+  2. 白名单内的群聊：有效命令正常回复，无效命令提示"命令不存在"
+  3. 非白名单群聊：所有 `/bot` 命令静默处理，不回复
+
+---
+
+## [1.1.4] - 2026-05-05
+
+### Fixed
+- 🐛 Refactor message judgment logic: determine if it's a `/bot` command by raw message, no longer interferes with other conversations
+- 🐛 Fix whitelist and unknown command interception not working
+
+### Changed
+- ♻️ Optimize interception logic:
+  1. Take over all commands starting with `/bot`, regardless of whether the group is in the whitelist
+  2. Groups in whitelist: valid commands get normal reply, invalid commands show "Command not found"
+  3. Groups not in whitelist: all `/bot` commands are silently ignored
+
+---
+
 ## [1.1.3] - 2026-05-05
 
 ### 修复
