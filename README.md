@@ -8,9 +8,9 @@
 
 | 功能分类 | 功能描述 |
 |----------|----------|
-| 🎉 新人欢迎 | 自动欢迎新成员加入群聊，支持 `{membername}` 变量显示昵称 |
-| 🔇 禁言管理 | 支持单个禁言、解禁、全员禁言 |
-| 📝 消息管理 | 撤回指定用户消息 |
+| 🎉 新人欢迎 | 自动欢迎新成员加入群聊，支持 `{membername}` 变量表示新人昵称 |
+| 🔇 禁言管理 | 支持单个禁言、全员禁言与解禁 |
+| 🔄 撤回消息 | 撤回指定用户最近发送的消息 |
 | 🏷️ 群名片管理 | 修改群昵称、设置专属头衔 |
 | 📌 精华消息 | 设置与移除群精华消息 |
 | 🔧 权限控制 | 自动同步群内管理员角色，群主和管理员可操作 |
@@ -27,9 +27,10 @@
 ### 方式二：手动安装
 
 输入仓库链接：
-```
-https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
-```
+
+`https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/`
+
+进行安装。
 
 ---
 
@@ -39,7 +40,7 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 所有指令统一使用 `/bot` 作为前缀。每个指令都支持中英文别名。
 
-支持以下两种格式：
+支持以下两种输入格式：
 - 直接输入：`/bot help`
 - @机器人：`@机器人 /bot help`
 
@@ -47,21 +48,22 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 | 指令 | 中文别名 | 功能描述 | 权限要求 |
 |------|----------|----------|----------|
-| `/bot help` | `/bot 帮助` | 显示帮助信息 | 全体 |
-| `/bot welcome [on\|off\|message <文本>]` | `/bot 欢迎` | 新人欢迎设置（支持 `{membername}` 变量） | 管理员 |
-| `/bot mute <QQ> [秒数]` | `/bot 禁言` | 禁言指定用户 | 管理员 |
-| `/bot unmute <QQ>` | `/bot 解禁` | 解除禁言 | 管理员 |
-| `/bot global_mute on\|off` | `/bot 全员禁言` | 全员禁言控制 | 管理员 |
-| `/bot recall <QQ> [数量]` | `/bot 撤回` | 撤回指定用户消息 | 管理员 |
-| `/bot rename <QQ> <昵称>` | `/bot 改名` | 修改群昵称 | 管理员 |
-| `/bot title <QQ> <头衔>` | `/bot 头衔` | 设置专属头衔 | 管理员 |
-| `/bot promote <QQ>` | `/bot 提升` | 提升为管理员 | 管理员 |
-| `/bot demote <QQ>` | `/bot 降级` | 移除管理员 | 管理员 |
-| `/bot set_group_name <名称>` | `/bot 设置群名` | 修改群名称 | 管理员 |
-| `/bot set_essence` | `/bot 设精` | 设置引用的消息为群精华 | 管理员 |
-| `/bot remove_essence` | `/bot 移精` | 移除引用的群精华消息 | 管理员 |
+| `/bot help` | `/bot 帮助` | 显示帮助信息 | 所有人 |
+| `/bot welcome [on\|off\|message <文本>]` | `/bot 欢迎 [on\|off\|message <文本>]` | 新人欢迎设置 | 管理员和群主 |
+| `/bot mute <QQ> [秒数]` | `/bot 禁言 <QQ> [秒数]` | 禁言指定用户 | 管理员和群主 |
+| `/bot unmute <QQ>` | `/bot 解禁 <QQ>` | 解除禁言 | 管理员和群主 |
+| `/bot global_mute on\|off` | `/bot 全员禁言 on\|off` | 全员禁言控制 | 管理员和群主 |
+| `/bot recall <QQ> [数量]` | `/bot 撤回 <QQ> [数量]` | 撤回指定用户消息 | 管理员和群主 |
+| `/bot rename <QQ> <昵称>` | `/bot 改名 <QQ> <昵称>` | 修改群昵称 | 所有人 |
+| `/bot title <QQ> <头衔>` | `/bot 头衔 <QQ> <头衔>` | 设置专属头衔 | 管理员和群主 |
+| `/bot promote <QQ>` | `/bot 提升 <QQ>` | 提升为管理员 | 管理员和群主 |
+| `/bot demote <QQ>` | `/bot 降级 <QQ>` | 移除管理员 | 管理员和群主 | 
+| `/bot set_group_name <名称>` | `/bot 设置群名 <名称>` | 修改群名称 | 管理员和群主 |
+| `/bot set_essence` | `/bot 设精` | 设置引用的消息为群精华 | 所有人 |
+| `/bot remove_essence` | `/bot 移精` | 移除引用的群精华消息 | 所有人 |
 
-> **注意**: `<QQ>` 参数支持 @提及 或直接输入 QQ 号。
+> ![TIP] 
+> <QQ> 可以为 @SSJ 或 QQ号。
 
 ### 使用示例
 
@@ -91,11 +93,11 @@ https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper/
 
 | 变量 | 说明 | 示例 |
 |------|------|------|
-| `{membername}` | 新成员的群昵称/昵称 | 欢迎 张三 加入群聊！ |
+| `{membername}` | 新成员的QQ昵称 | 欢迎 SSJ 加入群聊！ |
 
 示例：设置自定义欢迎消息
 ```
-/bot welcome message 欢迎 {membername} 加入 HTS Utospace！
+/bot welcome message 欢迎 {membername} 加入群聊！
 ```
 
 ### 命令拦截机制

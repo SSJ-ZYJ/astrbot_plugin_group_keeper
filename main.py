@@ -840,10 +840,6 @@ class GroupKeeperPlugin(star.Star):
         if not self._is_group_chat(event):
             self._reply_key(event, "msg_not_in_group")
             return
-        group_id = event.get_group_id()
-        if not await self._is_plugin_admin(event, group_id):
-            self._reply_key(event, "msg_no_permission")
-            return
 
         bot = self._get_bot(event)
         if bot is None:
@@ -867,10 +863,6 @@ class GroupKeeperPlugin(star.Star):
     async def cmd_remove_essence(self, event: AstrMessageEvent):
         if not self._is_group_chat(event):
             self._reply_key(event, "msg_not_in_group")
-            return
-        group_id = event.get_group_id()
-        if not await self._is_plugin_admin(event, group_id):
-            self._reply_key(event, "msg_no_permission")
             return
 
         bot = self._get_bot(event)
