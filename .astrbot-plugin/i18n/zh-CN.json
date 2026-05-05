@@ -81,7 +81,6 @@
     "msg_demote_success": "✅ 已移除 {user} 的管理员权限",
     "msg_group_name_success": "✅ 群名已改为「{name}」",
     "msg_error_detail": "错误详情：{error}",
-    "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令",
-    "msg_whitelist_not_allowed": "❌ 当前群未在白名单中，无法使用此功能"
+    "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令"
   }
 }

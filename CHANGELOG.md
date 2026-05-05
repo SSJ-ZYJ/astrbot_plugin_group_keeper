@@ -2,6 +2,20 @@
 
 ---
 
+## [1.1.7] - 2026-05-05
+
+### 清理
+- 🗑️ 移除冗余的 i18n 翻译 key `msg_whitelist_not_allowed`（非白名单群聊已改为静默处理）
+
+---
+
+## [1.1.7] - 2026-05-05
+
+### Cleanup
+- 🗑️ Remove redundant i18n translation key `msg_whitelist_not_allowed` (non-whitelist groups are now silently ignored)
+
+---
+
 ## [1.1.6] - 2026-05-05
 
 ### 修复

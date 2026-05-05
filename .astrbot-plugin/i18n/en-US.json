@@ -81,7 +81,6 @@
     "msg_demote_success": "✅ Demoted {user} from admin",
     "msg_group_name_success": "✅ Group name changed to \"{name}\"",
     "msg_error_detail": "Error detail: {error}",
-    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands",
-    "msg_whitelist_not_allowed": "❌ Current group is not in the whitelist, this feature is not available"
+    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands"
   }
 }
