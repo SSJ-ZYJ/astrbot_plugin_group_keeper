@@ -1,279 +1,275 @@
 {
-  "metadata": {
-    "display_name": "群控助手 - BotKeeper",
-    "short_desc": "HTS Team 群控助手",
-    "desc": "一个用来管理 QQ群聊 的 Astrbot 插件，用于管理 HTS Team，满足 HTS 管理需求。支持新人欢迎、管理员管理等功能。"
-  },
-  "config": {
-    "locale": {
-      "description": "语言",
-      "hint": "选择插件显示语言",
-      "labels": [
-        "简体中文",
-        "English"
-      ]
+    "metadata": {
+        "display_name": "群控助手 - BotKeeper",
+        "short_desc": "HTS Team 群控助手",
+        "desc": "一个用来管理 QQ群聊 的 Astrbot 插件，用于管理 HTS Team，满足 HTS 管理需求。支持新人欢迎、管理员管理等功能。"
     },
-    "whitelist_enabled": {
-      "description": "启用群白名单",
-      "hint": "启用后，只有白名单内的群号才能使用插件功能"
-    },
-    "group_whitelist": {
-      "description": "群白名单",
-      "hint": "输入群号，多个群号用换行分隔。启用白名单后，只有列表中的群才能使用插件功能"
-    },
-    "welcome_global_enabled": {
-      "description": "启用新人欢迎（全局）",
-      "hint": "全局总开关，关闭后所有群的新人欢迎功能都将禁用"
-    },
-    "welcome_default_enabled": {
-      "description": "新群默认开启欢迎",
-      "hint": "新群首次触发时是否默认开启欢迎消息"
-    },
-    "default_mute_duration": {
-      "description": "默认禁言时长（秒）",
-      "hint": "不指定时长时的默认禁言秒数"
-    },
-    "default_welcome_message": {
-      "description": "默认欢迎消息",
-      "hint": "留空则使用默认欢迎语。支持变量：{membername} = 新成员昵称"
-    },
-    "max_recall_count": {
-      "description": "最大撤回条数",
-      "hint": "单次最多撤回的消息条数"
-    },
-    "sentinel_enabled": {
-      "description": "启用哨兵监控",
-      "hint": "全局总开关，开启后哨兵将自动检测群消息并执行规则"
-    },
-    "sentinel_group_blacklist": {
-      "description": "哨兵群聊黑名单",
-      "hint": "名单中的群不进行哨兵检测，输入群号，多个群号用换行分隔"
-    },
-    "sentinel_user_whitelist": {
-      "description": "哨兵全局用户白名单",
-      "hint": "名单中的用户不会触发哨兵检测，输入QQ号，多个用换行分隔"
-    },
-    "sentinel_rules": {
-      "description": "哨兵检测规则",
-      "hint": "点击「添加」按钮选择规则模板，支持关键词规则和消息类型规则",
-      "templates": {
-        "keyword_rule": {
-          "name": "关键词规则",
-          "hint": "基于关键词/正则表达式匹配检测文本内容",
-          "items": {
-            "keywords": {
-              "description": "关键词列表",
-              "hint": "支持正则表达式，每行一个关键词"
-            },
-            "time_range": {
-              "description": "生效时段",
-              "hint": "如 Mon-Fri 09:00-18:00 或 22:00-02:00，留空表示全天"
-            },
-            "groups": {
-              "description": "生效群号",
-              "hint": "留空表示全部群"
-            },
-            "mute_duration": {
-              "description": "禁言秒数",
-              "hint": "0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
-            },
-            "recall_delay": {
-              "description": "延迟撤回时间（秒）",
-              "hint": "0 表示立即撤回"
-            },
-            "reply_message": {
-              "description": "命中回复",
-              "hint": "随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
-            },
-            "ignore_admin": {
-              "description": "忽略管理员",
-              "hint": "开启后管理员消息不会触发此规则"
-            },
-            "ignore_owner": {
-              "description": "忽略群主",
-              "hint": "开启后群主消息不会触发此规则"
-            },
-            "notify_group_admin": {
-              "description": "通知群管理员",
-              "hint": "开启后命中时私聊通知群内管理员"
-            },
-            "notify_bot_admin": {
-              "description": "通知Bot管理员",
-              "hint": "开启后命中时私聊通知Bot管理员"
-            },
-            "show_rule_in_notification": {
-              "description": "通知中显示关键词",
-              "hint": "开启后通知消息中会显示触发的关键词内容"
-            },
-            "rule_user_whitelist": {
-              "description": "规则用户白名单",
-              "hint": "名单用户不会触发此规则，输入QQ号，多个用换行分隔"
-            },
-            "rule_user_monitor_list": {
-              "description": "规则监控名单",
-              "hint": "留空表示监控全体成员"
-            },
-            "kick_threshold": {
-              "description": "累计踢出阈值",
-              "hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
-            },
-            "kick_message": {
-              "description": "踢出提示",
-              "hint": "随机提示列表，支持变量：{id}、{name}、{date}、{time}"
-            }
-          }
+    "config": {
+        "locale": {
+            "description": "语言",
+            "hint": "选择插件显示语言",
+            "labels": [
+                "简体中文",
+                "English"
+            ]
         },
-        "type_rule": {
-          "name": "消息类型规则",
-          "hint": "基于消息类型（图片/语音/视频等）检测",
-          "items": {
-            "msg_types": {
-              "description": "消息类型列表",
-              "hint": "可选值：text / image / voice / video / file / face / forward / json，每行一个"
-            },
-            "time_range": {
-              "description": "生效时段",
-              "hint": "如 Mon-Fri 09:00-18:00 或 22:00-02:00，留空表示全天"
-            },
-            "groups": {
-              "description": "生效群号",
-              "hint": "留空表示全部群"
-            },
-            "mute_duration": {
-              "description": "禁言秒数",
-              "hint": "0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
-            },
-            "recall_delay": {
-              "description": "延迟撤回时间（秒）",
-              "hint": "0 表示立即撤回"
-            },
-            "reply_message": {
-              "description": "命中回复",
-              "hint": "随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
-            },
-            "ignore_admin": {
-              "description": "忽略管理员",
-              "hint": "开启后管理员消息不会触发此规则"
-            },
-            "ignore_owner": {
-              "description": "忽略群主",
-              "hint": "开启后群主消息不会触发此规则"
-            },
-            "notify_group_admin": {
-              "description": "通知群管理员",
-              "hint": "开启后命中时私聊通知群内管理员"
-            },
-            "notify_bot_admin": {
-              "description": "通知Bot管理员",
-              "hint": "开启后命中时私聊通知Bot管理员"
-            },
-            "rule_user_whitelist": {
-              "description": "规则用户白名单",
-              "hint": "名单用户不会触发此规则，输入QQ号，多个用换行分隔"
-            },
-            "rule_user_monitor_list": {
-              "description": "规则监控名单",
-              "hint": "留空表示监控全体成员"
-            },
-            "kick_threshold": {
-              "description": "累计踢出阈值",
-              "hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
-            },
-            "kick_message": {
-              "description": "踢出提示",
-              "hint": "随机提示列表，支持变量：{id}、{name}、{date}、{time}"
+        "whitelist_enabled": {
+            "description": "启用群白名单",
+            "hint": "启用后，只有白名单内的群号才能使用插件功能"
+        },
+        "group_whitelist": {
+            "description": "群白名单",
+            "hint": "输入群号，多个群号用换行分隔。启用白名单后，只有列表中的群才能使用插件功能"
+        },
+        "welcome_global_enabled": {
+            "description": "启用新人欢迎（全局）",
+            "hint": "全局总开关，关闭后所有群的新人欢迎功能都将禁用"
+        },
+        "welcome_default_enabled": {
+            "description": "新群默认开启欢迎",
+            "hint": "新群首次触发时是否默认开启欢迎消息"
+        },
+        "default_mute_duration": {
+            "description": "默认禁言时长（秒）",
+            "hint": "不指定时长时的默认禁言秒数"
+        },
+        "default_welcome_message": {
+            "description": "默认欢迎消息",
+            "hint": "留空则使用默认欢迎语。支持变量：{membername} = 新成员昵称"
+        },
+        "max_recall_count": {
+            "description": "最大撤回条数",
+            "hint": "单次最多撤回的消息条数"
+        },
+        "sentinel_enabled": {
+            "description": "启用哨兵监控",
+            "hint": "全局总开关，开启后哨兵将自动检测群消息并执行规则"
+        },
+        "sentinel_group_blacklist": {
+            "description": "哨兵群聊黑名单",
+            "hint": "名单中的群不进行哨兵检测，输入群号，多个群号用换行分隔"
+        },
+        "sentinel_user_whitelist": {
+            "description": "哨兵全局用户白名单",
+            "hint": "名单中的用户不会触发哨兵检测，输入QQ号，多个用换行分隔"
+        },
+        "sentinel_rules": {
+            "description": "哨兵检测规则",
+            "hint": "点击「添加」按钮选择规则模板，支持关键词规则和消息类型规则",
+            "templates": {
+                "keyword_rule": {
+                    "name": "关键词规则",
+                    "hint": "基于关键词/正则表达式匹配检测文本内容",
+                    "keywords": {
+                        "description": "关键词列表",
+                        "hint": "支持正则表达式，每行一个关键词"
+                    },
+                    "time_range": {
+                        "description": "生效时段",
+                        "hint": "如 Mon-Fri 09:00-18:00 或 22:00-02:00，留空表示全天"
+                    },
+                    "groups": {
+                        "description": "生效群号",
+                        "hint": "留空表示全部群"
+                    },
+                    "mute_duration": {
+                        "description": "禁言秒数",
+                        "hint": "0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
+                    },
+                    "recall_delay": {
+                        "description": "延迟撤回时间（秒）",
+                        "hint": "0 表示立即撤回"
+                    },
+                    "reply_message": {
+                        "description": "命中回复",
+                        "hint": "随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
+                    },
+                    "ignore_admin": {
+                        "description": "忽略管理员",
+                        "hint": "开启后管理员消息不会触发此规则"
+                    },
+                    "ignore_owner": {
+                        "description": "忽略群主",
+                        "hint": "开启后群主消息不会触发此规则"
+                    },
+                    "notify_group_admin": {
+                        "description": "通知群管理员",
+                        "hint": "开启后命中时私聊通知群内管理员"
+                    },
+                    "notify_bot_admin": {
+                        "description": "通知Bot管理员",
+                        "hint": "开启后命中时私聊通知Bot管理员"
+                    },
+                    "show_rule_in_notification": {
+                        "description": "通知中显示关键词",
+                        "hint": "开启后通知消息中会显示触发的关键词内容"
+                    },
+                    "rule_user_whitelist": {
+                        "description": "规则用户白名单",
+                        "hint": "名单用户不会触发此规则，输入QQ号，多个用换行分隔"
+                    },
+                    "rule_user_monitor_list": {
+                        "description": "规则监控名单",
+                        "hint": "留空表示监控全体成员"
+                    },
+                    "kick_threshold": {
+                        "description": "累计踢出阈值",
+                        "hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
+                    },
+                    "kick_message": {
+                        "description": "踢出提示",
+                        "hint": "随机提示列表，支持变量：{id}、{name}、{date}、{time}"
+                    }
+                },
+                "type_rule": {
+                    "name": "消息类型规则",
+                    "hint": "基于消息类型（图片/语音/视频等）检测",
+                    "msg_types": {
+                        "description": "消息类型列表",
+                        "hint": "可选值：text / image / voice / video / file / face / forward / json，每行一个"
+                    },
+                    "time_range": {
+                        "description": "生效时段",
+                        "hint": "如 Mon-Fri 09:00-18:00 或 22:00-02:00，留空表示全天"
+                    },
+                    "groups": {
+                        "description": "生效群号",
+                        "hint": "留空表示全部群"
+                    },
+                    "mute_duration": {
+                        "description": "禁言秒数",
+                        "hint": "0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
+                    },
+                    "recall_delay": {
+                        "description": "延迟撤回时间（秒）",
+                        "hint": "0 表示立即撤回"
+                    },
+                    "reply_message": {
+                        "description": "命中回复",
+                        "hint": "随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
+                    },
+                    "ignore_admin": {
+                        "description": "忽略管理员",
+                        "hint": "开启后管理员消息不会触发此规则"
+                    },
+                    "ignore_owner": {
+                        "description": "忽略群主",
+                        "hint": "开启后群主消息不会触发此规则"
+                    },
+                    "notify_group_admin": {
+                        "description": "通知群管理员",
+                        "hint": "开启后命中时私聊通知群内管理员"
+                    },
+                    "notify_bot_admin": {
+                        "description": "通知Bot管理员",
+                        "hint": "开启后命中时私聊通知Bot管理员"
+                    },
+                    "rule_user_whitelist": {
+                        "description": "规则用户白名单",
+                        "hint": "名单用户不会触发此规则，输入QQ号，多个用换行分隔"
+                    },
+                    "rule_user_monitor_list": {
+                        "description": "规则监控名单",
+                        "hint": "留空表示监控全体成员"
+                    },
+                    "kick_threshold": {
+                        "description": "累计踢出阈值",
+                        "hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
+                    },
+                    "kick_message": {
+                        "description": "踢出提示",
+                        "hint": "随机提示列表，支持变量：{id}、{name}、{date}、{time}"
+                    }
+                }
             }
-          }
+        },
+        "sentinel_command_user_whitelist": {
+            "description": "哨兵指令白名单用户",
+            "hint": "该列表用户不会触发指令规则检测，输入QQ号，多个用换行分隔"
+        },
+        "sentinel_command_mute_duration": {
+            "description": "指令规则禁言时长（秒）",
+            "hint": "指令规则命中后的禁言秒数，0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
+        },
+        "sentinel_command_reply_message": {
+            "description": "指令规则命中回复",
+            "hint": "指令规则命中后随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
+        },
+        "sentinel_command_ignore_admin": {
+            "description": "指令规则忽略管理员",
+            "hint": "开启后管理员消息不会触发指令规则"
+        },
+        "sentinel_command_kick_threshold": {
+            "description": "指令规则累计踢出阈值",
+            "hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
+        },
+        "sentinel_command_kick_message": {
+            "description": "指令规则踢出提示",
+            "hint": "踢出后随机提示列表，支持变量：{id}、{name}、{date}、{time}"
+        },
+        "sentinel_command_notify_creator": {
+            "description": "指令规则命中通知创建者",
+            "hint": "开启后指令规则命中时私聊通知规则创建者"
         }
-      }
     },
-    "sentinel_command_user_whitelist": {
-      "description": "哨兵指令白名单用户",
-      "hint": "该列表用户不会触发指令规则检测，输入QQ号，多个用换行分隔"
-    },
-    "sentinel_command_mute_duration": {
-      "description": "指令规则禁言时长（秒）",
-      "hint": "指令规则命中后的禁言秒数，0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
-    },
-    "sentinel_command_reply_message": {
-      "description": "指令规则命中回复",
-      "hint": "指令规则命中后随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
-    },
-    "sentinel_command_ignore_admin": {
-      "description": "指令规则忽略管理员",
-      "hint": "开启后管理员消息不会触发指令规则"
-    },
-    "sentinel_command_kick_threshold": {
-      "description": "指令规则累计踢出阈值",
-      "hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
-    },
-    "sentinel_command_kick_message": {
-      "description": "指令规则踢出提示",
-      "hint": "踢出后随机提示列表，支持变量：{id}、{name}、{date}、{time}"
-    },
-    "sentinel_command_notify_creator": {
-      "description": "指令规则命中通知创建者",
-      "hint": "开启后指令规则命中时私聊通知规则创建者"
+    "messages": {
+        "help_title": "📖 群控助手 - BotKeeper - 命令帮助",
+        "help_header": "可用命令：",
+        "cmd_welcome": "/bot 欢迎 [on|off|message <文本>] - 新人欢迎设置（支持 {membername} 变量）",
+        "cmd_mute": "/bot 禁言 <QQ> [秒数] - 禁言群成员",
+        "cmd_unmute": "/bot 解禁 <QQ> - 解除禁言",
+        "cmd_global_mute": "/bot 全员禁言 on|off - 全员禁言",
+        "cmd_recall": "/bot 撤回 <QQ> [条数] - 撤回消息",
+        "cmd_rename": "/bot 改名 <QQ> <昵称> - 修改群昵称",
+        "cmd_title": "/bot 头衔 <QQ> <头衔> - 设置专属头衔",
+        "cmd_promote": "/bot 提升 <QQ> - 提升为管理员",
+        "cmd_demote": "/bot 降级 <QQ> - 移除管理员",
+        "cmd_set_group_name": "/bot 设置群名 <名称> - 修改群名",
+        "cmd_set_essence": "/bot 设精 - 设置引用的消息为群精华",
+        "cmd_remove_essence": "/bot 移精 - 移除引用的群精华消息",
+        "msg_not_in_group": "❌ 请在群聊中使用此命令",
+        "msg_no_permission": "❌ 您没有权限执行此操作",
+        "msg_status_on": "开启",
+        "msg_status_off": "关闭",
+        "msg_welcome_status": "🎉 新人欢迎消息状态：{status}",
+        "msg_welcome_enabled": "✅ 已开启新人欢迎",
+        "msg_welcome_disabled": "✅ 已关闭新人欢迎",
+        "msg_welcome_message": "🎉 欢迎 {membername} 加入群聊！✨",
+        "msg_parameter_error": "❌ 参数错误",
+        "msg_welcome_message_too_long": "❌ 欢迎消息过长（最多200字符）",
+        "msg_welcome_message_set": "✅ 欢迎消息已设置",
+        "msg_platform_not_supported": "❌ 当前平台不支持此功能",
+        "msg_operation_failed": "❌ 操作失败，请稍后再试",
+        "msg_mute_success": "✅ 已禁言 {user}，时长 {duration}",
+        "msg_unmute_success": "✅ 已解除 {user} 的禁言",
+        "msg_global_mute_enabled": "✅ 已开启全员禁言",
+        "msg_global_mute_disabled": "✅ 已关闭全员禁言",
+        "msg_recall_success": "✅ 成功撤回 {count} 条消息",
+        "msg_recall_no_messages": "❌ 无可撤回的消息",
+        "msg_rename_success": "✅ 已将 {user} 的群昵称改为 {new_name}",
+        "msg_owner_required": "❌ 需要群主权限",
+        "msg_title_success": "✅ 已为 {user} 设置头衔「{title}」",
+        "msg_promote_success": "✅ 已将 {user} 提升为管理员",
+        "msg_demote_success": "✅ 已移除 {user} 的管理员权限",
+        "msg_group_name_success": "✅ 群名已改为「{name}」",
+        "msg_set_essence_success": "✅ 已将引用的消息设为群精华",
+        "msg_remove_essence_success": "✅ 已移除引用的群精华消息",
+        "msg_essence_no_reply": "❌ 请先引用（回复）需要操作的消息，再使用此指令",
+        "msg_error_detail": "错误详情：{error}",
+        "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令",
+        "help_sentinel_header": "🛡️ 哨兵监控：",
+        "cmd_monitor": "/bot 监控 <关键词> [@某人...] - 添加监控规则",
+        "cmd_unmonitor": "/bot 取消监控 <规则ID|关键词> [@某人...] - 删除监控规则",
+        "cmd_monitorlist": "/bot 监控列表 - 查看当前群监控规则",
+        "msg_monitor_added": "✅ 已添加监控规则 #{rule_id}：{keyword}",
+        "msg_monitor_removed": "✅ 已删除监控规则 {rule_id}",
+        "msg_monitor_removed_count": "✅ 已删除 {count} 条监控规则",
+        "msg_monitor_removed_keyword": "✅ 已删除关键词「{keyword}」的监控规则",
+        "msg_monitor_list_title": "📋 当前群监控规则：",
+        "msg_monitor_list_empty": "📭 当前群无监控规则",
+        "msg_monitor_list_item": "  #{rule_id} 关键词：{keyword} | 监控：{users} | 创建者：{creator}",
+        "msg_monitor_all_members": "全体成员",
+        "msg_monitor_keyword_numeric": "❌ 关键词不允许纯数字",
+        "msg_monitor_not_found": "❌ 未找到匹配的监控规则"
     }
-  },
-  "messages": {
-    "help_title": "📖 群控助手 - BotKeeper - 命令帮助",
-    "help_header": "可用命令：",
-    "cmd_welcome": "/bot 欢迎 [on|off|message <文本>] - 新人欢迎设置（支持 {membername} 变量）",
-    "cmd_mute": "/bot 禁言 <QQ> [秒数] - 禁言群成员",
-    "cmd_unmute": "/bot 解禁 <QQ> - 解除禁言",
-    "cmd_global_mute": "/bot 全员禁言 on|off - 全员禁言",
-    "cmd_recall": "/bot 撤回 <QQ> [条数] - 撤回消息",
-    "cmd_rename": "/bot 改名 <QQ> <昵称> - 修改群昵称",
-    "cmd_title": "/bot 头衔 <QQ> <头衔> - 设置专属头衔",
-    "cmd_promote": "/bot 提升 <QQ> - 提升为管理员",
-    "cmd_demote": "/bot 降级 <QQ> - 移除管理员",
-    "cmd_set_group_name": "/bot 设置群名 <名称> - 修改群名",
-    "cmd_set_essence": "/bot 设精 - 设置引用的消息为群精华",
-    "cmd_remove_essence": "/bot 移精 - 移除引用的群精华消息",
-    "msg_not_in_group": "❌ 请在群聊中使用此命令",
-    "msg_no_permission": "❌ 您没有权限执行此操作",
-    "msg_status_on": "开启",
-    "msg_status_off": "关闭",
-    "msg_welcome_status": "🎉 新人欢迎消息状态：{status}",
-    "msg_welcome_enabled": "✅ 已开启新人欢迎",
-    "msg_welcome_disabled": "✅ 已关闭新人欢迎",
-    "msg_welcome_message": "🎉 欢迎 {membername} 加入群聊！✨",
-    "msg_parameter_error": "❌ 参数错误",
-    "msg_welcome_message_too_long": "❌ 欢迎消息过长（最多200字符）",
-    "msg_welcome_message_set": "✅ 欢迎消息已设置",
-    "msg_platform_not_supported": "❌ 当前平台不支持此功能",
-    "msg_operation_failed": "❌ 操作失败，请稍后再试",
-    "msg_mute_success": "✅ 已禁言 {user}，时长 {duration}",
-    "msg_unmute_success": "✅ 已解除 {user} 的禁言",
-    "msg_global_mute_enabled": "✅ 已开启全员禁言",
-    "msg_global_mute_disabled": "✅ 已关闭全员禁言",
-    "msg_recall_success": "✅ 成功撤回 {count} 条消息",
-    "msg_recall_no_messages": "❌ 无可撤回的消息",
-    "msg_rename_success": "✅ 已将 {user} 的群昵称改为 {new_name}",
-    "msg_owner_required": "❌ 需要群主权限",
-    "msg_title_success": "✅ 已为 {user} 设置头衔「{title}」",
-    "msg_promote_success": "✅ 已将 {user} 提升为管理员",
-    "msg_demote_success": "✅ 已移除 {user} 的管理员权限",
-    "msg_group_name_success": "✅ 群名已改为「{name}」",
-    "msg_set_essence_success": "✅ 已将引用的消息设为群精华",
-    "msg_remove_essence_success": "✅ 已移除引用的群精华消息",
-    "msg_essence_no_reply": "❌ 请先引用（回复）需要操作的消息，再使用此指令",
-    "msg_error_detail": "错误详情：{error}",
-    "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令",
-    "help_sentinel_header": "🛡️ 哨兵监控：",
-    "cmd_monitor": "/bot 监控 <关键词> [@某人...] - 添加监控规则",
-    "cmd_unmonitor": "/bot 取消监控 <规则ID|关键词> [@某人...] - 删除监控规则",
-    "cmd_monitorlist": "/bot 监控列表 - 查看当前群监控规则",
-    "msg_monitor_added": "✅ 已添加监控规则 #{rule_id}：{keyword}",
-    "msg_monitor_removed": "✅ 已删除监控规则 {rule_id}",
-    "msg_monitor_removed_count": "✅ 已删除 {count} 条监控规则",
-    "msg_monitor_removed_keyword": "✅ 已删除关键词「{keyword}」的监控规则",
-    "msg_monitor_list_title": "📋 当前群监控规则：",
-    "msg_monitor_list_empty": "📭 当前群无监控规则",
-    "msg_monitor_list_item": "  #{rule_id} 关键词：{keyword} | 监控：{users} | 创建者：{creator}",
-    "msg_monitor_all_members": "全体成员",
-    "msg_monitor_keyword_numeric": "❌ 关键词不允许纯数字",
-    "msg_monitor_not_found": "❌ 未找到匹配的监控规则"
-  }
 }

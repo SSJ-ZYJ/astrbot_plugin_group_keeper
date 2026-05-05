@@ -1,279 +1,275 @@
 {
-  "metadata": {
-    "display_name": "BotKeeper - Group Manager",
-    "short_desc": "HTS Team Group Control Assistant",
-    "desc": "An Astrbot plugin for managing QQ groups, designed for HTS Team management. Supports welcome messages, admin management and other features."
-  },
-  "config": {
-    "locale": {
-      "description": "Language",
-      "hint": "Select plugin display language",
-      "labels": [
-        "Chinese",
-        "English"
-      ]
+    "metadata": {
+        "display_name": "BotKeeper - Group Manager",
+        "short_desc": "HTS Team Group Control Assistant",
+        "desc": "An Astrbot plugin for managing QQ groups, designed for HTS Team management. Supports welcome messages, admin management and other features."
     },
-    "whitelist_enabled": {
-      "description": "Enable group whitelist",
-      "hint": "When enabled, only groups in the whitelist can use plugin features"
-    },
-    "group_whitelist": {
-      "description": "Group whitelist",
-      "hint": "Enter group IDs, one per line. When whitelist is enabled, only listed groups can use plugin features"
-    },
-    "welcome_global_enabled": {
-      "description": "Enable welcome message (Global)",
-      "hint": "Global master switch. When disabled, welcome messages will be disabled for all groups"
-    },
-    "welcome_default_enabled": {
-      "description": "Enable welcome for new groups by default",
-      "hint": "Whether to enable welcome messages by default when a new group triggers for the first time"
-    },
-    "default_mute_duration": {
-      "description": "Default mute duration (seconds)",
-      "hint": "Default mute duration when not specified"
-    },
-    "default_welcome_message": {
-      "description": "Default welcome message",
-      "hint": "Leave empty to use i18n default. Supported variables: {membername} = new member's name"
-    },
-    "max_recall_count": {
-      "description": "Max recall count",
-      "hint": "Maximum messages that can be recalled at once"
-    },
-    "sentinel_enabled": {
-      "description": "Enable Sentinel Monitor",
-      "hint": "Global master switch. When enabled, Sentinel will automatically detect group messages and apply rules"
-    },
-    "sentinel_group_blacklist": {
-      "description": "Sentinel group blacklist",
-      "hint": "Groups in this list will not be monitored by Sentinel. Enter group IDs, one per line"
-    },
-    "sentinel_user_whitelist": {
-      "description": "Sentinel global user whitelist",
-      "hint": "Users in this list will not trigger Sentinel detection. Enter QQ numbers, one per line"
-    },
-    "sentinel_rules": {
-      "description": "Sentinel detection rules",
-      "hint": "Click the Add button to select a rule template. Supports keyword rules and message type rules",
-      "templates": {
-        "keyword_rule": {
-          "name": "Keyword Rule",
-          "hint": "Detect text content based on keyword/regex matching",
-          "items": {
-            "keywords": {
-              "description": "Keyword list",
-              "hint": "Supports regular expressions, one keyword per line"
-            },
-            "time_range": {
-              "description": "Active time range",
-              "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
-            },
-            "groups": {
-              "description": "Target group IDs",
-              "hint": "Leave empty to apply to all groups"
-            },
-            "mute_duration": {
-              "description": "Mute duration (seconds)",
-              "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
-            },
-            "recall_delay": {
-              "description": "Recall delay (seconds)",
-              "hint": "0 means recall immediately"
-            },
-            "reply_message": {
-              "description": "Reply on hit",
-              "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
-            },
-            "ignore_admin": {
-              "description": "Ignore admins",
-              "hint": "When enabled, admin messages will not trigger this rule"
-            },
-            "ignore_owner": {
-              "description": "Ignore group owner",
-              "hint": "When enabled, group owner messages will not trigger this rule"
-            },
-            "notify_group_admin": {
-              "description": "Notify group admins",
-              "hint": "When enabled, group admins will be notified via private message on hit"
-            },
-            "notify_bot_admin": {
-              "description": "Notify bot admin",
-              "hint": "When enabled, bot admin will be notified via private message on hit"
-            },
-            "show_rule_in_notification": {
-              "description": "Show keywords in notification",
-              "hint": "When enabled, triggered keywords will be shown in notification messages"
-            },
-            "rule_user_whitelist": {
-              "description": "Rule-level user whitelist",
-              "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
-            },
-            "rule_user_monitor_list": {
-              "description": "Rule-level monitor list",
-              "hint": "Leave empty to monitor all members"
-            },
-            "kick_threshold": {
-              "description": "Cumulative kick threshold",
-              "hint": "Kick user when hit count reaches this threshold. 0=disabled"
-            },
-            "kick_message": {
-              "description": "Kick message",
-              "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
-            }
-          }
+    "config": {
+        "locale": {
+            "description": "Language",
+            "hint": "Select plugin display language",
+            "labels": [
+                "Chinese",
+                "English"
+            ]
         },
-        "type_rule": {
-          "name": "Message Type Rule",
-          "hint": "Detect based on message type (image/voice/video etc.)",
-          "items": {
-            "msg_types": {
-              "description": "Message type list",
-              "hint": "Options: text / image / voice / video / file / face / forward / json, one per line"
-            },
-            "time_range": {
-              "description": "Active time range",
-              "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
-            },
-            "groups": {
-              "description": "Target group IDs",
-              "hint": "Leave empty to apply to all groups"
-            },
-            "mute_duration": {
-              "description": "Mute duration (seconds)",
-              "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
-            },
-            "recall_delay": {
-              "description": "Recall delay (seconds)",
-              "hint": "0 means recall immediately"
-            },
-            "reply_message": {
-              "description": "Reply on hit",
-              "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
-            },
-            "ignore_admin": {
-              "description": "Ignore admins",
-              "hint": "When enabled, admin messages will not trigger this rule"
-            },
-            "ignore_owner": {
-              "description": "Ignore group owner",
-              "hint": "When enabled, group owner messages will not trigger this rule"
-            },
-            "notify_group_admin": {
-              "description": "Notify group admins",
-              "hint": "When enabled, group admins will be notified via private message on hit"
-            },
-            "notify_bot_admin": {
-              "description": "Notify bot admin",
-              "hint": "When enabled, bot admin will be notified via private message on hit"
-            },
-            "rule_user_whitelist": {
-              "description": "Rule-level user whitelist",
-              "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
-            },
-            "rule_user_monitor_list": {
-              "description": "Rule-level monitor list",
-              "hint": "Leave empty to monitor all members"
-            },
-            "kick_threshold": {
-              "description": "Cumulative kick threshold",
-              "hint": "Kick user when hit count reaches this threshold. 0=disabled"
-            },
-            "kick_message": {
-              "description": "Kick message",
-              "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
+        "whitelist_enabled": {
+            "description": "Enable group whitelist",
+            "hint": "When enabled, only groups in the whitelist can use plugin features"
+        },
+        "group_whitelist": {
+            "description": "Group whitelist",
+            "hint": "Enter group IDs, one per line. When whitelist is enabled, only listed groups can use plugin features"
+        },
+        "welcome_global_enabled": {
+            "description": "Enable welcome message (Global)",
+            "hint": "Global master switch. When disabled, welcome messages will be disabled for all groups"
+        },
+        "welcome_default_enabled": {
+            "description": "Enable welcome for new groups by default",
+            "hint": "Whether to enable welcome messages by default when a new group triggers for the first time"
+        },
+        "default_mute_duration": {
+            "description": "Default mute duration (seconds)",
+            "hint": "Default mute duration when not specified"
+        },
+        "default_welcome_message": {
+            "description": "Default welcome message",
+            "hint": "Leave empty to use i18n default. Supported variables: {membername} = new member's name"
+        },
+        "max_recall_count": {
+            "description": "Max recall count",
+            "hint": "Maximum messages that can be recalled at once"
+        },
+        "sentinel_enabled": {
+            "description": "Enable Sentinel Monitor",
+            "hint": "Global master switch. When enabled, Sentinel will automatically detect group messages and apply rules"
+        },
+        "sentinel_group_blacklist": {
+            "description": "Sentinel group blacklist",
+            "hint": "Groups in this list will not be monitored by Sentinel. Enter group IDs, one per line"
+        },
+        "sentinel_user_whitelist": {
+            "description": "Sentinel global user whitelist",
+            "hint": "Users in this list will not trigger Sentinel detection. Enter QQ numbers, one per line"
+        },
+        "sentinel_rules": {
+            "description": "Sentinel detection rules",
+            "hint": "Click the Add button to select a rule template. Supports keyword rules and message type rules",
+            "templates": {
+                "keyword_rule": {
+                    "name": "Keyword Rule",
+                    "hint": "Detect text content based on keyword/regex matching",
+                    "keywords": {
+                        "description": "Keyword list",
+                        "hint": "Supports regular expressions, one keyword per line"
+                    },
+                    "time_range": {
+                        "description": "Active time range",
+                        "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
+                    },
+                    "groups": {
+                        "description": "Target group IDs",
+                        "hint": "Leave empty to apply to all groups"
+                    },
+                    "mute_duration": {
+                        "description": "Mute duration (seconds)",
+                        "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
+                    },
+                    "recall_delay": {
+                        "description": "Recall delay (seconds)",
+                        "hint": "0 means recall immediately"
+                    },
+                    "reply_message": {
+                        "description": "Reply on hit",
+                        "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
+                    },
+                    "ignore_admin": {
+                        "description": "Ignore admins",
+                        "hint": "When enabled, admin messages will not trigger this rule"
+                    },
+                    "ignore_owner": {
+                        "description": "Ignore group owner",
+                        "hint": "When enabled, group owner messages will not trigger this rule"
+                    },
+                    "notify_group_admin": {
+                        "description": "Notify group admins",
+                        "hint": "When enabled, group admins will be notified via private message on hit"
+                    },
+                    "notify_bot_admin": {
+                        "description": "Notify bot admin",
+                        "hint": "When enabled, bot admin will be notified via private message on hit"
+                    },
+                    "show_rule_in_notification": {
+                        "description": "Show keywords in notification",
+                        "hint": "When enabled, triggered keywords will be shown in notification messages"
+                    },
+                    "rule_user_whitelist": {
+                        "description": "Rule-level user whitelist",
+                        "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
+                    },
+                    "rule_user_monitor_list": {
+                        "description": "Rule-level monitor list",
+                        "hint": "Leave empty to monitor all members"
+                    },
+                    "kick_threshold": {
+                        "description": "Cumulative kick threshold",
+                        "hint": "Kick user when hit count reaches this threshold. 0=disabled"
+                    },
+                    "kick_message": {
+                        "description": "Kick message",
+                        "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
+                    }
+                },
+                "type_rule": {
+                    "name": "Message Type Rule",
+                    "hint": "Detect based on message type (image/voice/video etc.)",
+                    "msg_types": {
+                        "description": "Message type list",
+                        "hint": "Options: text / image / voice / video / file / face / forward / json, one per line"
+                    },
+                    "time_range": {
+                        "description": "Active time range",
+                        "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
+                    },
+                    "groups": {
+                        "description": "Target group IDs",
+                        "hint": "Leave empty to apply to all groups"
+                    },
+                    "mute_duration": {
+                        "description": "Mute duration (seconds)",
+                        "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
+                    },
+                    "recall_delay": {
+                        "description": "Recall delay (seconds)",
+                        "hint": "0 means recall immediately"
+                    },
+                    "reply_message": {
+                        "description": "Reply on hit",
+                        "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
+                    },
+                    "ignore_admin": {
+                        "description": "Ignore admins",
+                        "hint": "When enabled, admin messages will not trigger this rule"
+                    },
+                    "ignore_owner": {
+                        "description": "Ignore group owner",
+                        "hint": "When enabled, group owner messages will not trigger this rule"
+                    },
+                    "notify_group_admin": {
+                        "description": "Notify group admins",
+                        "hint": "When enabled, group admins will be notified via private message on hit"
+                    },
+                    "notify_bot_admin": {
+                        "description": "Notify bot admin",
+                        "hint": "When enabled, bot admin will be notified via private message on hit"
+                    },
+                    "rule_user_whitelist": {
+                        "description": "Rule-level user whitelist",
+                        "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
+                    },
+                    "rule_user_monitor_list": {
+                        "description": "Rule-level monitor list",
+                        "hint": "Leave empty to monitor all members"
+                    },
+                    "kick_threshold": {
+                        "description": "Cumulative kick threshold",
+                        "hint": "Kick user when hit count reaches this threshold. 0=disabled"
+                    },
+                    "kick_message": {
+                        "description": "Kick message",
+                        "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
+                    }
+                }
             }
-          }
+        },
+        "sentinel_command_user_whitelist": {
+            "description": "Sentinel command whitelist users",
+            "hint": "Users in this list will not trigger command rule detection. Enter QQ numbers, one per line"
+        },
+        "sentinel_command_mute_duration": {
+            "description": "Command rule mute duration (seconds)",
+            "hint": "Mute duration for command rule hits. 0=no mute, -1=no recall no mute. Supports range like 60~300"
+        },
+        "sentinel_command_reply_message": {
+            "description": "Command rule reply on hit",
+            "hint": "Random reply list for command rule hits. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
+        },
+        "sentinel_command_ignore_admin": {
+            "description": "Command rule ignore admins",
+            "hint": "When enabled, admin messages will not trigger command rules"
+        },
+        "sentinel_command_kick_threshold": {
+            "description": "Command rule cumulative kick threshold",
+            "hint": "Kick user when hit count reaches this threshold. 0=disabled"
+        },
+        "sentinel_command_kick_message": {
+            "description": "Command rule kick message",
+            "hint": "Random kick message list. Variables: {id}, {name}, {date}, {time}"
+        },
+        "sentinel_command_notify_creator": {
+            "description": "Notify command rule creator on hit",
+            "hint": "When enabled, the rule creator will be notified via private message when a command rule is triggered"
         }
-      }
     },
-    "sentinel_command_user_whitelist": {
-      "description": "Sentinel command whitelist users",
-      "hint": "Users in this list will not trigger command rule detection. Enter QQ numbers, one per line"
-    },
-    "sentinel_command_mute_duration": {
-      "description": "Command rule mute duration (seconds)",
-      "hint": "Mute duration for command rule hits. 0=no mute, -1=no recall no mute. Supports range like 60~300"
-    },
-    "sentinel_command_reply_message": {
-      "description": "Command rule reply on hit",
-      "hint": "Random reply list for command rule hits. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
-    },
-    "sentinel_command_ignore_admin": {
-      "description": "Command rule ignore admins",
-      "hint": "When enabled, admin messages will not trigger command rules"
-    },
-    "sentinel_command_kick_threshold": {
-      "description": "Command rule cumulative kick threshold",
-      "hint": "Kick user when hit count reaches this threshold. 0=disabled"
-    },
-    "sentinel_command_kick_message": {
-      "description": "Command rule kick message",
-      "hint": "Random kick message list. Variables: {id}, {name}, {date}, {time}"
-    },
-    "sentinel_command_notify_creator": {
-      "description": "Notify command rule creator on hit",
-      "hint": "When enabled, the rule creator will be notified via private message when a command rule is triggered"
+    "messages": {
+        "help_title": "📖 BotKeeper - Group Manager - Help",
+        "help_header": "Available commands:",
+        "cmd_welcome": "/bot welcome [on|off|message <text>] - Welcome settings (supports {membername} variable)",
+        "cmd_mute": "/bot mute <QQ> [seconds] - Mute member",
+        "cmd_unmute": "/bot unmute <QQ> - Unmute member",
+        "cmd_global_mute": "/bot global_mute on|off - Global mute",
+        "cmd_recall": "/bot recall <QQ> [count] - Recall messages",
+        "cmd_rename": "/bot rename <QQ> <name> - Change group nickname",
+        "cmd_title": "/bot title <QQ> <title> - Set special title",
+        "cmd_promote": "/bot promote <QQ> - Promote to admin",
+        "cmd_demote": "/bot demote <QQ> - Demote admin",
+        "cmd_set_group_name": "/bot set_group_name <name> - Change group name",
+        "cmd_set_essence": "/bot set_essence - Set the quoted message as group essence",
+        "cmd_remove_essence": "/bot remove_essence - Remove the quoted group essence message",
+        "msg_not_in_group": "❌ Please use this command in a group chat",
+        "msg_no_permission": "❌ You don't have permission to do this",
+        "msg_status_on": "Enabled",
+        "msg_status_off": "Disabled",
+        "msg_welcome_status": "🎉 Welcome message status: {status}",
+        "msg_welcome_enabled": "✅ Welcome messages enabled",
+        "msg_welcome_disabled": "✅ Welcome messages disabled",
+        "msg_welcome_message": "🎉 Welcome {membername} to group chat! ✨",
+        "msg_parameter_error": "❌ Parameter error",
+        "msg_welcome_message_too_long": "❌ Welcome message too long (max 200 chars)",
+        "msg_welcome_message_set": "✅ Welcome message set",
+        "msg_platform_not_supported": "❌ This feature is not supported on current platform",
+        "msg_operation_failed": "❌ Operation failed, please try again later",
+        "msg_mute_success": "✅ Muted {user} for {duration}s",
+        "msg_unmute_success": "✅ Unmuted {user}",
+        "msg_global_mute_enabled": "✅ Global mute enabled",
+        "msg_global_mute_disabled": "✅ Global mute disabled",
+        "msg_recall_success": "✅ Recalled {count} messages",
+        "msg_recall_no_messages": "❌ No messages to recall",
+        "msg_rename_success": "✅ Changed {user}'s group nickname to {new_name}",
+        "msg_owner_required": "❌ Group owner permission required",
+        "msg_title_success": "✅ Set title \"{title}\" for {user}",
+        "msg_promote_success": "✅ Promoted {user} to admin",
+        "msg_demote_success": "✅ Demoted {user} from admin",
+        "msg_group_name_success": "✅ Group name changed to \"{name}\"",
+        "msg_set_essence_success": "✅ Quoted message set as group essence",
+        "msg_remove_essence_success": "✅ Quoted group essence message removed",
+        "msg_essence_no_reply": "❌ Please reply to (quote) the target message first, then use this command",
+        "msg_error_detail": "Error detail: {error}",
+        "msg_command_not_found": "❌ Command not found, use /bot help to see available commands",
+        "help_sentinel_header": "🛡️ Sentinel Monitor:",
+        "cmd_monitor": "/bot monitor <keyword> [@someone...] - Add monitoring rule",
+        "cmd_unmonitor": "/bot unmonitor <rule_id|keyword> [@someone...] - Remove monitoring rule",
+        "cmd_monitorlist": "/bot monitorlist - View current group monitoring rules",
+        "msg_monitor_added": "✅ Added monitoring rule #{rule_id}: {keyword}",
+        "msg_monitor_removed": "✅ Removed monitoring rule {rule_id}",
+        "msg_monitor_removed_count": "✅ Removed {count} monitoring rule(s)",
+        "msg_monitor_removed_keyword": "✅ Removed monitoring rule for keyword \"{keyword}\"",
+        "msg_monitor_list_title": "📋 Current group monitoring rules:",
+        "msg_monitor_list_empty": "📭 No monitoring rules in this group",
+        "msg_monitor_list_item": "  #{rule_id} Keyword: {keyword} | Monitor: {users} | Creator: {creator}",
+        "msg_monitor_all_members": "All members",
+        "msg_monitor_keyword_numeric": "❌ Keyword cannot be pure numbers",
+        "msg_monitor_not_found": "❌ No matching monitoring rule found"
     }
-  },
-  "messages": {
-    "help_title": "📖 BotKeeper - Group Manager - Help",
-    "help_header": "Available commands:",
-    "cmd_welcome": "/bot welcome [on|off|message <text>] - Welcome settings (supports {membername} variable)",
-    "cmd_mute": "/bot mute <QQ> [seconds] - Mute member",
-    "cmd_unmute": "/bot unmute <QQ> - Unmute member",
-    "cmd_global_mute": "/bot global_mute on|off - Global mute",
-    "cmd_recall": "/bot recall <QQ> [count] - Recall messages",
-    "cmd_rename": "/bot rename <QQ> <name> - Change group nickname",
-    "cmd_title": "/bot title <QQ> <title> - Set special title",
-    "cmd_promote": "/bot promote <QQ> - Promote to admin",
-    "cmd_demote": "/bot demote <QQ> - Demote admin",
-    "cmd_set_group_name": "/bot set_group_name <name> - Change group name",
-    "cmd_set_essence": "/bot set_essence - Set the quoted message as group essence",
-    "cmd_remove_essence": "/bot remove_essence - Remove the quoted group essence message",
-    "msg_not_in_group": "❌ Please use this command in a group chat",
-    "msg_no_permission": "❌ You don't have permission to do this",
-    "msg_status_on": "Enabled",
-    "msg_status_off": "Disabled",
-    "msg_welcome_status": "🎉 Welcome message status: {status}",
-    "msg_welcome_enabled": "✅ Welcome messages enabled",
-    "msg_welcome_disabled": "✅ Welcome messages disabled",
-    "msg_welcome_message": "🎉 Welcome {membername} to group chat! ✨",
-    "msg_parameter_error": "❌ Parameter error",
-    "msg_welcome_message_too_long": "❌ Welcome message too long (max 200 chars)",
-    "msg_welcome_message_set": "✅ Welcome message set",
-    "msg_platform_not_supported": "❌ This feature is not supported on current platform",
-    "msg_operation_failed": "❌ Operation failed, please try again later",
-    "msg_mute_success": "✅ Muted {user} for {duration}s",
-    "msg_unmute_success": "✅ Unmuted {user}",
-    "msg_global_mute_enabled": "✅ Global mute enabled",
-    "msg_global_mute_disabled": "✅ Global mute disabled",
-    "msg_recall_success": "✅ Recalled {count} messages",
-    "msg_recall_no_messages": "❌ No messages to recall",
-    "msg_rename_success": "✅ Changed {user}'s group nickname to {new_name}",
-    "msg_owner_required": "❌ Group owner permission required",
-    "msg_title_success": "✅ Set title \"{title}\" for {user}",
-    "msg_promote_success": "✅ Promoted {user} to admin",
-    "msg_demote_success": "✅ Demoted {user} from admin",
-    "msg_group_name_success": "✅ Group name changed to \"{name}\"",
-    "msg_set_essence_success": "✅ Quoted message set as group essence",
-    "msg_remove_essence_success": "✅ Quoted group essence message removed",
-    "msg_essence_no_reply": "❌ Please reply to (quote) the target message first, then use this command",
-    "msg_error_detail": "Error detail: {error}",
-    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands",
-    "help_sentinel_header": "🛡️ Sentinel Monitor:",
-    "cmd_monitor": "/bot monitor <keyword> [@someone...] - Add monitoring rule",
-    "cmd_unmonitor": "/bot unmonitor <rule_id|keyword> [@someone...] - Remove monitoring rule",
-    "cmd_monitorlist": "/bot monitorlist - View current group monitoring rules",
-    "msg_monitor_added": "✅ Added monitoring rule #{rule_id}: {keyword}",
-    "msg_monitor_removed": "✅ Removed monitoring rule {rule_id}",
-    "msg_monitor_removed_count": "✅ Removed {count} monitoring rule(s)",
-    "msg_monitor_removed_keyword": "✅ Removed monitoring rule for keyword \"{keyword}\"",
-    "msg_monitor_list_title": "📋 Current group monitoring rules:",
-    "msg_monitor_list_empty": "📭 No monitoring rules in this group",
-    "msg_monitor_list_item": "  #{rule_id} Keyword: {keyword} | Monitor: {users} | Creator: {creator}",
-    "msg_monitor_all_members": "All members",
-    "msg_monitor_keyword_numeric": "❌ Keyword cannot be pure numbers",
-    "msg_monitor_not_found": "❌ No matching monitoring rule found"
-  }
 }
