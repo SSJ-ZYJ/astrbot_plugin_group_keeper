@@ -57,127 +57,127 @@
       "description": "Sentinel detection rules",
       "hint": "Click the Add button to select a rule template. Supports keyword rules and message type rules"
     },
-    "sentinel_rules.keyword_rule": {
+    "sentinel_rules.templates.keyword_rule": {
       "name": "Keyword Rule",
       "hint": "Detect text content based on keyword/regex matching"
     },
-    "sentinel_rules.keyword_rule.items.keywords": {
+    "sentinel_rules.templates.keyword_rule.items.keywords": {
       "description": "Keyword list",
       "hint": "Supports regular expressions, one keyword per line"
     },
-    "sentinel_rules.keyword_rule.items.time_range": {
+    "sentinel_rules.templates.keyword_rule.items.time_range": {
       "description": "Active time range",
       "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
     },
-    "sentinel_rules.keyword_rule.items.groups": {
+    "sentinel_rules.templates.keyword_rule.items.groups": {
       "description": "Target group IDs",
       "hint": "Leave empty to apply to all groups"
     },
-    "sentinel_rules.keyword_rule.items.mute_duration": {
+    "sentinel_rules.templates.keyword_rule.items.mute_duration": {
       "description": "Mute duration (seconds)",
       "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
     },
-    "sentinel_rules.keyword_rule.items.recall_delay": {
+    "sentinel_rules.templates.keyword_rule.items.recall_delay": {
       "description": "Recall delay (seconds)",
       "hint": "0 means recall immediately"
     },
-    "sentinel_rules.keyword_rule.items.reply_message": {
+    "sentinel_rules.templates.keyword_rule.items.reply_message": {
       "description": "Reply on hit",
       "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
     },
-    "sentinel_rules.keyword_rule.items.ignore_admin": {
+    "sentinel_rules.templates.keyword_rule.items.ignore_admin": {
       "description": "Ignore admins",
       "hint": "When enabled, admin messages will not trigger this rule"
     },
-    "sentinel_rules.keyword_rule.items.ignore_owner": {
+    "sentinel_rules.templates.keyword_rule.items.ignore_owner": {
       "description": "Ignore group owner",
       "hint": "When enabled, group owner messages will not trigger this rule"
     },
-    "sentinel_rules.keyword_rule.items.notify_group_admin": {
+    "sentinel_rules.templates.keyword_rule.items.notify_group_admin": {
       "description": "Notify group admins",
       "hint": "When enabled, group admins will be notified via private message on hit"
     },
-    "sentinel_rules.keyword_rule.items.notify_bot_admin": {
+    "sentinel_rules.templates.keyword_rule.items.notify_bot_admin": {
       "description": "Notify bot admin",
       "hint": "When enabled, bot admin will be notified via private message on hit"
     },
-    "sentinel_rules.keyword_rule.items.show_rule_in_notification": {
+    "sentinel_rules.templates.keyword_rule.items.show_rule_in_notification": {
       "description": "Show keywords in notification",
       "hint": "When enabled, triggered keywords will be shown in notification messages"
     },
-    "sentinel_rules.keyword_rule.items.rule_user_whitelist": {
+    "sentinel_rules.templates.keyword_rule.items.rule_user_whitelist": {
       "description": "Rule-level user whitelist",
       "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
     },
-    "sentinel_rules.keyword_rule.items.rule_user_monitor_list": {
+    "sentinel_rules.templates.keyword_rule.items.rule_user_monitor_list": {
       "description": "Rule-level monitor list",
       "hint": "Leave empty to monitor all members"
     },
-    "sentinel_rules.keyword_rule.items.kick_threshold": {
+    "sentinel_rules.templates.keyword_rule.items.kick_threshold": {
       "description": "Cumulative kick threshold",
       "hint": "Kick user when hit count reaches this threshold. 0=disabled"
     },
-    "sentinel_rules.keyword_rule.items.kick_message": {
+    "sentinel_rules.templates.keyword_rule.items.kick_message": {
       "description": "Kick message",
       "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
     },
-    "sentinel_rules.type_rule": {
+    "sentinel_rules.templates.type_rule": {
       "name": "Message Type Rule",
       "hint": "Detect based on message type (image/voice/video etc.)"
     },
-    "sentinel_rules.type_rule.items.msg_types": {
+    "sentinel_rules.templates.type_rule.items.msg_types": {
       "description": "Message type list",
       "hint": "Options: text / image / voice / video / file / face / forward / json, one per line"
     },
-    "sentinel_rules.type_rule.items.time_range": {
+    "sentinel_rules.templates.type_rule.items.time_range": {
       "description": "Active time range",
       "hint": "e.g. Mon-Fri 09:00-18:00 or 22:00-02:00, leave empty for all day"
     },
-    "sentinel_rules.type_rule.items.groups": {
+    "sentinel_rules.templates.type_rule.items.groups": {
       "description": "Target group IDs",
       "hint": "Leave empty to apply to all groups"
     },
-    "sentinel_rules.type_rule.items.mute_duration": {
+    "sentinel_rules.templates.type_rule.items.mute_duration": {
       "description": "Mute duration (seconds)",
       "hint": "0=no mute, -1=no recall no mute. Supports range like 60~300"
     },
-    "sentinel_rules.type_rule.items.recall_delay": {
+    "sentinel_rules.templates.type_rule.items.recall_delay": {
       "description": "Recall delay (seconds)",
       "hint": "0 means recall immediately"
     },
-    "sentinel_rules.type_rule.items.reply_message": {
+    "sentinel_rules.templates.type_rule.items.reply_message": {
       "description": "Reply on hit",
       "hint": "Random reply list. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
     },
-    "sentinel_rules.type_rule.items.ignore_admin": {
+    "sentinel_rules.templates.type_rule.items.ignore_admin": {
       "description": "Ignore admins",
       "hint": "When enabled, admin messages will not trigger this rule"
     },
-    "sentinel_rules.type_rule.items.ignore_owner": {
+    "sentinel_rules.templates.type_rule.items.ignore_owner": {
       "description": "Ignore group owner",
       "hint": "When enabled, group owner messages will not trigger this rule"
     },
-    "sentinel_rules.type_rule.items.notify_group_admin": {
+    "sentinel_rules.templates.type_rule.items.notify_group_admin": {
       "description": "Notify group admins",
       "hint": "When enabled, group admins will be notified via private message on hit"
     },
-    "sentinel_rules.type_rule.items.notify_bot_admin": {
+    "sentinel_rules.templates.type_rule.items.notify_bot_admin": {
       "description": "Notify bot admin",
       "hint": "When enabled, bot admin will be notified via private message on hit"
     },
-    "sentinel_rules.type_rule.items.rule_user_whitelist": {
+    "sentinel_rules.templates.type_rule.items.rule_user_whitelist": {
       "description": "Rule-level user whitelist",
       "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
     },
-    "sentinel_rules.type_rule.items.rule_user_monitor_list": {
+    "sentinel_rules.templates.type_rule.items.rule_user_monitor_list": {
       "description": "Rule-level monitor list",
       "hint": "Leave empty to monitor all members"
     },
-    "sentinel_rules.type_rule.items.kick_threshold": {
+    "sentinel_rules.templates.type_rule.items.kick_threshold": {
       "description": "Cumulative kick threshold",
       "hint": "Kick user when hit count reaches this threshold. 0=disabled"
     },
-    "sentinel_rules.type_rule.items.kick_message": {
+    "sentinel_rules.templates.type_rule.items.kick_message": {
       "description": "Kick message",
       "hint": "Random message list. Variables: {id}, {name}, {date}, {time}"
     },

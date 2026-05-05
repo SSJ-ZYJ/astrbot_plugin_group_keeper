@@ -15,6 +15,9 @@
 - ♻️ 移除硬编码分割线，改用 `template_list` 实现规则分组
 - ♻️ 更新 `metadata.yaml` 最低 AstrBot 版本要求至 `>=4.10.4`（支持 `template_list` 类型）
 
+### 修复
+- 🐛 修复 `template_list` 规则模板 i18n 键名格式错误，现在正确使用 `sentinel_rules.templates.<template_key>` 路径
+
 ---
 
 ## [1.2.1] - 2026-05-05
@@ -369,6 +372,9 @@
 - ♻️ `zh-CN.json` and `en-US.json` add Chinese and English translations for all sentinel config items
 - ♻️ Remove hardcoded dividers, use `template_list` for rule grouping
 - ♻️ Update `metadata.yaml` minimum AstrBot version requirement to `>=4.10.4` (supports `template_list` type)
+
+### Fixed
+- 🐛 Fix `template_list` template i18n key format error, now correctly uses `sentinel_rules.templates.<template_key>` path
 
 ---
 
