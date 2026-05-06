@@ -227,7 +227,7 @@
   "messages": {
     "help_title": "📖 群控助手 - BotKeeper - 命令帮助",
     "help_header": "可用命令：",
-    "cmd_welcome": "/bot 欢迎 [on|off|message <文本>] - 新人欢迎设置（支持 {membername} 变量）",
+    "cmd_welcome": "/bot 欢迎 [on|off|message \"<文本>\"] - 新人欢迎设置（支持 {membername} 变量）",
     "cmd_mute": "/bot 禁言 <QQ> [秒数] - 禁言群成员",
     "cmd_unmute": "/bot 解禁 <QQ> - 解除禁言",
     "cmd_global_mute": "/bot 全员禁言 on|off - 全员禁言",

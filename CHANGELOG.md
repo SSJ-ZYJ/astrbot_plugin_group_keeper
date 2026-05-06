@@ -2,10 +2,22 @@
 
 ---
 
+## [1.2.5] - 2026-05-06
+
+### 修改
+- ♻️ 统一欢迎消息设置命令格式：`/bot welcome message "欢迎消息内容"`，支持双引号包裹内容
+- ♻️ 与 `/bot set_group_name "群名"` 命令格式保持一致
+
+### 文档
+- 📝 更新 README.md，更新欢迎消息设置示例
+- 📝 更新 i18n 帮助文本，反映新的命令格式
+
+---
+
 ## [1.2.4] - 2026-05-05
 
-### Changed
-- ♻️ Global rename sentinel term to "巡检" across CHANGELOG.md, README.md, zh-CN.json, sentinel_handler.py
+### 修改
+- ♻️ 全局统一术语"巡检"，涉及 CHANGELOG.md、README.md、zh-CN.json、sentinel_handler.py
 
 ---
 
@@ -381,6 +393,25 @@
 ---
 
 # Changelog
+
+---
+
+## [1.2.5] - 2026-05-06
+
+### Changed
+- ♻️ Unify welcome message command format: `/bot welcome message "welcome message content"`, support double-quoted content
+- ♻️ Consistent with `/bot set_group_name "group name"` command format
+
+### Documentation
+- 📝 Update README.md, update welcome message setting example
+- 📝 Update i18n help text to reflect new command format
+
+---
+
+## [1.2.4] - 2026-05-05
+
+### Changed
+- ♻️ Global rename sentinel term to "巡检" across CHANGELOG.md, README.md, zh-CN.json, sentinel_handler.py
 
 ---
 

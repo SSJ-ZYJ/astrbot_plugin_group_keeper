@@ -18,12 +18,12 @@ WELCOME_MESSAGE_MAX_LEN = 200
     name="astrbot_plugin_group_keeper",
     author="SSJ-ZYJ",
     desc="BotKeeper - A QQ group management plugin for AstrBot, designed for HTS Team.",
-    version="1.2.2",
+    version="1.2.5",
     repo="https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper",
 )
 class GroupKeeperPlugin(star.Star):
-    """BotKeeper - Group Control Assistant - comprehensive group management plugin.
-
+    """
+    BotKeeper - Group Control Assistant - comprehensive group management plugin.
     群控助手 - 综合群管理插件。
     """
 
@@ -503,6 +503,7 @@ class GroupKeeperPlugin(star.Star):
         elif arg1.lower() == "message":
             new_msg = self._strip_command_prefix(event, "welcome", "欢迎")
             new_msg = re.sub(r"^(message)\s*", "", new_msg, flags=re.IGNORECASE).strip()
+            new_msg = self._strip_quotes(new_msg)
             if not new_msg:
                 self._reply_key(event, "msg_parameter_error")
                 return

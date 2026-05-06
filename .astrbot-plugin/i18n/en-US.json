@@ -227,7 +227,7 @@
   "messages": {
     "help_title": "📖 BotKeeper - Group Manager - Help",
     "help_header": "Available commands:",
-    "cmd_welcome": "/bot welcome [on|off|message <text>] - Welcome settings (supports {membername} variable)",
+    "cmd_welcome": "/bot welcome [on|off|message \"<text>\"] - Welcome settings (supports {membername} variable)",
     "cmd_mute": "/bot mute <QQ> [seconds] - Mute member",
     "cmd_unmute": "/bot unmute <QQ> - Unmute member",
     "cmd_global_mute": "/bot global_mute on|off - Global mute",

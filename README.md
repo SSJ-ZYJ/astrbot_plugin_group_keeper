@@ -67,7 +67,8 @@
 | `/bot monitorlist` | `/bot 监控列表` | 查看当前群指令监控规则 | 管理员/群主/白名单用户 |
 
 > [!TIP] 
-> `<QQ>` 可以为 @SSJ 或 QQ号。
+> `<QQ>` 可以为 @群成员 或 QQ号。
+> 如：`/bot title @SSJ 神秘头衔` 或 `/bot title 176*****76 神秘头衔` 。
 
 ### 使用示例
 
@@ -97,11 +98,11 @@
 
 | 变量 | 说明 | 示例 |
 |------|------|------|
-| `{membername}` | 新成员的QQ昵称 | 欢迎 SSJ 加入群聊！ |
+| `{membername}` | 新成员的QQ昵称 | 欢迎 xxx 加入群聊！ |
 
 示例：设置自定义欢迎消息
 ```
-/bot welcome message 欢迎 {membername} 加入群聊！
+/bot welcome message "欢迎 {membername} 加入群聊！"
 ```
 
 ### 命令拦截机制
@@ -116,7 +117,7 @@
 | 非 `/bot` 开头的消息 | 不处理，交给其他插件（如 LLM） |
 
 > [!CAUTION] 
-> 启用白名单后，非白名单群聊中的 `/bot` 命令将被静默忽略，不会产生任何回复。
+> 启用白名单后，非白名单群聊中以 `/bot` 开头的一切消息将被静默忽略，不会产生任何回复。
 
 ---
 
@@ -134,8 +135,11 @@
 | `welcome_global_enabled` | 布尔 | true | 新人欢迎全局总开关，关闭后所有群的欢迎功能都将禁用 |
 | `welcome_default_enabled` | 布尔 | true | 新群首次触发时是否默认开启欢迎消息 |
 | `default_mute_duration` | 整数 | 60 | 默认禁言时长（秒） |
-| `default_welcome_message` | 文本 | (空) | 默认欢迎消息，留空使用语言包。支持 `{membername}` 变量 |
+| `default_welcome_message` | 文本 | (空) | 默认欢迎消息，留空使用默认欢迎消息。支持 `{membername}` 变量 |
 | `max_recall_count` | 整数 | 10 | 单次最多撤回消息条数 |
+
+> [!NOTE]
+> 默认欢迎消息为："🎉欢迎 {membername} 加入群聊！✨"
 
 ### 群级别配置
 
