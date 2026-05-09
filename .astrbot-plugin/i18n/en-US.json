@@ -41,6 +41,14 @@
       "description": "Max recall count",
       "hint": "Maximum messages that can be recalled at once"
     },
+    "enable_long_message_merge": {
+      "description": "Enable long message merge",
+      "hint": "When enabled, messages longer than threshold will be sent as merged messages"
+    },
+    "long_message_threshold": {
+      "description": "Long message threshold (characters)",
+      "hint": "Maximum message length before splitting and merging. Default: 350 characters"
+    },
     "sentinel_settings": {
       "description": "Sentinel Module Settings",
       "hint": "Configure sentinel monitoring, detection rules, and command module",
@@ -282,6 +290,9 @@
     "msg_monitor_list_item": "  #{rule_id} Keyword: {keyword} | Monitor: {users} | Creator: {creator}",
     "msg_monitor_all_members": "All members",
     "msg_monitor_keyword_numeric": "❌ Keyword cannot be pure numbers",
-    "msg_monitor_not_found": "❌ No matching monitoring rule found"
+    "msg_monitor_not_found": "❌ No matching monitoring rule found",
+    "msg_sentinel_keyword_info": " | Keywords: {keywords}",
+    "msg_sentinel_hit_notification": "⚠️ Sentinel monitoring hit | Group: {group_id} | User: {user_name}({user_id}){keyword_info}",
+    "msg_sentinel_creator_notification": "⚠️ Your monitor rule was triggered | Group: {group_id} | Keyword: {keyword} | Triggered user: {user_name}({user_id})"
   }
 }

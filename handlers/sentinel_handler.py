@@ -4,6 +4,7 @@ import asyncio
 import json
 import random
 import re
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -24,49 +25,79 @@ MSG_TYPE_MAP = {
 }
 
 VIOLATION_FILE = "violation_counts.json"
+Translator = Callable[..., str]
 
 
 class SentinelHandler:
-    """Handles sentinel monitoring logic: rule matching, violation tracking, and actions."""
+    """Handles sentinel monitoring logic: rule matching, violation tracking, and actions.
 
-    def __init__(self, data_path: Path):
+    处理巡检监控逻辑，包括规则匹配、违规记录跟踪和操作执行。
+    """
+
+    def __init__(self, data_path: Path, translator: Translator | None = None):
         self.sentinel_path = data_path / "sentinel"
         self.sentinel_path.mkdir(parents=True, exist_ok=True)
+        self._translator = translator
         self._violation_data: dict[str, dict[str, dict[str, int]]] = {}
         self._load_violations()
 
+    def _t(self, key: str, **kwargs) -> str:
+        """Translate sentinel notification text through the plugin i18n manager.
+
+        通过插件 i18n 管理器翻译巡检通知文本。
+        """
+        if self._translator is None:
+            return key
+        return self._translator(key, **kwargs)
+
     def _load_violations(self):
+        """Load violation counters from plugin data storage.
+
+        从插件数据目录加载违规计数。
+        """
         vf = self.sentinel_path / VIOLATION_FILE
         if vf.exists():
             try:
-                with open(vf, encoding="utf-8") as f:
+                with vf.open(encoding="utf-8") as f:
                     self._violation_data = json.load(f)
             except Exception as e:
                 logger.error(f"Failed to load violation counts: {e}")
                 self._violation_data = {}
 
     def _save_violations(self):
+        """Persist violation counters to plugin data storage.
+
+        将违规计数保存到插件数据目录。
+        """
         vf = self.sentinel_path / VIOLATION_FILE
         try:
-            with open(vf, "w", encoding="utf-8") as f:
+            with vf.open("w", encoding="utf-8") as f:
                 json.dump(self._violation_data, f, ensure_ascii=False, indent=2)
         except Exception as e:
             logger.error(f"Failed to save violation counts: {e}")
 
     def load_command_rules(self, group_id: str) -> dict:
+        """Load command-created sentinel rules for one group.
+
+        加载单群通过指令创建的巡检规则。
+        """
         rf = self.sentinel_path / f"command_rules_{group_id}.json"
         if rf.exists():
             try:
-                with open(rf, encoding="utf-8") as f:
+                with rf.open(encoding="utf-8") as f:
                     return json.load(f)
             except Exception as e:
                 logger.error(f"Failed to load command rules for {group_id}: {e}")
         return {"rules": [], "next_id": 1}
 
     def save_command_rules(self, group_id: str, data: dict):
+        """Persist command-created sentinel rules for one group.
+
+        保存单群通过指令创建的巡检规则。
+        """
         rf = self.sentinel_path / f"command_rules_{group_id}.json"
         try:
-            with open(rf, "w", encoding="utf-8") as f:
+            with rf.open("w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
         except Exception as e:
             logger.error(f"Failed to save command rules for {group_id}: {e}")
@@ -78,6 +109,10 @@ class SentinelHandler:
         monitor_users: list[str],
         creator_id: str,
     ) -> int:
+        """Add a command-created monitor rule and return its numeric id.
+
+        添加指令创建的监控规则，并返回数字编号。
+        """
         data = self.load_command_rules(group_id)
         rule_id = data["next_id"]
         data["rules"].append(
@@ -100,6 +135,10 @@ class SentinelHandler:
         target_users: list[str] | None = None,
         rule_id: str | None = None,
     ) -> list[str]:
+        """Remove command-created rules by id, keyword, or target users.
+
+        按规则 ID、关键词或目标用户删除指令创建的规则。
+        """
         data = self.load_command_rules(group_id)
         removed: list[str] = []
 
@@ -138,19 +177,26 @@ class SentinelHandler:
                     remaining.append(r)
             data["rules"] = remaining
         elif keyword and not target_users:
-            before = len(data["rules"])
+            matched = [r for r in data["rules"] if r["keyword"] == keyword]
             data["rules"] = [r for r in data["rules"] if r["keyword"] != keyword]
-            removed = [r["rule_id"] for r in data["rules"] if r["keyword"] == keyword]
-            if len(data["rules"]) < before:
+            if matched:
                 removed = [f"keyword:{keyword}"]
 
         self.save_command_rules(group_id, data)
         return removed
 
     def get_violation_count(self, group_id: str, user_id: str, rule_id: str) -> int:
+        """Return the current violation count for a user/rule pair.
+
+        返回指定用户和规则的当前违规计数。
+        """
         return self._violation_data.get(group_id, {}).get(user_id, {}).get(rule_id, 0)
 
     def increment_violation(self, group_id: str, user_id: str, rule_id: str) -> int:
+        """Increment and persist a user/rule violation counter.
+
+        增加并保存指定用户和规则的违规计数。
+        """
         if group_id not in self._violation_data:
             self._violation_data[group_id] = {}
         if user_id not in self._violation_data[group_id]:
@@ -162,6 +208,10 @@ class SentinelHandler:
         return self._violation_data[group_id][user_id][rule_id]
 
     def reset_violation(self, group_id: str, user_id: str, rule_id: str):
+        """Reset one user/rule violation counter and prune empty containers.
+
+        重置指定用户和规则的违规计数，并清理空容器。
+        """
         if (
             group_id in self._violation_data
             and user_id in self._violation_data[group_id]
@@ -182,6 +232,10 @@ class SentinelHandler:
         message_str: str,
         message_types: set[str],
     ) -> list[dict]:
+        """Find all configured and command-created sentinel rules hit by a message.
+
+        查找当前消息命中的配置规则和指令规则。
+        """
         matched: list[dict] = []
 
         sentinel_settings = config.get("sentinel_settings", {})
@@ -226,7 +280,11 @@ class SentinelHandler:
                 cmd_rule, group_id, sender_id, sender_role, message_str, cmd_config
             ):
                 matched.append(
-                    {"type": "command", "rule": cmd_rule, "cmd_config": cmd_config}
+                    {
+                        "type": "command",
+                        "rule": cmd_rule,
+                        "cmd_config": cmd_config,
+                    }
                 )
 
         return matched
@@ -240,6 +298,10 @@ class SentinelHandler:
         message_str: str,
         message_types: set[str],
     ) -> bool:
+        """Evaluate one WebUI-configured sentinel rule.
+
+        评估一条 WebUI 配置的巡检规则。
+        """
         groups = rule.get("groups", [])
         if groups and str(group_id) not in [str(g) for g in groups]:
             return False
@@ -296,6 +358,10 @@ class SentinelHandler:
         message_str: str,
         cmd_config: dict,
     ) -> bool:
+        """Evaluate one command-created monitor rule.
+
+        评估一条通过指令创建的监控规则。
+        """
         cmd_whitelist = cmd_config.get("command_user_whitelist", [])
         if sender_id in cmd_whitelist:
             return False
@@ -326,6 +392,10 @@ class SentinelHandler:
         message_id: int | None,
         match_info: dict,
     ) -> str | None:
+        """Execute recall, mute, reply, kick, and notification actions for a hit.
+
+        对命中规则执行撤回、禁言、回复、踢出和通知动作。
+        """
         rule = match_info["rule"]
         match_type = match_info["type"]
 
@@ -444,6 +514,10 @@ class SentinelHandler:
 
     @staticmethod
     def _render_template(text: str, user_id: str, user_name: str) -> str:
+        """Render runtime placeholders in sentinel reply/kick templates.
+
+        渲染巡检回复和踢出提示中的运行时占位符。
+        """
         now = datetime.now()
         text = text.replace("{id}", str(user_id))
         text = text.replace("{name}", user_name or str(user_id))
@@ -453,6 +527,10 @@ class SentinelHandler:
 
     @staticmethod
     def _parse_mute_duration(mute_str: str) -> int:
+        """Parse a fixed or ranged mute duration string.
+
+        解析固定值或区间格式的禁言秒数。
+        """
         try:
             if "~" in mute_str:
                 parts = mute_str.split("~")
@@ -465,6 +543,10 @@ class SentinelHandler:
 
     @staticmethod
     async def _get_sender_role(event: Any, group_id: str, sender_id: str) -> str:
+        """Fetch the sender's real group role, falling back to member.
+
+        获取发送者真实群角色，失败时按普通成员处理。
+        """
         bot = getattr(event, "bot", None)
         if bot is None:
             return "member"
@@ -479,8 +561,8 @@ class SentinelHandler:
         except Exception:
             return "member"
 
-    @staticmethod
     async def _notify_group_admins(
+        self,
         bot: Any,
         group_id: str,
         rule: dict,
@@ -488,6 +570,10 @@ class SentinelHandler:
         user_id: str,
         user_name: str,
     ):
+        """Notify group admins by private message when a config rule is hit.
+
+        配置规则命中时，通过私聊通知群管理员。
+        """
         try:
             info = await bot.call_action(
                 "get_group_member_list", group_id=int(group_id)
@@ -502,8 +588,16 @@ class SentinelHandler:
             if show_keyword:
                 keywords = rule.get("keywords", [])
                 if keywords:
-                    keyword_info = f" | 关键词: {','.join(keywords)}"
-            text = f"⚠️ 巡检监控命中 | 群: {group_id} | 用户: {user_name}({user_id}){keyword_info}"
+                    keyword_info = self._t(
+                        "msg_sentinel_keyword_info", keywords=",".join(keywords)
+                    )
+            text = self._t(
+                "msg_sentinel_hit_notification",
+                group_id=group_id,
+                user_name=user_name,
+                user_id=user_id,
+                keyword_info=keyword_info,
+            )
             for admin in admins:
                 try:
                     await bot.call_action(
@@ -516,8 +610,8 @@ class SentinelHandler:
         except Exception as e:
             logger.warning(f"Sentinel notify group admins failed: {e}")
 
-    @staticmethod
     async def _notify_bot_admin(
+        self,
         bot: Any,
         group_id: str,
         rule: dict,
@@ -525,14 +619,26 @@ class SentinelHandler:
         user_id: str,
         user_name: str,
     ):
+        """Notify the group owner as the bot-admin fallback recipient.
+
+        将群主作为 Bot 管理员回退接收者进行通知。
+        """
         try:
             await bot.call_action("get_login_info")
             keyword_info = ""
             if show_keyword:
                 keywords = rule.get("keywords", [])
                 if keywords:
-                    keyword_info = f" | 关键词: {','.join(keywords)}"
-            text = f"⚠️ 巡检监控命中 | 群: {group_id} | 用户: {user_name}({user_id}){keyword_info}"
+                    keyword_info = self._t(
+                        "msg_sentinel_keyword_info", keywords=",".join(keywords)
+                    )
+            text = self._t(
+                "msg_sentinel_hit_notification",
+                group_id=group_id,
+                user_name=user_name,
+                user_id=user_id,
+                keyword_info=keyword_info,
+            )
             admins = await bot.call_action(
                 "get_group_member_list", group_id=int(group_id)
             )
@@ -549,8 +655,8 @@ class SentinelHandler:
         except Exception as e:
             logger.warning(f"Sentinel notify bot admin failed: {e}")
 
-    @staticmethod
     async def _notify_creator(
+        self,
         bot: Any,
         group_id: str,
         rule: dict,
@@ -558,9 +664,19 @@ class SentinelHandler:
         user_id: str,
         user_name: str,
     ):
+        """Notify the creator of a command-created monitor rule.
+
+        通知通过指令创建监控规则的创建者。
+        """
         try:
             keyword = rule.get("keyword", "")
-            text = f"⚠️ 您的监控规则被触发 | 群: {group_id} | 关键词: {keyword} | 触发用户: {user_name}({user_id})"
+            text = self._t(
+                "msg_sentinel_creator_notification",
+                group_id=group_id,
+                keyword=keyword,
+                user_name=user_name,
+                user_id=user_id,
+            )
             await bot.call_action(
                 "send_private_msg",
                 user_id=int(creator_id),
@@ -571,6 +687,10 @@ class SentinelHandler:
 
     @staticmethod
     def extract_message_types(event: Any) -> set[str]:
+        """Extract AstrBot component types plus raw OneBot segment types.
+
+        提取 AstrBot 消息组件类型以及原始 OneBot 片段类型。
+        """
         types: set[str] = set()
         messages = event.get_messages() if hasattr(event, "get_messages") else []
         for comp in messages:
@@ -599,6 +719,10 @@ class SentinelHandler:
 
     @staticmethod
     def extract_message_id(event: Any) -> int | None:
+        """Extract OneBot message_id from raw event payload.
+
+        从原始事件载荷中提取 OneBot message_id。
+        """
         raw = (
             getattr(event.message_obj, "raw_message", None)
             if hasattr(event, "message_obj")

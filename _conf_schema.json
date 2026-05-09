@@ -40,7 +40,7 @@
 	"default_mute_duration": {
 		"description": "Default mute duration (seconds)",
 		"type": "int",
-		"default": 60,
+		"default": 30,
 		"hint": "Default mute duration when not specified"
 	},
 	"default_welcome_message": {
@@ -54,6 +54,18 @@
 		"type": "int",
 		"default": 10,
 		"hint": "Maximum messages that can be recalled at once"
+	},
+	"enable_long_message_merge": {
+		"description": "Enable long message merge",
+		"type": "bool",
+		"default": true,
+		"hint": "When enabled, messages longer than threshold will be sent as merged messages"
+	},
+	"long_message_threshold": {
+		"description": "Long message threshold (characters)",
+		"type": "int",
+		"default": 350,
+		"hint": "Maximum message length before splitting and merging. Default: 350 characters"
 	},
 	"sentinel_settings": {
 		"description": "Sentinel Module Settings",

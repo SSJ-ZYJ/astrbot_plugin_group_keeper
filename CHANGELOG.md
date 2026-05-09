@@ -2,6 +2,19 @@
 
 ---
 
+## [1.2.6] - 2026-05-09
+
+### 修改
+- ♻️ 重构 `main.py` 命令前置校验逻辑，统一群聊、管理员、Bot 对象和群主权限检查，保持原有功能行为不变
+- ♻️ 重构巡检指令和消息检测逻辑，复用 `/bot` 命令识别、关键词规整与长消息回复处理
+- ♻️ 巡检私聊通知改为通过 i18n 语言包生成，移除新增通知文本硬编码
+
+### 文档
+- 📝 补充中英双语注释，更新 README.md 中权限、配置默认值和数据目录说明
+- 📝 更新 `metadata.yaml` 版本号至 v1.2.6
+
+---
+
 ## [1.2.5] - 2026-05-06
 
 ### 修改
@@ -393,6 +406,19 @@
 ---
 
 # Changelog
+
+---
+
+## [1.2.6] - 2026-05-09
+
+### Changed
+- ♻️ Refactor `main.py` command precondition checks to centralize group, admin, bot-object, and owner permission validation while preserving existing behavior
+- ♻️ Refactor sentinel command and watchdog logic to reuse `/bot` command detection, keyword normalization, and long-message reply handling
+- ♻️ Move sentinel private notification text generation to i18n resources, avoiding newly added hardcoded notification strings
+
+### Documentation
+- 📝 Add bilingual comments and update README.md permissions, config defaults, and data directory notes
+- 📝 Update `metadata.yaml` version to v1.2.6
 
 ---
 

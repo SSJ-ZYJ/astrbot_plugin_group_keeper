@@ -41,26 +41,34 @@
       "description": "最大撤回条数",
       "hint": "单次最多撤回的消息条数"
     },
+    "enable_long_message_merge": {
+      "description": "启用长消息合并",
+      "hint": "开启后，超过阈值的消息将以合并消息形式发送"
+    },
+    "long_message_threshold": {
+      "description": "长消息阈值（字符）",
+      "hint": "消息超过此长度将被拆分合并发送。默认：350字符"
+    },
     "sentinel_settings": {
-      "description": "哨兵模块设置",
-      "hint": "配置哨兵监控、检测规则和指令模块",
+      "description": "巡检模块设置",
+      "hint": "配置巡检监控、检测规则和指令模块",
       "sentinel_enabled": {
-        "description": "启用哨兵监控",
-        "hint": "全局总开关，开启后哨兵将自动检测群消息并执行规则"
+        "description": "启用巡检监控",
+        "hint": "全局总开关，开启后巡检将自动检测群消息并执行规则"
       },
       "sentinel_group_blacklist": {
-        "description": "哨兵群聊黑名单",
-        "hint": "名单中的群不进行哨兵检测，输入群号，多个群号用换行分隔"
+        "description": "巡检群聊黑名单",
+        "hint": "名单中的群不进行巡检检测，输入群号，多个群号用换行分隔"
       },
       "sentinel_user_whitelist": {
-        "description": "哨兵全局用户白名单",
-        "hint": "名单中的用户不会触发哨兵检测，输入QQ号，多个用换行分隔"
+        "description": "巡检全局用户白名单",
+        "hint": "名单中的用户不会触发巡检检测，输入QQ号，多个用换行分隔"
       },
       "sentinel_rules_group": {
         "description": "检测规则配置",
         "hint": "配置关键词和消息类型检测规则",
         "sentinel_rules": {
-          "description": "哨兵检测规则",
+          "description": "巡检检测规则",
           "hint": "点击「添加」按钮选择规则模板，支持关键词规则和消息类型规则",
           "templates": {
             "keyword_rule": {
@@ -194,7 +202,7 @@
         "description": "指令模块配置",
         "hint": "配置通过 /bot 监控 指令创建的监控规则",
         "sentinel_command_user_whitelist": {
-          "description": "哨兵指令白名单用户",
+          "description": "巡检指令白名单用户",
           "hint": "该列表用户不会触发指令规则检测，输入QQ号，多个用换行分隔"
         },
         "sentinel_command_mute_duration": {
@@ -282,6 +290,9 @@
     "msg_monitor_list_item": "  #{rule_id} 关键词：{keyword} | 监控：{users} | 创建者：{creator}",
     "msg_monitor_all_members": "全体成员",
     "msg_monitor_keyword_numeric": "❌ 关键词不允许纯数字",
-    "msg_monitor_not_found": "❌ 未找到匹配的监控规则"
+    "msg_monitor_not_found": "❌ 未找到匹配的监控规则",
+    "msg_sentinel_keyword_info": " | 关键词：{keywords}",
+    "msg_sentinel_hit_notification": "⚠️ 巡检监控命中 | 群：{group_id} | 用户：{user_name}({user_id}){keyword_info}",
+    "msg_sentinel_creator_notification": "⚠️ 您的监控规则被触发 | 群：{group_id} | 关键词：{keyword} | 触发用户：{user_name}({user_id})"
   }
 }

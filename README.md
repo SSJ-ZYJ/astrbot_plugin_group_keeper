@@ -55,7 +55,7 @@
 | `/bot unmute <QQ>` | `/bot 解禁 <QQ>` | 解除禁言 | 管理员和群主 |
 | `/bot global_mute on\|off` | `/bot 全员禁言 on\|off` | 全员禁言控制 | 管理员和群主 |
 | `/bot recall <QQ> [数量]` | `/bot 撤回 <QQ> [数量]` | 撤回指定用户消息 | 管理员和群主 |
-| `/bot rename <QQ> <昵称>` | `/bot 改名 <QQ> <昵称>` | 修改群昵称 | 所有人 |
+| `/bot rename <QQ> <昵称>` | `/bot 改名 <QQ> <昵称>` | 修改群昵称 | 管理员和群主 |
 | `/bot title <QQ> <头衔>` | `/bot 头衔 <QQ> <头衔>` | 设置专属头衔 | 管理员和群主 |
 | `/bot promote <QQ>` | `/bot 提升 <QQ>` | 提升为管理员 | 管理员和群主 |
 | `/bot demote <QQ>` | `/bot 降级 <QQ>` | 移除管理员 | 管理员和群主 | 
@@ -134,9 +134,11 @@
 | `group_whitelist` | 列表 | [] | 群白名单列表，输入群号，多个群号用换行分隔 |
 | `welcome_global_enabled` | 布尔 | true | 新人欢迎全局总开关，关闭后所有群的欢迎功能都将禁用 |
 | `welcome_default_enabled` | 布尔 | true | 新群首次触发时是否默认开启欢迎消息 |
-| `default_mute_duration` | 整数 | 60 | 默认禁言时长（秒） |
+| `default_mute_duration` | 整数 | 30 | 默认禁言时长（秒） |
 | `default_welcome_message` | 文本 | (空) | 默认欢迎消息，留空使用默认欢迎消息。支持 `{membername}` 变量 |
 | `max_recall_count` | 整数 | 10 | 单次最多撤回消息条数 |
+| `enable_long_message_merge` | 布尔 | true | 启用后，超过阈值的回复将以合并消息形式发送 |
+| `long_message_threshold` | 整数 | 350 | 长消息拆分阈值（字符） |
 
 > [!NOTE]
 > 默认欢迎消息为："🎉欢迎 {membername} 加入群聊！✨"
@@ -150,7 +152,7 @@
 | `welcome_enabled` | 当前群是否开启欢迎 | `/bot welcome on/off` |
 | `welcome_message` | 当前群的自定义欢迎消息 | `/bot welcome message <文本>` |
 
-群配置文件存储在 `data/astrbot_plugin_group_keeper/groups/group_<群号>.json`。
+群配置文件存储在 AstrBot 数据目录的 `plugin_data/astrbot_plugin_group_keeper/groups/group_<群号>.json`。
 
 ### 配置优先级
 

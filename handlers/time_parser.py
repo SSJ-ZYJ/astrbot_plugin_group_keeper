@@ -24,13 +24,24 @@ class TimeParser:
         ``Mon-Fri 09:00-18:00``
         ``09:00-18:00``
         ``22:00-02:00`` (cross-day)
+
+    解析并评估时间范围表达式，用于巡检规则。
+    支持日期、星期和时间范围的组合。
+    例如：
+        ``2026-10-01~2026-10-07 Mon-Fri 09:00-18:00``
+        ``Mon-Fri 09:00-18:00``
+        ``09:00-18:00``
+        ``22:00-02:00`` (跨天时间范围)
     """
 
     @staticmethod
     def is_in_range(time_range_str: str) -> bool:
         """Check if current datetime is within the specified time range.
 
+        判断当前时间是否落在给定范围内。
+
         An empty or whitespace-only string means always active.
+        空字符串或纯空白字符串表示始终生效。
         """
         if not time_range_str or not time_range_str.strip():
             return True
@@ -74,6 +85,10 @@ class TimeParser:
 
     @staticmethod
     def _parse_date_range(part: str, now: datetime) -> bool:
+        """Parse a date or date range expression.
+
+        解析单日期或日期区间表达式。
+        """
         if "~" in part:
             start_str, end_str = part.split("~", 1)
             start = TimeParser._resolve_date(start_str.strip(), now)
@@ -111,6 +126,10 @@ class TimeParser:
 
     @staticmethod
     def _parse_weekday_range(part: str, now: datetime) -> bool:
+        """Parse a weekday expression.
+
+        解析星期表达式。
+        """
         lower = part.lower()
 
         if "," in lower:
@@ -140,6 +159,10 @@ class TimeParser:
 
     @staticmethod
     def _parse_time_range(part: str, now: datetime) -> bool:
+        """Parse a time range expression, including cross-day ranges.
+
+        解析时间范围表达式，支持跨天区间。
+        """
         match = re.match(r"^(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})$", part)
         if not match:
             return True

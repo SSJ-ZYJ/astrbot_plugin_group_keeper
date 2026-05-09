@@ -6,7 +6,10 @@ from astrbot.api import logger
 
 
 class JoinHandler:
-    """Handles group join events such as welcome messages."""
+    """Handles group join events such as welcome messages.
+
+    处理群加入事件，如欢迎消息。
+    """
 
     @staticmethod
     async def send_welcome(
@@ -20,6 +23,9 @@ class JoinHandler:
 
         Supports ``{membername}`` placeholder which will be replaced with the
         member's display name (card / nickname / user_id fallback).
+
+        发送欢迎消息到群，提及新成员。
+        支持 ``{membername}`` 占位符，将被替换为成员的显示名称（卡片名、昵称或用户ID）。
         """
         display_name = member_name or str(user_id)
         message = message.replace("{membername}", display_name)
