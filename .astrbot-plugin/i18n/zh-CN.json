@@ -51,7 +51,7 @@
     },
     "sentinel_settings": {
       "description": "巡检模块设置",
-      "hint": "配置巡检监控、检测规则和指令模块",
+      "hint": "配置巡检监控和检测规则",
       "sentinel_enabled": {
         "description": "启用巡检监控",
         "hint": "全局总开关，开启后巡检将自动检测群消息并执行规则"
@@ -106,18 +106,6 @@
                 "description": "忽略群主",
                 "hint": "开启后群主消息不会触发此规则"
               },
-              "notify_group_admin": {
-                "description": "通知群管理员",
-                "hint": "开启后命中时私聊通知群内管理员"
-              },
-              "notify_bot_admin": {
-                "description": "通知Bot管理员",
-                "hint": "开启后命中时私聊通知Bot管理员"
-              },
-              "show_rule_in_notification": {
-                "description": "通知中显示关键词",
-                "hint": "开启后通知消息中会显示触发的关键词内容"
-              },
               "rule_user_whitelist": {
                 "description": "规则用户白名单",
                 "hint": "名单用户不会触发此规则，输入QQ号，多个用换行分隔"
@@ -170,14 +158,6 @@
                 "description": "忽略群主",
                 "hint": "开启后群主消息不会触发此规则"
               },
-              "notify_group_admin": {
-                "description": "通知群管理员",
-                "hint": "开启后命中时私聊通知群内管理员"
-              },
-              "notify_bot_admin": {
-                "description": "通知Bot管理员",
-                "hint": "开启后命中时私聊通知Bot管理员"
-              },
               "rule_user_whitelist": {
                 "description": "规则用户白名单",
                 "hint": "名单用户不会触发此规则，输入QQ号，多个用换行分隔"
@@ -196,38 +176,6 @@
               }
             }
           }
-        }
-      },
-      "sentinel_command_group": {
-        "description": "指令模块配置",
-        "hint": "配置通过 /bot 监控 指令创建的监控规则",
-        "sentinel_command_user_whitelist": {
-          "description": "巡检指令白名单用户",
-          "hint": "该列表用户不会触发指令规则检测，输入QQ号，多个用换行分隔"
-        },
-        "sentinel_command_mute_duration": {
-          "description": "指令规则禁言时长（秒）",
-          "hint": "指令规则命中后的禁言秒数，0=不禁言，-1=不撤回不禁言，支持区间如 60~300"
-        },
-        "sentinel_command_reply_message": {
-          "description": "指令规则命中回复",
-          "hint": "指令规则命中后随机回复列表，支持变量：{id}=QQ号、{name}=昵称、{date}=日期、{time}=时间"
-        },
-        "sentinel_command_ignore_admin": {
-          "description": "指令规则忽略管理员",
-          "hint": "开启后管理员消息不会触发指令规则"
-        },
-        "sentinel_command_kick_threshold": {
-          "description": "指令规则累计踢出阈值",
-          "hint": "累计命中次数达到阈值后踢出群聊，0=不踢出"
-        },
-        "sentinel_command_kick_message": {
-          "description": "指令规则踢出提示",
-          "hint": "踢出后随机提示列表，支持变量：{id}、{name}、{date}、{time}"
-        },
-        "sentinel_command_notify_creator": {
-          "description": "指令规则命中通知创建者",
-          "hint": "开启后指令规则命中时私聊通知规则创建者"
         }
       }
     }
@@ -276,23 +224,6 @@
     "msg_remove_essence_success": "✅ 已移除引用的群精华消息",
     "msg_essence_no_reply": "❌ 请先引用（回复）需要操作的消息，再使用此指令",
     "msg_error_detail": "错误详情：{error}",
-    "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令",
-    "help_sentinel_header": "🛡️ 巡检监控：",
-    "cmd_monitor": "/bot 监控 <关键词> [@某人...] - 添加监控规则",
-    "cmd_unmonitor": "/bot 取消监控 <规则ID|关键词> [@某人...] - 删除监控规则",
-    "cmd_monitorlist": "/bot 监控列表 - 查看当前群监控规则",
-    "msg_monitor_added": "✅ 已添加监控规则 #{rule_id}：{keyword}",
-    "msg_monitor_removed": "✅ 已删除监控规则 {rule_id}",
-    "msg_monitor_removed_count": "✅ 已删除 {count} 条监控规则",
-    "msg_monitor_removed_keyword": "✅ 已删除关键词「{keyword}」的监控规则",
-    "msg_monitor_list_title": "📋 当前群监控规则：",
-    "msg_monitor_list_empty": "📭 当前群无监控规则",
-    "msg_monitor_list_item": "  #{rule_id} 关键词：{keyword} | 监控：{users} | 创建者：{creator}",
-    "msg_monitor_all_members": "全体成员",
-    "msg_monitor_keyword_numeric": "❌ 关键词不允许纯数字",
-    "msg_monitor_not_found": "❌ 未找到匹配的监控规则",
-    "msg_sentinel_keyword_info": " | 关键词：{keywords}",
-    "msg_sentinel_hit_notification": "⚠️ 巡检监控命中 | 群：{group_id} | 用户：{user_name}({user_id}){keyword_info}",
-    "msg_sentinel_creator_notification": "⚠️ 您的监控规则被触发 | 群：{group_id} | 关键词：{keyword} | 触发用户：{user_name}({user_id})"
+    "msg_command_not_found": "❌ 指令不存在，请使用 /bot help 查看可用指令"
   }
 }

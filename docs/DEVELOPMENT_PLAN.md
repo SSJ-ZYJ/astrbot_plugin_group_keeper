@@ -39,7 +39,7 @@ astrbot_plugin_group_keeper/
 | `handlers/group_handler.py` | 群管理 API 封装（禁言、撤回、改名、头衔、精华等） |
 | `handlers/join_handler.py` | 入群欢迎消息处理 |
 | `handlers/message_handler.py` | 长消息完整封装与合并消息构造 |
-| `handlers/sentinel_handler.py` | 巡检规则匹配、违规计数、动作执行、通知发送 |
+| `handlers/sentinel_handler.py` | 巡检规则匹配、违规计数和动作执行 |
 | `handlers/time_parser.py` | 巡检时间范围解析 |
 | `i18n.py` | 插件级中英双语翻译加载 |
 
@@ -49,7 +49,6 @@ astrbot_plugin_group_keeper/
 
 - 插件持久化数据应存放在 `StarTools.get_data_dir("astrbot_plugin_group_keeper")` 返回的目录中。
 - 群级欢迎配置存放在 `groups/group_<群号>.json`。
-- 巡检指令规则存放在 `sentinel/command_rules_<群号>.json`。
 - 违规计数存放在 `sentinel/violation_counts.json`。
 
 ---
@@ -82,7 +81,6 @@ astrbot_plugin_group_keeper/
 | `/bot rename`、`/bot set_group_name` | 群管理员/群主 |
 | `/bot title`、`/bot promote`、`/bot demote` | 群管理员/群主，且机器人本身需具备群主权限 |
 | `/bot set_essence`、`/bot remove_essence` | 所有人（仅要求群聊与平台支持） |
-| `/bot monitor`、`/bot unmonitor`、`/bot monitorlist` | 群管理员/群主或指令白名单用户 |
 
 ---
 
@@ -90,5 +88,6 @@ astrbot_plugin_group_keeper/
 
 | 版本 | 说明 |
 |------|------|
+| v1.2.8 | 优化巡检模式，移除巡检指令模块和私聊通知配置，英文外显名称统一为 Inspection |
 | v1.2.7 | 长消息超过阈值时仅进行单节点合并发送，不再拆分消息内容 |
 | v1.2.6 | 重构版本，统一前置检查、长消息处理、巡检通知 i18n 和文档 |

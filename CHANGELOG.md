@@ -2,6 +2,18 @@
 
 ---
 
+## [1.2.8] - 2026-05-10
+
+### 修改
+- ♻️ 优化巡检模式：巡检仅保留 WebUI 配置规则检测，不再支持 `/bot monitor`、`/bot unmonitor`、`/bot monitorlist` 指令创建或维护规则
+- ♻️ 删除 `notify_group_admin`、`notify_bot_admin` 与规则命中私聊通知逻辑
+- ♻️ 英文外显文案统一将巡检模块命名为 `Inspection`
+
+### 文档
+- 📝 更新 README.md、开发文档、i18n 配置文案和 `metadata.yaml` 版本号至 v1.2.8
+
+---
+
 ## [1.2.7] - 2026-05-10
 
 ### 修改
@@ -417,6 +429,18 @@
 ---
 
 # Changelog
+
+---
+
+## [1.2.8] - 2026-05-10
+
+### Changed
+- ♻️ Optimize inspection mode: inspection now only uses WebUI-configured rules and no longer supports `/bot monitor`, `/bot unmonitor`, or `/bot monitorlist` for rule management
+- ♻️ Remove `notify_group_admin`, `notify_bot_admin`, and private notification handling for rule hits
+- ♻️ Standardize the user-facing English inspection module name as `Inspection`
+
+### Documentation
+- 📝 Update README.md, development notes, i18n config text, and `metadata.yaml` version to v1.2.8
 
 ---
 

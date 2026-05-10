@@ -10,11 +10,11 @@ from astrbot.api.event import AstrMessageEvent, filter
 from astrbot.api.message_components import At, Plain, Reply
 from astrbot.core.platform import MessageType
 
-from .handlers import GroupHandler, JoinHandler, MessageHandler, SentinelHandler
+from .handlers import GroupHandler, InspectionHandler, JoinHandler, MessageHandler
 from .i18n import I18nManager
 
 PLUGIN_NAME = "astrbot_plugin_group_keeper"
-PLUGIN_VERSION = "1.2.7"
+PLUGIN_VERSION = "1.2.8"
 PLUGIN_REPO = "https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper"
 BOT_COMMAND_PREFIX = "/bot"
 WELCOME_MESSAGE_MAX_LEN = 200
@@ -54,7 +54,7 @@ class GroupKeeperPlugin(star.Star):
         self.i18n = I18nManager()
         self.group_handler = GroupHandler()
         self.join_handler = JoinHandler()
-        self.sentinel_handler = SentinelHandler(self.data_path, self._t)
+        self.sentinel_handler = InspectionHandler(self.data_path)
 
         self._group_configs: dict[str, dict] = {}
 
@@ -661,12 +661,6 @@ class GroupKeeperPlugin(star.Star):
         "设精",
         "remove_essence",
         "移精",
-        "monitor",
-        "监控",
-        "unmonitor",
-        "取消监控",
-        "monitorlist",
-        "监控列表",
     }
 
     @filter.regex(r"^.*$", priority=1)
@@ -727,11 +721,6 @@ class GroupKeeperPlugin(star.Star):
             self._t("cmd_set_group_name"),
             self._t("cmd_set_essence"),
             self._t("cmd_remove_essence"),
-            "",
-            self._t("help_sentinel_header"),
-            self._t("cmd_monitor"),
-            self._t("cmd_unmonitor"),
-            self._t("cmd_monitorlist"),
         ]
         self._reply(event, "\n".join(lines))
 
@@ -1055,68 +1044,20 @@ class GroupKeeperPlugin(star.Star):
             self._reply_key(event, "msg_operation_failed")
 
     # ------------------------------------------------------------------ #
-    #  Sentinel watchdog & commands
+    #  Inspection watchdog
     # ------------------------------------------------------------------ #
 
     def _get_sentinel_settings(self) -> dict:
-        """Return the sentinel settings object from plugin config.
+        """Return the inspection settings object from plugin config.
 
         从插件配置中读取巡检模块设置。
         """
         return self.config.get("sentinel_settings", {})
 
-    def _get_sentinel_cmd_whitelist(self) -> list[str]:
-        """Return users allowed to manage command-created sentinel rules.
-
-        返回允许管理指令巡检规则的用户白名单。
-        """
-        sentinel_settings = self._get_sentinel_settings()
-        cmd_group = sentinel_settings.get("sentinel_command_group", {})
-        return [str(u) for u in cmd_group.get("sentinel_command_user_whitelist", [])]
-
-    async def _check_sentinel_cmd_permission(
-        self, event: AstrMessageEvent, group_id: str
-    ) -> bool:
-        """Check monitor-command permission for group admins or whitelist users.
-
-        检查监控指令权限：群管理员/群主或指令白名单用户可使用。
-        """
-        sender_id = event.get_sender_id()
-        cmd_whitelist = self._get_sentinel_cmd_whitelist()
-        if await self._is_plugin_admin(event, group_id) or sender_id in cmd_whitelist:
-            return True
-        self._reply_key(event, "msg_no_permission")
-        return False
-
-    async def _require_sentinel_command_group(
-        self, event: AstrMessageEvent
-    ) -> str | None:
-        """Validate group and permission preconditions for sentinel commands.
-
-        校验巡检指令需要的群聊和权限前置条件。
-        """
-        group_id = self._require_group_chat(event)
-        if group_id is None:
-            return None
-        if not await self._check_sentinel_cmd_permission(event, group_id):
-            return None
-        return group_id
-
-    @staticmethod
-    def _normalize_monitor_keyword(rest: str, at_users: list[str]) -> str:
-        """Remove At text fragments and normalize spaces for monitor keywords.
-
-        移除 @ 文本片段并规整空格，得到监控关键词。
-        """
-        keyword = rest
-        for qq in at_users:
-            keyword = keyword.replace(f"@{qq}", "").strip()
-        return re.sub(r"\s+", " ", keyword).strip()
-
     @filter.regex(r"^.*$", priority=2)
     @filter.event_message_type(filter.EventMessageType.GROUP_MESSAGE)
     async def sentinel_watchdog(self, event: AstrMessageEvent):
-        """Intercept group messages and check sentinel rules.
+        """Intercept group messages and check inspection rules.
 
         拦截群聊消息并执行巡检规则检测。
         """
@@ -1146,7 +1087,7 @@ class GroupKeeperPlugin(star.Star):
                 event, self.config, group_id, sender_id, full_text, message_types
             )
         except Exception as e:
-            logger.error(f"Sentinel check_message error: {e}")
+            logger.error(f"Inspection check_message error: {e}")
             return
 
         if not matched:
@@ -1171,145 +1112,10 @@ class GroupKeeperPlugin(star.Star):
                     match_info,
                 )
             except Exception as e:
-                logger.error(f"Sentinel execute_action error: {e}")
+                logger.error(f"Inspection execute_action error: {e}")
 
         event.stop_event()
         yield
-
-    def _extract_sentinel_at_users(self, event: AstrMessageEvent) -> list[str]:
-        """Extract non-bot At targets for command-created monitor rules.
-
-        提取指令监控规则中的非机器人 @ 目标。
-        """
-        self_id = str(event.get_self_id())
-        users: list[str] = []
-        for comp in event.get_messages():
-            if isinstance(comp, At):
-                qq = str(comp.qq)
-                if qq != self_id and qq != "all":
-                    users.append(qq)
-        return users
-
-    # ---- /bot monitor <keyword> [@someone...] ----
-
-    @bot_group.command("monitor", alias={"监控"})
-    async def cmd_monitor(self, event: AstrMessageEvent):
-        group_id = await self._require_sentinel_command_group(event)
-        if group_id is None:
-            return
-
-        sender_id = event.get_sender_id()
-        rest = self._strip_command_prefix(event, "monitor", "监控")
-        at_users = self._extract_sentinel_at_users(event)
-
-        keyword = self._normalize_monitor_keyword(rest, at_users)
-        if not keyword:
-            self._reply_key(event, "msg_parameter_error")
-            return
-
-        if keyword.isdigit():
-            self._reply_key(event, "msg_monitor_keyword_numeric")
-            return
-
-        rule_id = self.sentinel_handler.add_command_rule(
-            group_id, keyword, at_users, sender_id
-        )
-        self._reply_key(
-            event, "msg_monitor_added", rule_id=str(rule_id), keyword=keyword
-        )
-
-    # ---- /bot unmonitor <rule_id|keyword> [@someone...] ----
-
-    @bot_group.command("unmonitor", alias={"取消监控"})
-    async def cmd_unmonitor(self, event: AstrMessageEvent):
-        group_id = await self._require_sentinel_command_group(event)
-        if group_id is None:
-            return
-
-        rest = self._strip_command_prefix(event, "unmonitor", "取消监控")
-        at_users = self._extract_sentinel_at_users(event)
-
-        rule_id_match = re.match(r"^cmd_(\d+)$", rest.strip())
-        if rule_id_match:
-            removed = self.sentinel_handler.remove_command_rules(
-                group_id, rule_id=f"cmd_{rule_id_match.group(1)}"
-            )
-            if removed:
-                self._reply_key(event, "msg_monitor_removed", rule_id=removed[0])
-            else:
-                self._reply_key(event, "msg_monitor_not_found")
-            return
-
-        keyword = self._normalize_monitor_keyword(rest, at_users)
-
-        if at_users and not keyword:
-            removed = self.sentinel_handler.remove_command_rules(
-                group_id, target_users=at_users
-            )
-            if removed:
-                self._reply_key(
-                    event, "msg_monitor_removed_count", count=str(len(removed))
-                )
-            else:
-                self._reply_key(event, "msg_monitor_not_found")
-            return
-
-        if keyword and at_users:
-            removed = self.sentinel_handler.remove_command_rules(
-                group_id, keyword=keyword, target_users=at_users
-            )
-            if removed:
-                self._reply_key(
-                    event, "msg_monitor_removed_count", count=str(len(removed))
-                )
-            else:
-                self._reply_key(event, "msg_monitor_not_found")
-            return
-
-        if keyword:
-            removed = self.sentinel_handler.remove_command_rules(
-                group_id, keyword=keyword
-            )
-            if removed:
-                self._reply_key(event, "msg_monitor_removed_keyword", keyword=keyword)
-            else:
-                self._reply_key(event, "msg_monitor_not_found")
-            return
-
-        self._reply_key(event, "msg_parameter_error")
-
-    # ---- /bot monitorlist ----
-
-    @bot_group.command("monitorlist", alias={"监控列表"})
-    async def cmd_monitorlist(self, event: AstrMessageEvent):
-        group_id = await self._require_sentinel_command_group(event)
-        if group_id is None:
-            return
-
-        data = self.sentinel_handler.load_command_rules(group_id)
-        rules = data.get("rules", [])
-
-        if not rules:
-            self._reply_key(event, "msg_monitor_list_empty")
-            return
-
-        lines = [self._t("msg_monitor_list_title")]
-        for r in rules:
-            users_str = (
-                ", ".join(r["monitor_users"])
-                if r.get("monitor_users")
-                else self._t("msg_monitor_all_members")
-            )
-            lines.append(
-                self._t(
-                    "msg_monitor_list_item",
-                    rule_id=r["rule_id"],
-                    keyword=r["keyword"],
-                    users=users_str,
-                    creator=r.get("creator_id", ""),
-                )
-            )
-        self._reply(event, "\n".join(lines))
 
     # ------------------------------------------------------------------ #
     #  Event listener for member join / leave and unknown commands

@@ -50,25 +50,25 @@
       "hint": "Messages longer than this will be wrapped intact as a merged message without splitting. Default: 350 characters"
     },
     "sentinel_settings": {
-      "description": "Sentinel Module Settings",
-      "hint": "Configure sentinel monitoring, detection rules, and command module",
+      "description": "Inspection Module Settings",
+      "hint": "Configure inspection monitoring and detection rules",
       "sentinel_enabled": {
-        "description": "Enable Sentinel Monitor",
-        "hint": "Global master switch. When enabled, Sentinel will automatically detect group messages and apply rules"
+        "description": "Enable Inspection Monitor",
+        "hint": "Global master switch. When enabled, Inspection will automatically detect group messages and apply rules"
       },
       "sentinel_group_blacklist": {
-        "description": "Sentinel group blacklist",
-        "hint": "Groups in this list will not be monitored by Sentinel. Enter group IDs, one per line"
+        "description": "Inspection group blacklist",
+        "hint": "Groups in this list will not be monitored by Inspection. Enter group IDs, one per line"
       },
       "sentinel_user_whitelist": {
-        "description": "Sentinel global user whitelist",
-        "hint": "Users in this list will not trigger Sentinel detection. Enter QQ numbers, one per line"
+        "description": "Inspection global user whitelist",
+        "hint": "Users in this list will not trigger Inspection detection. Enter QQ numbers, one per line"
       },
       "sentinel_rules_group": {
         "description": "Detection Rules Config",
         "hint": "Configure detection rules for keyword and message type monitoring",
         "sentinel_rules": {
-          "description": "Sentinel detection rules",
+          "description": "Inspection detection rules",
           "hint": "Click the Add button to select a rule template. Supports keyword rules and message type rules",
           "templates": {
             "keyword_rule": {
@@ -105,18 +105,6 @@
               "ignore_owner": {
                 "description": "Ignore group owner",
                 "hint": "When enabled, group owner messages will not trigger this rule"
-              },
-              "notify_group_admin": {
-                "description": "Notify group admins",
-                "hint": "When enabled, group admins will be notified via private message on hit"
-              },
-              "notify_bot_admin": {
-                "description": "Notify bot admin",
-                "hint": "When enabled, bot admin will be notified via private message on hit"
-              },
-              "show_rule_in_notification": {
-                "description": "Show keywords in notification",
-                "hint": "When enabled, triggered keywords will be shown in notification messages"
               },
               "rule_user_whitelist": {
                 "description": "Rule-level user whitelist",
@@ -170,14 +158,6 @@
                 "description": "Ignore group owner",
                 "hint": "When enabled, group owner messages will not trigger this rule"
               },
-              "notify_group_admin": {
-                "description": "Notify group admins",
-                "hint": "When enabled, group admins will be notified via private message on hit"
-              },
-              "notify_bot_admin": {
-                "description": "Notify bot admin",
-                "hint": "When enabled, bot admin will be notified via private message on hit"
-              },
               "rule_user_whitelist": {
                 "description": "Rule-level user whitelist",
                 "hint": "Users in this list will not trigger this rule. Enter QQ numbers, one per line"
@@ -196,38 +176,6 @@
               }
             }
           }
-        }
-      },
-      "sentinel_command_group": {
-        "description": "Command Module Config",
-        "hint": "Configure command-based monitoring rules created via /bot monitor",
-        "sentinel_command_user_whitelist": {
-          "description": "Sentinel command whitelist users",
-          "hint": "Users in this list will not trigger command rule detection. Enter QQ numbers, one per line"
-        },
-        "sentinel_command_mute_duration": {
-          "description": "Command rule mute duration (seconds)",
-          "hint": "Mute duration for command rule hits. 0=no mute, -1=no recall no mute. Supports range like 60~300"
-        },
-        "sentinel_command_reply_message": {
-          "description": "Command rule reply on hit",
-          "hint": "Random reply list for command rule hits. Variables: {id}=QQ number, {name}=nickname, {date}=date, {time}=time"
-        },
-        "sentinel_command_ignore_admin": {
-          "description": "Command rule ignore admins",
-          "hint": "When enabled, admin messages will not trigger command rules"
-        },
-        "sentinel_command_kick_threshold": {
-          "description": "Command rule cumulative kick threshold",
-          "hint": "Kick user when hit count reaches this threshold. 0=disabled"
-        },
-        "sentinel_command_kick_message": {
-          "description": "Command rule kick message",
-          "hint": "Random kick message list. Variables: {id}, {name}, {date}, {time}"
-        },
-        "sentinel_command_notify_creator": {
-          "description": "Notify command rule creator on hit",
-          "hint": "When enabled, the rule creator will be notified via private message when a command rule is triggered"
         }
       }
     }
@@ -276,23 +224,6 @@
     "msg_remove_essence_success": "✅ Quoted group essence message removed",
     "msg_essence_no_reply": "❌ Please reply to (quote) the target message first, then use this command",
     "msg_error_detail": "Error detail: {error}",
-    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands",
-    "help_sentinel_header": "🛡️ Sentinel Monitor:",
-    "cmd_monitor": "/bot monitor <keyword> [@someone...] - Add monitoring rule",
-    "cmd_unmonitor": "/bot unmonitor <rule_id|keyword> [@someone...] - Remove monitoring rule",
-    "cmd_monitorlist": "/bot monitorlist - View current group monitoring rules",
-    "msg_monitor_added": "✅ Added monitoring rule #{rule_id}: {keyword}",
-    "msg_monitor_removed": "✅ Removed monitoring rule {rule_id}",
-    "msg_monitor_removed_count": "✅ Removed {count} monitoring rule(s)",
-    "msg_monitor_removed_keyword": "✅ Removed monitoring rule for keyword \"{keyword}\"",
-    "msg_monitor_list_title": "📋 Current group monitoring rules:",
-    "msg_monitor_list_empty": "📭 No monitoring rules in this group",
-    "msg_monitor_list_item": "  #{rule_id} Keyword: {keyword} | Monitor: {users} | Creator: {creator}",
-    "msg_monitor_all_members": "All members",
-    "msg_monitor_keyword_numeric": "❌ Keyword cannot be pure numbers",
-    "msg_monitor_not_found": "❌ No matching monitoring rule found",
-    "msg_sentinel_keyword_info": " | Keywords: {keywords}",
-    "msg_sentinel_hit_notification": "⚠️ Sentinel monitoring hit | Group: {group_id} | User: {user_name}({user_id}){keyword_info}",
-    "msg_sentinel_creator_notification": "⚠️ Your monitor rule was triggered | Group: {group_id} | Keyword: {keyword} | Triggered user: {user_name}({user_id})"
+    "msg_command_not_found": "❌ Command not found, use /bot help to see available commands"
   }
 }
