@@ -43,11 +43,11 @@
     },
     "enable_long_message_merge": {
       "description": "启用长消息合并",
-      "hint": "开启后，超过阈值的消息将以合并消息形式发送"
+      "hint": "开启后，超过阈值的消息将以单节点合并消息形式完整发送"
     },
     "long_message_threshold": {
       "description": "长消息阈值（字符）",
-      "hint": "消息超过此长度将被拆分合并发送。默认：350字符"
+      "hint": "消息超过此长度将完整封装为合并消息发送，不会拆分内容。默认：350字符"
     },
     "sentinel_settings": {
       "description": "巡检模块设置",

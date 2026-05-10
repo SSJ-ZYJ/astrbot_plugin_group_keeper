@@ -3,18 +3,18 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from typing import Any, cast
+from typing import Any
 
 from astrbot.api import AstrBotConfig, logger, star
 from astrbot.api.event import AstrMessageEvent, filter
-from astrbot.api.message_components import At, BaseMessageComponent, Plain, Reply
+from astrbot.api.message_components import At, Plain, Reply
 from astrbot.core.platform import MessageType
 
 from .handlers import GroupHandler, JoinHandler, MessageHandler, SentinelHandler
 from .i18n import I18nManager
 
 PLUGIN_NAME = "astrbot_plugin_group_keeper"
-PLUGIN_VERSION = "1.2.6"
+PLUGIN_VERSION = "1.2.7"
 PLUGIN_REPO = "https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper"
 BOT_COMMAND_PREFIX = "/bot"
 WELCOME_MESSAGE_MAX_LEN = 200
@@ -606,19 +606,20 @@ class GroupKeeperPlugin(star.Star):
         event: AstrMessageEvent,
         message: str,
     ):
-        """Prepare a message for sending with automatic long message handling.
+        """Prepare a message for sending with automatic long message wrapping.
 
-        If long message merge is enabled and message exceeds threshold,
-        it will be prepared as a merged message chain.
+        If long message merge is enabled and message exceeds threshold, the
+        complete text will be wrapped in a single merged-forward node.
 
-        根据配置准备回复消息：超过阈值时构造成合并转发消息。
+        根据配置准备回复消息：超过阈值时将完整文本封装为单节点合并转发消息。
 
         Args:
             event: The message event
             message: The message text
 
         Returns:
-            Message result object for yielding in command handlers
+            Message result object for yielding in command handlers.
+            命令处理器可直接返回的消息结果对象。
         """
         enabled, threshold = self._get_long_message_settings()
 
@@ -626,9 +627,8 @@ class GroupKeeperPlugin(star.Star):
             return event.plain_result(message)
 
         self_id = str(event.get_self_id())
-        chunks = MessageHandler.split_message(message, threshold)
-        nodes = MessageHandler.build_merged_message(self_id, chunks, self.display_name)
-        return event.chain_result(cast(list[BaseMessageComponent], nodes))
+        nodes = MessageHandler.build_merged_message(self_id, message, self.display_name)
+        return event.chain_result(nodes)
 
     # ------------------------------------------------------------------ #
     #  Command group: /bot

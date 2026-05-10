@@ -115,13 +115,15 @@ class SentinelHandler:
         """
         data = self.load_command_rules(group_id)
         rule_id = data["next_id"]
-        data["rules"].append({
-            "rule_id": f"cmd_{rule_id}",
-            "keyword": keyword,
-            "monitor_users": monitor_users,
-            "creator_id": creator_id,
-            "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        })
+        data["rules"].append(
+            {
+                "rule_id": f"cmd_{rule_id}",
+                "keyword": keyword,
+                "monitor_users": monitor_users,
+                "creator_id": creator_id,
+                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            }
+        )
         data["next_id"] = rule_id + 1
         self.save_command_rules(group_id, data)
         return rule_id
@@ -277,11 +279,13 @@ class SentinelHandler:
             if self._match_command_rule(
                 cmd_rule, group_id, sender_id, sender_role, message_str, cmd_config
             ):
-                matched.append({
-                    "type": "command",
-                    "rule": cmd_rule,
-                    "cmd_config": cmd_config,
-                })
+                matched.append(
+                    {
+                        "type": "command",
+                        "rule": cmd_rule,
+                        "cmd_config": cmd_config,
+                    }
+                )
 
         return matched
 

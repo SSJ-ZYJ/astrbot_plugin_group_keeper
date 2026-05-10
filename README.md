@@ -137,8 +137,8 @@
 | `default_mute_duration` | 整数 | 30 | 默认禁言时长（秒） |
 | `default_welcome_message` | 文本 | (空) | 默认欢迎消息，留空使用默认欢迎消息。支持 `{membername}` 变量 |
 | `max_recall_count` | 整数 | 10 | 单次最多撤回消息条数 |
-| `enable_long_message_merge` | 布尔 | true | 启用后，超过阈值的回复将以合并消息形式发送 |
-| `long_message_threshold` | 整数 | 350 | 长消息拆分阈值（字符） |
+| `enable_long_message_merge` | 布尔 | true | 启用后，超过阈值的回复将以单节点合并消息形式完整发送 |
+| `long_message_threshold` | 整数 | 350 | 长消息合并阈值（字符），超过后不拆分内容 |
 
 > [!NOTE]
 > 默认欢迎消息为："🎉欢迎 {membername} 加入群聊！✨"

@@ -38,7 +38,7 @@ astrbot_plugin_group_keeper/
 | `main.py` | 插件入口、命令处理、事件拦截、欢迎消息、巡检调度 |
 | `handlers/group_handler.py` | 群管理 API 封装（禁言、撤回、改名、头衔、精华等） |
 | `handlers/join_handler.py` | 入群欢迎消息处理 |
-| `handlers/message_handler.py` | 长消息拆分与合并消息构造 |
+| `handlers/message_handler.py` | 长消息完整封装与合并消息构造 |
 | `handlers/sentinel_handler.py` | 巡检规则匹配、违规计数、动作执行、通知发送 |
 | `handlers/time_parser.py` | 巡检时间范围解析 |
 | `i18n.py` | 插件级中英双语翻译加载 |
@@ -90,4 +90,5 @@ astrbot_plugin_group_keeper/
 
 | 版本 | 说明 |
 |------|------|
-| v1.2.6 | 当前重构版本，统一前置检查、长消息处理、巡检通知 i18n 和文档 |
+| v1.2.7 | 长消息超过阈值时仅进行单节点合并发送，不再拆分消息内容 |
+| v1.2.6 | 重构版本，统一前置检查、长消息处理、巡检通知 i18n 和文档 |

@@ -43,11 +43,11 @@
     },
     "enable_long_message_merge": {
       "description": "Enable long message merge",
-      "hint": "When enabled, messages longer than threshold will be sent as merged messages"
+      "hint": "When enabled, messages longer than threshold will be sent intact as a single-node merged message"
     },
     "long_message_threshold": {
       "description": "Long message threshold (characters)",
-      "hint": "Maximum message length before splitting and merging. Default: 350 characters"
+      "hint": "Messages longer than this will be wrapped intact as a merged message without splitting. Default: 350 characters"
     },
     "sentinel_settings": {
       "description": "Sentinel Module Settings",

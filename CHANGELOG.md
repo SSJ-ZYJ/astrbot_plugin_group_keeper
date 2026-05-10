@@ -2,6 +2,17 @@
 
 ---
 
+## [1.2.7] - 2026-05-10
+
+### 修改
+- ♻️ 调整长消息合并发送逻辑：超过阈值时仅将完整文本封装为单节点合并消息，不再拆分消息内容
+- ♻️ 更新长消息配置说明、README.md 和开发文档，统一“合并但不拆分”的行为描述
+
+### 文档
+- 📝 更新 `metadata.yaml` 版本号至 v1.2.7
+
+---
+
 ## [1.2.6] - 2026-05-09
 
 ### 修改
@@ -406,6 +417,17 @@
 ---
 
 # Changelog
+
+---
+
+## [1.2.7] - 2026-05-10
+
+### Changed
+- ♻️ Adjust long-message merged sending: messages over the threshold are wrapped intact as a single-node merged message and are no longer split
+- ♻️ Update long-message config text, README.md, and development notes to match the merge-without-splitting behavior
+
+### Documentation
+- 📝 Update `metadata.yaml` version to v1.2.7
 
 ---
 

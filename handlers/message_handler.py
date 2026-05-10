@@ -4,75 +4,32 @@ from astrbot.api.message_components import Node, Plain
 
 
 class MessageHandler:
-    """Handles message sending with support for long message merging.
+    """Handles long-message wrapping for merged forwarding.
 
-    处理消息发送，支持长消息自动合并发送。
+    处理长消息合并转发封装，不再拆分消息内容。
     """
 
     DEFAULT_MAX_LENGTH = 350
 
     @staticmethod
-    def split_message(text: str, max_length: int = DEFAULT_MAX_LENGTH) -> list[str]:
-        """Split a long message into chunks with specified max length.
-
-        将长消息按指定长度拆分为多个片段。
-
-        Args:
-            text: The message text to split.
-            max_length: Maximum length per chunk (default: 350).
-
-        Returns:
-            List of message chunks.
-        """
-        chunks = []
-        text = text.strip()
-
-        while len(text) > max_length:
-            # Find a good split point. / 寻找合适的拆分位置。
-            split_at = max_length
-
-            # Try to split at newline first. / 优先按换行拆分。
-            newline_pos = text.rfind("\n", 0, max_length)
-            if newline_pos > max_length // 2:
-                split_at = newline_pos + 1
-            else:
-                # Try to split at sentence ending. / 再尝试按句末拆分。
-                for char in ["。", "！", "？", "；", ":", ";", ".", "!", "?"]:
-                    pos = text.rfind(char, 0, max_length)
-                    if pos > max_length // 2:
-                        split_at = pos + 1
-                        break
-
-            chunks.append(text[:split_at].strip())
-            text = text[split_at:].strip()
-
-        if text:
-            chunks.append(text)
-
-        return chunks
-
-    @staticmethod
     def build_merged_message(
         self_id: str,
-        messages: list[str],
+        message: str,
         node_name: str,
     ) -> list[Node]:
-        """Build a merged message chain from message chunks.
+        """Build a single-node merged message from the full text.
 
-        由多个消息片段构造合并转发消息链。
+        使用完整文本构造单节点合并转发消息。
 
         Args:
             self_id: The bot's own ID.
-            messages: List of message chunks to merge.
+            message: Full message text, kept intact.
             node_name: Display name shown on each merged node.
 
         Returns:
-            List of Node components for merged message.
+            A one-node merged message component list.
         """
-        nodes = []
-        for msg in messages:
-            nodes.append(Node(uin=self_id, name=node_name, content=[Plain(msg)]))
-        return nodes
+        return [Node(uin=self_id, name=node_name, content=[Plain(message)])]
 
     @staticmethod
     def needs_merge(message: str, max_length: int = DEFAULT_MAX_LENGTH) -> bool:
