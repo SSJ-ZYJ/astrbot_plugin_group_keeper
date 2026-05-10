@@ -1,3 +1,19 @@
+# This file is part of astrbot_plugin_group_keeper.
+# Copyright (C) 2024-2026 SSJ-ZYJ and contributors
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
 from __future__ import annotations
 
 import json
@@ -14,7 +30,7 @@ from .handlers import GroupHandler, InspectionHandler, JoinHandler, MessageHandl
 from .i18n import I18nManager
 
 PLUGIN_NAME = "astrbot_plugin_group_keeper"
-PLUGIN_VERSION = "1.2.8"
+PLUGIN_VERSION = "1.2.9"
 PLUGIN_REPO = "https://github.com/SSJ-ZYJ/astrbot_plugin_group_keeper"
 BOT_COMMAND_PREFIX = "/bot"
 WELCOME_MESSAGE_MAX_LEN = 200
@@ -54,7 +70,7 @@ class GroupKeeperPlugin(star.Star):
         self.i18n = I18nManager()
         self.group_handler = GroupHandler()
         self.join_handler = JoinHandler()
-        self.sentinel_handler = InspectionHandler(self.data_path)
+        self.inspection_handler = InspectionHandler(self.data_path)
 
         self._group_configs: dict[str, dict] = {}
 
@@ -1047,22 +1063,27 @@ class GroupKeeperPlugin(star.Star):
     #  Inspection watchdog
     # ------------------------------------------------------------------ #
 
-    def _get_sentinel_settings(self) -> dict:
+    def _get_inspection_settings(self) -> dict:
         """Return the inspection settings object from plugin config.
 
         从插件配置中读取巡检模块设置。
         """
-        return self.config.get("sentinel_settings", {})
+        return self.config.get("inspection_settings") or self.config.get(
+            "sentinel_settings", {}
+        )
 
     @filter.regex(r"^.*$", priority=2)
     @filter.event_message_type(filter.EventMessageType.GROUP_MESSAGE)
-    async def sentinel_watchdog(self, event: AstrMessageEvent):
+    async def inspection_watchdog(self, event: AstrMessageEvent):
         """Intercept group messages and check inspection rules.
 
         拦截群聊消息并执行巡检规则检测。
         """
-        sentinel_settings = self._get_sentinel_settings()
-        if not sentinel_settings.get("sentinel_enabled", False):
+        inspection_settings = self._get_inspection_settings()
+        inspection_enabled = inspection_settings.get(
+            "inspection_enabled", inspection_settings.get("sentinel_enabled", False)
+        )
+        if not inspection_enabled:
             return
 
         group_id = event.get_group_id()
@@ -1075,7 +1096,7 @@ class GroupKeeperPlugin(star.Star):
             return
 
         msg_str = event.get_message_str().strip()
-        message_types = self.sentinel_handler.extract_message_types(event)
+        message_types = self.inspection_handler.extract_message_types(event)
 
         json_content = (
             self._extract_json_component_text(event) if "Json" in message_types else ""
@@ -1083,7 +1104,7 @@ class GroupKeeperPlugin(star.Star):
         full_text = self._join_non_empty_text(msg_str, json_content)
 
         try:
-            matched = await self.sentinel_handler.check_message(
+            matched = await self.inspection_handler.check_message(
                 event, self.config, group_id, sender_id, full_text, message_types
             )
         except Exception as e:
@@ -1098,11 +1119,11 @@ class GroupKeeperPlugin(star.Star):
             return
 
         sender_name = event.get_sender_name() or sender_id
-        message_id = self.sentinel_handler.extract_message_id(event)
+        message_id = self.inspection_handler.extract_message_id(event)
 
         for match_info in matched:
             try:
-                await self.sentinel_handler.execute_action(
+                await self.inspection_handler.execute_action(
                     event,
                     bot,
                     group_id,

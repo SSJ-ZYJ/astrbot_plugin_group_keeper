@@ -49,25 +49,25 @@
       "description": "长消息阈值（字符）",
       "hint": "消息超过此长度将完整封装为合并消息发送，不会拆分内容。默认：350字符"
     },
-    "sentinel_settings": {
+    "inspection_settings": {
       "description": "巡检模块设置",
       "hint": "配置巡检监控和检测规则",
-      "sentinel_enabled": {
+      "inspection_enabled": {
         "description": "启用巡检监控",
         "hint": "全局总开关，开启后巡检将自动检测群消息并执行规则"
       },
-      "sentinel_group_blacklist": {
+      "inspection_group_blacklist": {
         "description": "巡检群聊黑名单",
         "hint": "名单中的群不进行巡检检测，输入群号，多个群号用换行分隔"
       },
-      "sentinel_user_whitelist": {
+      "inspection_user_whitelist": {
         "description": "巡检全局用户白名单",
         "hint": "名单中的用户不会触发巡检检测，输入QQ号，多个用换行分隔"
       },
-      "sentinel_rules_group": {
+      "inspection_rules_group": {
         "description": "检测规则配置",
         "hint": "配置关键词和消息类型检测规则",
-        "sentinel_rules": {
+        "inspection_rules": {
           "description": "巡检检测规则",
           "hint": "点击「添加」按钮选择规则模板，支持关键词规则和消息类型规则",
           "templates": {

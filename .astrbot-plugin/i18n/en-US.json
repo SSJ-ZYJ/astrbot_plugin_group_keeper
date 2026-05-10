@@ -49,25 +49,25 @@
       "description": "Long message threshold (characters)",
       "hint": "Messages longer than this will be wrapped intact as a merged message without splitting. Default: 350 characters"
     },
-    "sentinel_settings": {
+    "inspection_settings": {
       "description": "Inspection Module Settings",
       "hint": "Configure inspection monitoring and detection rules",
-      "sentinel_enabled": {
+      "inspection_enabled": {
         "description": "Enable Inspection Monitor",
         "hint": "Global master switch. When enabled, Inspection will automatically detect group messages and apply rules"
       },
-      "sentinel_group_blacklist": {
+      "inspection_group_blacklist": {
         "description": "Inspection group blacklist",
         "hint": "Groups in this list will not be monitored by Inspection. Enter group IDs, one per line"
       },
-      "sentinel_user_whitelist": {
+      "inspection_user_whitelist": {
         "description": "Inspection global user whitelist",
         "hint": "Users in this list will not trigger Inspection detection. Enter QQ numbers, one per line"
       },
-      "sentinel_rules_group": {
+      "inspection_rules_group": {
         "description": "Detection Rules Config",
         "hint": "Configure detection rules for keyword and message type monitoring",
-        "sentinel_rules": {
+        "inspection_rules": {
           "description": "Inspection detection rules",
           "hint": "Click the Add button to select a rule template. Supports keyword rules and message type rules",
           "templates": {

@@ -1,3 +1,23 @@
+# This file is part of astrbot_plugin_group_keeper.
+# Copyright (C) 2024-2026 SSJ-ZYJ and contributors
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+#
+# This file contains code derived from astrbot_plugin_sentinel
+# (https://github.com/Foolllll-J/astrbot_plugin_sentinel),
+# originally licensed under AGPL-3.0 by Foolllll-J.
+
 from __future__ import annotations
 
 import asyncio
@@ -23,6 +43,8 @@ MSG_TYPE_MAP = {
     "json": "Json",
 }
 
+INSPECTION_DIR = "inspection"
+LEGACY_INSPECTION_DIR = "sentinel"
 VIOLATION_FILE = "violation_counts.json"
 
 
@@ -33,17 +55,34 @@ class InspectionHandler:
     """
 
     def __init__(self, data_path: Path):
-        self.sentinel_path = data_path / "sentinel"
-        self.sentinel_path.mkdir(parents=True, exist_ok=True)
+        self.inspection_path = data_path / INSPECTION_DIR
+        self.legacy_inspection_path = data_path / LEGACY_INSPECTION_DIR
+        self.inspection_path.mkdir(parents=True, exist_ok=True)
         self._violation_data: dict[str, dict[str, dict[str, int]]] = {}
         self._load_violations()
+
+    @staticmethod
+    def _get_with_legacy(
+        data: dict, current_key: str, legacy_key: str, default: Any
+    ) -> Any:
+        """Read the current inspection key with legacy config fallback.
+
+        读取当前巡检配置键，并兼容旧版配置键。
+        """
+        if current_key in data:
+            return data.get(current_key, default)
+        return data.get(legacy_key, default)
 
     def _load_violations(self):
         """Load violation counters from plugin data storage.
 
         从插件数据目录加载违规计数。
         """
-        vf = self.sentinel_path / VIOLATION_FILE
+        vf = self.inspection_path / VIOLATION_FILE
+        if not vf.exists():
+            legacy_vf = self.legacy_inspection_path / VIOLATION_FILE
+            if legacy_vf.exists():
+                vf = legacy_vf
         if vf.exists():
             try:
                 with vf.open(encoding="utf-8") as f:
@@ -57,7 +96,7 @@ class InspectionHandler:
 
         将违规计数保存到插件数据目录。
         """
-        vf = self.sentinel_path / VIOLATION_FILE
+        vf = self.inspection_path / VIOLATION_FILE
         try:
             with vf.open("w", encoding="utf-8") as f:
                 json.dump(self._violation_data, f, ensure_ascii=False, indent=2)
@@ -117,23 +156,47 @@ class InspectionHandler:
         """
         matched: list[dict] = []
 
-        sentinel_settings = config.get("sentinel_settings", {})
+        inspection_settings = config.get("inspection_settings") or config.get(
+            "sentinel_settings", {}
+        )
         group_blacklist = [
-            str(g) for g in sentinel_settings.get("sentinel_group_blacklist", [])
+            str(g)
+            for g in self._get_with_legacy(
+                inspection_settings,
+                "inspection_group_blacklist",
+                "sentinel_group_blacklist",
+                [],
+            )
         ]
         if group_id in group_blacklist:
             return matched
 
         user_whitelist = [
-            str(u) for u in sentinel_settings.get("sentinel_user_whitelist", [])
+            str(u)
+            for u in self._get_with_legacy(
+                inspection_settings,
+                "inspection_user_whitelist",
+                "sentinel_user_whitelist",
+                [],
+            )
         ]
         if sender_id in user_whitelist:
             return matched
 
         sender_role = await self._get_sender_role(event, group_id, sender_id)
 
-        rules_group = sentinel_settings.get("sentinel_rules_group", {})
-        rules = rules_group.get("sentinel_rules", [])
+        rules_group = self._get_with_legacy(
+            inspection_settings,
+            "inspection_rules_group",
+            "sentinel_rules_group",
+            {},
+        )
+        rules = self._get_with_legacy(
+            rules_group,
+            "inspection_rules",
+            "sentinel_rules",
+            [],
+        )
         for idx, rule in enumerate(rules):
             if self._match_rule(
                 rule, group_id, sender_id, sender_role, message_str, message_types

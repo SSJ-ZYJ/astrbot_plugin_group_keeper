@@ -173,9 +173,9 @@ flowchart LR
 
 | 配置项 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
-| `sentinel_enabled` | 布尔 | false | 巡检监控全局总开关 |
-| `sentinel_group_blacklist` | 列表 | [] | 群黑名单，这些群的消息不检测 |
-| `sentinel_user_whitelist` | 列表 | [] | 用户白名单，这些用户的消息不检测 |
+| `inspection_enabled` | 布尔 | false | 巡检监控全局总开关 |
+| `inspection_group_blacklist` | 列表 | [] | 群黑名单，这些群的消息不检测 |
+| `inspection_user_whitelist` | 列表 | [] | 用户白名单，这些用户的消息不检测 |
 
 #### 检测规则配置
 
@@ -233,6 +233,19 @@ flowchart LR
 ## 📌 版本要求
 
 - AstrBot >= v4.10.4
+
+---
+
+## 🙏 致谢与引用
+
+本插件的部分代码来源于 [astrbot_plugin_sentinel](https://github.com/Foolllll-J/astrbot_plugin_sentinel) 项目，该项目由 [Foolllll-J](https://github.com/Foolllll-J) 开发，采用 [GNU Affero General Public License v3 (AGPL-3.0)](https://github.com/Foolllll-J/astrbot_plugin_sentinel/blob/main/LICENSE) 许可证发布。
+
+根据 AGPL-3.0 协议的要求，本项目对原项目的引用和修改遵循以下原则：
+- 保留原项目的版权声明和许可证声明
+- 对基于原项目代码的修改部分进行了明确标注
+- 本项目整体同样采用 AGPL-3.0 许可证发布
+
+感谢 Foolllll-J 的开源贡献！
 
 ---
 

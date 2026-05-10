@@ -2,6 +2,26 @@
 
 ---
 
+## [1.2.9] - 2026-05-10
+
+### 修改
+- ♻️ 全局统一巡检模块命名：将配置键名从 `sentinel_*` 统一为 `inspection_*`，涉及 `_conf_schema.json`、`i18n` 翻译文件、`README.md` 和 `DEVELOPMENT_PLAN.md`
+- ♻️ 保留向后兼容：通过 `_get_with_legacy()` 函数兼容旧版 `sentinel_*` 配置键，`LEGACY_INSPECTION_DIR` 兼容旧版数据目录
+
+### 文档
+- 📝 新增 AGPL-3.0 协议引用说明，标注代码来源 [astrbot_plugin_sentinel](https://github.com/Foolllll-J/astrbot_plugin_sentinel) 项目
+- 📝 更新 `handlers/inspection_handler.py` 和 `main.py` 版权头
+
+### Changed
+- ♻️ Unify inspection module naming globally: rename config keys from `sentinel_*` to `inspection_*` across `_conf_schema.json`, i18n files, `README.md`, and `DEVELOPMENT_PLAN.md`
+- ♻️ Maintain backward compatibility: legacy `sentinel_*` config keys supported via `_get_with_legacy()` function, `LEGACY_INSPECTION_DIR` preserves compatibility with old data directory
+
+### Documentation
+- 📝 Add AGPL-3.0 license attribution, referencing source project [astrbot_plugin_sentinel](https://github.com/Foolllll-J/astrbot_plugin_sentinel)
+- 📝 Update copyright headers in `handlers/inspection_handler.py` and `main.py`
+
+---
+
 ## [1.2.8] - 2026-05-10
 
 ### 修改
@@ -11,6 +31,14 @@
 
 ### 文档
 - 📝 更新 README.md、开发文档、i18n 配置文案和 `metadata.yaml` 版本号至 v1.2.8
+
+### Changed
+- ♻️ Optimize inspection mode: inspection now only uses WebUI-configured rules and no longer supports `/bot monitor`, `/bot unmonitor`, or `/bot monitorlist` for rule management
+- ♻️ Remove `notify_group_admin`, `notify_bot_admin`, and private notification handling for rule hits
+- ♻️ Standardize the user-facing English inspection module name as `Inspection`
+
+### Documentation
+- 📝 Update README.md, development notes, i18n config text, and `metadata.yaml` version to v1.2.8
 
 ---
 
@@ -22,6 +50,13 @@
 
 ### 文档
 - 📝 更新 `metadata.yaml` 版本号至 v1.2.7
+
+### Changed
+- ♻️ Adjust long-message merged sending: messages over the threshold are wrapped intact as a single-node merged message and are no longer split
+- ♻️ Update long-message config text, README.md, and development notes to match the merge-without-splitting behavior
+
+### Documentation
+- 📝 Update `metadata.yaml` version to v1.2.7
 
 ---
 
@@ -36,6 +71,15 @@
 - 📝 补充中英双语注释，更新 README.md 中权限、配置默认值和数据目录说明
 - 📝 更新 `metadata.yaml` 版本号至 v1.2.6
 
+### Changed
+- ♻️ Refactor `main.py` command precondition checks to centralize group, admin, bot-object, and owner permission validation while preserving existing behavior
+- ♻️ Refactor sentinel command and watchdog logic to reuse `/bot` command detection, keyword normalization, and long-message reply handling
+- ♻️ Move sentinel private notification text generation to i18n resources, avoiding newly added hardcoded notification strings
+
+### Documentation
+- 📝 Add bilingual comments and update README.md permissions, config defaults, and data directory notes
+- 📝 Update `metadata.yaml` version to v1.2.6
+
 ---
 
 ## [1.2.5] - 2026-05-06
@@ -48,12 +92,23 @@
 - 📝 更新 README.md，更新欢迎消息设置示例
 - 📝 更新 i18n 帮助文本，反映新的命令格式
 
+### Changed
+- ♻️ Unify welcome message command format: `/bot welcome message "welcome message content"`, support double-quoted content
+- ♻️ Consistent with `/bot set_group_name "group name"` command format
+
+### Documentation
+- 📝 Update README.md, update welcome message setting example
+- 📝 Update i18n help text to reflect new command format
+
 ---
 
 ## [1.2.4] - 2026-05-05
 
 ### 修改
 - ♻️ 全局统一术语"巡检"，涉及 CHANGELOG.md、README.md、zh-CN.json、sentinel_handler.py
+
+### Changed
+- ♻️ Global rename sentinel term to "巡检" across CHANGELOG.md, README.md, zh-CN.json, sentinel_handler.py
 
 ---
 
@@ -64,6 +119,12 @@
 
 ### 文档
 - 📝 更新 README.md，新增巡检监控功能说明、监控指令列表和巡检模块配置说明
+
+### Changed
+- ♻️ Unify sentinel config variables in `main.py`, extract `_get_sentinel_settings()`, `_get_sentinel_cmd_whitelist()`, `_check_sentinel_cmd_permission()` helper methods, eliminate duplicate code in `cmd_monitor`, `cmd_unmonitor`, `cmd_monitorlist`
+
+### Documentation
+- 📝 Update README.md, add sentinel monitoring feature description, monitoring command list and sentinel module configuration description
 
 ---
 
@@ -90,6 +151,27 @@
 - 🐛 修复子配置项 i18n 路径错误：移除多余的 `items` 层级，路径应为 `templates.keyword_rule.keywords` 而非 `templates.keyword_rule.items.keywords`
 - 🐛 修复 `object` 类型分组配置的 i18n 路径错误：移除所有 `items` 中间层级，路径应为 `sentinel_settings.sentinel_enabled` 而非 `sentinel_settings.items.sentinel_enabled`
 
+### Added
+- ✨ `sentinel_rules` config now uses `template_list` type, supporting dynamic addition of keyword rules and message type rules in WebUI
+- ✨ Add `keyword_rule` template: keyword/regex matching detection
+- ✨ Add `type_rule` template: message type detection (image/voice/video etc.)
+
+### Changed
+- ♻️ Refactor sentinel config structure using `object` type for grouping:
+  - `sentinel_settings` (Sentinel Module Settings)
+    - `sentinel_enabled`, `sentinel_group_blacklist`, `sentinel_user_whitelist`
+    - `sentinel_rules_group` (Detection Rules Config) → `sentinel_rules`
+    - `sentinel_command_group` (Command Module Config) → command rule related configs
+- ♻️ `_conf_schema.json` fully complies with i18n standards, all `description`/`hint` fields now use English fallback text
+- ♻️ `zh-CN.json` and `en-US.json` add Chinese and English translations for all sentinel config items
+- ♻️ Remove hardcoded dividers, use `template_list` for rule grouping
+- ♻️ Update `metadata.yaml` minimum AstrBot version requirement to `>=4.10.4` (supports `template_list` type)
+
+### Fixed
+- 🐛 Fix `template_list` template i18n structure error: changed from flat key names to nested structure to match frontend `getByPath` parsing logic
+- 🐛 Fix sub-config item i18n path error: removed extra `items` layer, path should be `templates.keyword_rule.keywords` not `templates.keyword_rule.items.keywords`
+- 🐛 Fix `object` type grouped config i18n path error: removed all `items` intermediate layers, path should be `sentinel_settings.sentinel_enabled` not `sentinel_settings.items.sentinel_enabled`
+
 ---
 
 ## [1.2.1] - 2026-05-05
@@ -115,6 +197,20 @@
 ### 文档
 - 📝 更新 `metadata.yaml` 版本号至 v1.2.1
 
+### Added
+- ✨ Add sentinel monitoring: automatic keyword/message-type detection and violation handling for group chats
+- ✨ Add command `/bot 监控 <关键词> [@某人...]` (`/bot monitor <keyword> [@someone...]`): add a command monitoring rule
+- ✨ Add command `/bot 取消监控 <规则ID|关键词> [@某人...]` (`/bot unmonitor <rule_id|keyword> [@someone...]`): remove a command monitoring rule
+- ✨ Add command `/bot 监控列表` (`/bot monitorlist`): view current group command monitoring rules
+- ✨ Add `sentinel_watchdog` message interceptor with regex keyword matching, message-type detection, and time-range control
+- ✨ Add config-page detection rules (`sentinel_rules`): keyword/regex, multimodal message types, time ranges (including cross-day), rule-level whitelist and monitor list
+- ✨ Add cumulative violation kick: auto-kick users when hit count reaches threshold
+- ✨ Add variable templates: `{id}`, `{name}`, `{date}`, `{time}` usable in reply and kick messages
+- ✨ Add hit notifications: support notifying group admins, bot admin, and command rule creators
+- ✨ Add multi-level whitelists and group blacklists (global / group / rule / command level)
+- ✨ Add `TimeParser` module supporting combined date + weekday + time-range expressions with cross-day support
+- ✨ Add `handlers/time_parser.py` and `handlers/sentinel_handler.py` modules
+
 ---
 
 ## [1.2.0] - 2026-05-05
@@ -129,6 +225,13 @@
 ### 文档
 - 📝 更新 README.md，新增精华消息功能说明与使用示例
 
+### Added
+- ✨ Add group essence message management: support setting and removing group essence messages
+- ✨ Add command `/bot set_essence <QQ>` (`/bot 设精 <QQ>`): set the latest message of a user as group essence
+- ✨ Add command `/bot remove_essence <QQ>` (`/bot 移精 <QQ>`): remove group essence message from a user
+- ✨ Add `set_essence_msg`, `delete_essence_msg`, `get_essence_msg_list` API methods
+- ✨ Add i18n keys `cmd_set_essence`, `cmd_remove_essence`, `msg_set_essence_success`, `msg_remove_essence_success`
+
 ---
 
 ## [1.1.8] - 2026-05-05
@@ -138,12 +241,20 @@
 - 📝 新增 `@机器人 /bot xxx` 格式的使用说明
 - 📝 更新功能特性表格，说明非白名单群静默处理
 
+### Documentation
+- 📝 Update README.md, improve command interception mechanism description
+- 📝 Add usage instructions for `@bot /bot xxx` format
+- 📝 Update feature table, describe silent handling for non-whitelist groups
+
 ---
 
 ## [1.1.7] - 2026-05-05
 
 ### 清理
 - 🗑️ 移除冗余的 i18n 翻译 key `msg_whitelist_not_allowed`（非白名单群聊已改为静默处理）
+
+### Cleanup
+- 🗑️ Remove redundant i18n translation key `msg_whitelist_not_allowed` (non-whitelist groups are now silently ignored)
 
 ---
 
@@ -153,12 +264,19 @@
 - 🐛 修复非白名单群聊中 `@机器人 /bot xxx` 格式命令未被正确拦截的问题
 - 🐛 修复 `stop_event()` 后缺少 `yield` 导致事件未被正确阻止的问题
 
+### Fixed
+- 🐛 Fix `@bot /bot xxx` format commands not being correctly intercepted in non-whitelist groups
+- 🐛 Fix missing `yield` after `stop_event()` causing events not to be properly blocked
+
 ---
 
 ## [1.1.5] - 2026-05-05
 
 ### 新增
 - ✨ 支持 `@机器人 /bot xxx` 格式的命令接管，与直接 `/bot xxx` 使用相同的拦截逻辑
+
+### Added
+- ✨ Support `@bot /bot xxx` format command interception, using the same logic as direct `/bot xxx`
 
 ---
 
@@ -174,6 +292,16 @@
   2. 白名单内的群聊：有效命令正常回复，无效命令提示"命令不存在"
   3. 非白名单群聊：所有 `/bot` 命令静默处理，不回复
 
+### Fixed
+- 🐛 Refactor message judgment logic: determine if it's a `/bot` command by raw message, no longer interferes with other conversations
+- 🐛 Fix whitelist and unknown command interception not working
+
+### Changed
+- ♻️ Optimize interception logic:
+  1. Take over all commands starting with `/bot`, regardless of whether the group is in the whitelist
+  2. Groups in whitelist: valid commands get normal reply, invalid commands show "Command not found"
+  3. Groups not in whitelist: all `/bot` commands are silently ignored
+
 ---
 
 ## [1.1.3] - 2026-05-05
@@ -182,6 +310,10 @@
 - 🐛 修复白名单和无效命令截断功能失效的问题
 - 🐛 改进拦截逻辑：区分无效命令和正常 LLM 对话，只有当没有其他 handler 被激活时才拦截
 
+### Fixed
+- 🐛 Fix whitelist and unknown command interception not working
+- 🐛 Improve interception logic: distinguish between invalid commands and normal LLM conversations, only intercept when no other handlers are activated
+
 ---
 
 ## [1.1.2] - 2026-05-05
@@ -189,12 +321,18 @@
 ### 修复
 - 🐛 修复无效指令截断影响正常 LLM 对话的问题：现在只截断以 `/bot` 开头的消息，不再干扰其他对话
 
+### Fixed
+- 🐛 Fix unknown command interception affecting normal LLM conversations: now only intercepts messages starting with `/bot`, no longer interferes with other conversations
+
 ---
 
 ## [1.1.1] - 2026-05-05
 
 ### 修改
 - ♻️ 非白名单群聊中输入指令时改为静默处理，不再回复提示消息
+
+### Changed
+- ♻️ Non-whitelist groups now silently ignore commands instead of replying with a message
 
 ---
 
@@ -215,6 +353,7 @@
 ### 修改
 - ♻️ 重构命令拦截机制：使用高优先级事件监听器 `whitelist_guard` 统一处理白名单检查和未知命令拦截
 - ♻️ 规范配置项命名：`welcome_enabled` → `welcome_global_enabled`（全局总开关），`default_welcome_enabled` → `welcome_default_enabled`（新群默认值）
+- ♻️ 重构 `GroupHandler`，新增 `_execute_api` 和 `_execute_api_with_error` 方法，区分读操作和写操作的返回值判断逻辑
 - 📝 更新 README.md，新增配置优先级说明和群级别配置说明
 
 ---
@@ -227,6 +366,12 @@
 - ✨ 新增配置项 `group_whitelist`：群白名单列表，支持多个群号
 - ✨ 新增国际化翻译 `msg_whitelist_not_allowed`：白名单限制提示消息
 
+### Added
+- ✨ Add group whitelist feature: configure whitelist group IDs, when enabled only whitelisted groups can use plugin features
+- ✨ Add config option `whitelist_enabled`: enable/disable group whitelist
+- ✨ Add config option `group_whitelist`: group whitelist list, supports multiple group IDs
+- ✨ Add i18n translation `msg_whitelist_not_allowed`: whitelist restriction prompt message
+
 ---
 
 ## [1.0.15] - 2026-05-04
@@ -236,6 +381,11 @@
 - 🐛 移除无效的 `@bot_group.command("")` 方式，改用 `@filter.event_message_type` 事件监听器
 - 🐛 新增 `on_unknown_command` 方法，监听所有消息事件，检查 `/bot` 前缀但子指令不在有效列表中时提示"指令不存在"
 
+### Fixed
+- 🐛 Fix fallback handler not working for unknown commands
+- 🐛 Remove invalid `@bot_group.command("")` approach, use `@filter.event_message_type` event listener instead
+- 🐛 Add `on_unknown_command` method to listen all message events, check if `/bot` prefix is present but sub-command is not in valid list, then prompt "Command not found"
+
 ---
 
 ## [1.0.14] - 2026-05-04
@@ -244,6 +394,11 @@
 - ♻️ 全面更新 README.md，反映最新功能状态
 - ♻️ 更新插件名称、指令列表、配置说明、权限说明等内容
 - ♻️ 添加欢迎消息变量说明和未知指令处理说明
+
+### Changed
+- ♻️ Fully updated README.md to reflect latest feature status
+- ♻️ Updated plugin name, command list, configuration description, permission description
+- ♻️ Added welcome message variable description and unknown command handling description
 
 ---
 
@@ -255,6 +410,12 @@
 - 🐛 `main.py` 新增 `display_name`、`short_desc`、`desc` 属性，根据当前 locale 动态返回对应语言的元数据
 - 🐛 `metadata.yaml` 恢复标准格式（name 使用英文标识符，display_name 使用英文）
 
+### Fixed
+- 🐛 Fix display_name, short_desc, desc i18n switching not working
+- 🐛 `I18nManager` now correctly loads `metadata` section, added `get_metadata()` method
+- 🐛 `main.py` added `display_name`, `short_desc`, `desc` properties that return locale-specific metadata
+- 🐛 `metadata.yaml` restored to standard format (name uses English identifier, display_name uses English)
+
 ---
 
 ## [1.0.12] - 2026-05-04
@@ -262,6 +423,10 @@
 ### 修改
 - ♻️ 插件更名为 **群控助手 - BotKeeper**
 - ♻️ 更新所有相关文件中的插件名称引用（metadata.yaml、i18n 文件、main.py 类注释和日志）
+
+### Changed
+- ♻️ Plugin renamed to **BotKeeper - Group Manager**
+- ♻️ Updated all plugin name references in metadata.yaml, i18n files, main.py class docstrings and logs
 
 ---
 
@@ -271,12 +436,19 @@
 - ✨ 添加兜底处理机制：当用户输入的 `/bot` 指令不存在或格式错误时，自动提示"指令不存在，请使用 /bot help 查看可用指令"
 - ✨ 新增 `msg_command_not_found` 国际化翻译 key（中英文）
 
+### Added
+- ✨ Add fallback handler: When user inputs an unknown or invalid `/bot` command, automatically prompt "Command not found, use /bot help to see available commands"
+- ✨ Add `msg_command_not_found` i18n translation key (Chinese and English)
+
 ---
 
 ## [1.0.10] - 2026-05-04
 
 ### 修改
 - ♻️ 更新中文 i18n 文件，将所有指令示例中的 `/机器人` 改为 `/bot`
+
+### Changed
+- ♻️ Updated Chinese i18n file, changed all command examples from `/机器人` to `/bot`
 
 ---
 
@@ -286,12 +458,19 @@
 - ♻️ 移除指令组中文别名 `/机器人`，统一使用 `/bot` 作为唯一指令前缀
 - ♻️ 更新 `_strip_command_prefix()` 方法，仅支持 `/bot` 前缀解析
 
+### Changed
+- ♻️ Removed command group Chinese alias `/机器人`, unified to use `/bot` as the only command prefix
+- ♻️ Updated `_strip_command_prefix()` method to only support `/bot` prefix parsing
+
 ---
 
 ## [1.0.8] - 2026-05-04
 
 ### 修改
 - ♻️ 统一指令前缀：中英文消息均需以 `/bot` 开头，确保指令唤醒的一致性和明确性
+
+### Changed
+- ♻️ Unified command prefix: Both Chinese and English messages must start with `/bot` to ensure consistent and clear command wake-up
 
 ---
 
@@ -319,414 +498,6 @@
 - ♻️ 帮助菜单根据语言设置只显示对应语言的指令，不再中英混杂
 - ♻️ 更新 README.md 反映当前功能状态
 
----
-
-## [1.0.6] - 2026-05-04
-
-### 修复
-- 🐛 修复 `cmd_help` 传递多余 `event` 参数给 `_t()` 导致 basedpyright 报错
-- 🐛 修复 `cmd_global_mute` 空参数时 `status.lower()` 崩溃
-- 🐛 修复 `_check_group_role` 异常静默无日志
-- 🐛 修复 `on_event` 中 `group_id=0` 被当作有效群号
-- 🐛 修复 main.py 中 9 处注释乱码（`<QQå?>`）
-
-### 修改
-- ♻️ 移除 `default_admin_list` 配置项，权限检测改为直接查询 QQ 群内真实角色
-- ♻️ 统一国际化文件至 `.astrbot-plugin/i18n/` 目录，移除旧的 `locales/` 和 `i18n.py` 硬编码翻译
-- ♻️ 重构 `__init__` 签名，使用 `AstrBotConfig` 类型
-- ♻️ 重构 `_t()` 方法，移除未使用的 `event` 参数
-- ♻️ 将 `_extract_text_after_target` 移至 Helpers 区
-- ♻️ 所有方法添加中英文双语 docstrings
-- ♻️ 补全缺失的 i18n 翻译 key（help/cmd/mute_success 等 20+ 个）
-- ♻️ 严格按照 AstrBot 插件文档规范重构项目结构
-
----
-
-## [1.0.5] - 2026-05-03
-
-### 新增
-- ✨ 新增配置项 `default_admin_list`：在 WebUI 中设置全局默认管理员 QQ 号列表
-
----
-
-## [1.0.4] - 2026-05-03
-
-### 修复
-- 🐛 修复插件无法识别群主和群管理员权限的问题，`_is_plugin_admin` 现在会同时检查本地管理员列表和 QQ 群内真实角色
-
----
-
-## [1.0.3] - 2026-05-03
-
-### 修复
-- 🐛 修复设置头衔（`set_group_special_title`）和提升管理员（`set_group_admin`）功能无效的问题
-- 🐛 修复所有写操作（禁言、踢人、改名等）成功后仍提示"操作失败"的根因：OneBot API 成功时返回 `None` 被误判为失败
-- 🐛 修复获取公告列表无法获取群内公告的问题，新增 `_get_group_notice` API 调用
-- 🐛 修复添加管理员（`add_admin`）和移除管理员（`remove_admin`）功能不可用，增加手动参数提取回退逻辑
-- 🐛 修复 `_extract_text_after_target` 在 At 组件后无法正确提取文本的问题
-
-### 新增
-- ✨ 发布公告支持配置项：是否需要群成员确认（`default_announce_confirm_required`）
-- ✨ 发布公告支持配置项：是否置顶（`default_announce_pinned`）
-- ✨ 公告列表显示置顶和需确认标签
-- ✨ 设置群名（`set_group_name`）支持双引号包裹带空格的群名，如 `/bot set_group_name "群名称"`
-
-### 修改
-- ♻️ 重构 `GroupHandler`，新增 `_execute_api` 和 `_execute_api_with_error` 方法，区分读操作和写操作的返回值判断逻辑
-- ♻️ 重构 `NoticeHandler`，新增 `get_from_group` 方法获取群内公告
-
----
-
-## [1.0.2] - 2026-05-03
-
-### 修复
-- 🐛 修复 `set_group_special_title` API 缺少 `duration` 参数导致设置头衔失败
-- 🐛 改进错误处理，操作失败时显示具体错误信息
-
-### 修改
-- ♻️ 将指令参数从 `@用户` 格式改为 `<QQ号>` 格式
-- ♻️ 规范本地化文件格式，统一使用 `<QQ号>` / `<QQ>` 格式
-
----
-
-## [1.0.1] - 2026-05-03
-
-### 新增
-- ✨ 添加 WebUI 配置面板支持
-- ✨ 新增配置项：语言设置（中文/英文）
-- ✨ 新增配置项：默认禁言时长
-- ✨ 新增配置项：默认开启欢迎消息
-- ✨ 新增配置项：默认欢迎消息内容
-- ✨ 新增配置项：最大撤回条数
-
-### 修改
-- ♻️ 重构配置管理，使用 AstrBot 标准配置系统
-- ♻️ 移除手动文件存储的 global_config
-- ♻️ 使用 StarTools.get_data_dir() 获取数据目录
-- 📝 更新 README 许可证说明（AGPL-3.0）
-
-### 修复
-- 🐛 修复 register_star() 参数名错误
-- 🐛 修复 Context 对象无 data_dir 属性错误
-
----
-
-## [1.0.0] - 2026-05-03
-
-### 新增
-- ✨ 初始版本发布
-- ✨ 新人欢迎功能（自动发送欢迎消息）
-- ✨ 管理员管理（添加/移除/列出管理员）
-- ✨ 禁言管理（单个禁言、解禁、全体禁言）
-- ✨ 拉黑功能（封禁用户）
-- ✨ 消息撤回功能
-- ✨ 群名片管理（修改昵称、设置头衔）
-- ✨ 管理员权限管理（设为管理员/取消管理员）
-- ✨ 群名称修改
-- ✨ 群公告管理（发布/查看公告）
-- ✨ 中英文双语支持
-
----
-
-# Changelog
-
----
-
-## [1.2.8] - 2026-05-10
-
-### Changed
-- ♻️ Optimize inspection mode: inspection now only uses WebUI-configured rules and no longer supports `/bot monitor`, `/bot unmonitor`, or `/bot monitorlist` for rule management
-- ♻️ Remove `notify_group_admin`, `notify_bot_admin`, and private notification handling for rule hits
-- ♻️ Standardize the user-facing English inspection module name as `Inspection`
-
-### Documentation
-- 📝 Update README.md, development notes, i18n config text, and `metadata.yaml` version to v1.2.8
-
----
-
-## [1.2.7] - 2026-05-10
-
-### Changed
-- ♻️ Adjust long-message merged sending: messages over the threshold are wrapped intact as a single-node merged message and are no longer split
-- ♻️ Update long-message config text, README.md, and development notes to match the merge-without-splitting behavior
-
-### Documentation
-- 📝 Update `metadata.yaml` version to v1.2.7
-
----
-
-## [1.2.6] - 2026-05-09
-
-### Changed
-- ♻️ Refactor `main.py` command precondition checks to centralize group, admin, bot-object, and owner permission validation while preserving existing behavior
-- ♻️ Refactor sentinel command and watchdog logic to reuse `/bot` command detection, keyword normalization, and long-message reply handling
-- ♻️ Move sentinel private notification text generation to i18n resources, avoiding newly added hardcoded notification strings
-
-### Documentation
-- 📝 Add bilingual comments and update README.md permissions, config defaults, and data directory notes
-- 📝 Update `metadata.yaml` version to v1.2.6
-
----
-
-## [1.2.5] - 2026-05-06
-
-### Changed
-- ♻️ Unify welcome message command format: `/bot welcome message "welcome message content"`, support double-quoted content
-- ♻️ Consistent with `/bot set_group_name "group name"` command format
-
-### Documentation
-- 📝 Update README.md, update welcome message setting example
-- 📝 Update i18n help text to reflect new command format
-
----
-
-## [1.2.4] - 2026-05-05
-
-### Changed
-- ♻️ Global rename sentinel term to "巡检" across CHANGELOG.md, README.md, zh-CN.json, sentinel_handler.py
-
----
-
-## [1.2.3] - 2026-05-05
-
-### Changed
-- ♻️ Unify sentinel config variables in `main.py`, extract `_get_sentinel_settings()`, `_get_sentinel_cmd_whitelist()`, `_check_sentinel_cmd_permission()` helper methods, eliminate duplicate code in `cmd_monitor`, `cmd_unmonitor`, `cmd_monitorlist`
-
-### Documentation
-- 📝 Update README.md, add sentinel monitoring feature description, monitoring command list and sentinel module configuration description
-
----
-
-## [1.2.2] - 2026-05-05
-
-### Added
-- ✨ `sentinel_rules` config now uses `template_list` type, supporting dynamic addition of keyword rules and message type rules in WebUI
-- ✨ Add `keyword_rule` template: keyword/regex matching detection
-- ✨ Add `type_rule` template: message type detection (image/voice/video etc.)
-
-### Changed
-- ♻️ Refactor sentinel config structure using `object` type for grouping:
-  - `sentinel_settings` (Sentinel Module Settings)
-    - `sentinel_enabled`, `sentinel_group_blacklist`, `sentinel_user_whitelist`
-    - `sentinel_rules_group` (Detection Rules Config) → `sentinel_rules`
-    - `sentinel_command_group` (Command Module Config) → command rule related configs
-- ♻️ `_conf_schema.json` fully complies with i18n standards, all `description`/`hint` fields now use English fallback text
-- ♻️ `zh-CN.json` and `en-US.json` add Chinese and English translations for all sentinel config items
-- ♻️ Remove hardcoded dividers, use `template_list` for rule grouping
-- ♻️ Update `metadata.yaml` minimum AstrBot version requirement to `>=4.10.4` (supports `template_list` type)
-
-### Fixed
-- 🐛 Fix `template_list` template i18n structure error: changed from flat key names to nested structure to match frontend `getByPath` parsing logic
-- 🐛 Fix sub-config item i18n path error: removed extra `items` layer, path should be `templates.keyword_rule.keywords` not `templates.keyword_rule.items.keywords`
-- 🐛 Fix `object` type grouped config i18n path error: removed all `items` intermediate layers, path should be `sentinel_settings.sentinel_enabled` not `sentinel_settings.items.sentinel_enabled`
-
----
-
-## [1.2.1] - 2026-05-05
-
-### Added
-- ✨ Add sentinel monitoring: automatic keyword/message-type detection and violation handling for group chats
-- ✨ Add command `/bot 监控 <关键词> [@某人...]` (`/bot monitor <keyword> [@someone...]`): add a command monitoring rule
-- ✨ Add command `/bot 取消监控 <规则ID|关键词> [@某人...]` (`/bot unmonitor <rule_id|keyword> [@someone...]`): remove a command monitoring rule
-- ✨ Add command `/bot 监控列表` (`/bot monitorlist`): view current group command monitoring rules
-- ✨ Add `sentinel_watchdog` message interceptor with regex keyword matching, message-type detection, and time-range control
-- ✨ Add config-page detection rules (`sentinel_rules`): keyword/regex, multimodal message types, time ranges (including cross-day), rule-level whitelist and monitor list
-- ✨ Add cumulative violation kick: auto-kick users when hit count reaches threshold
-- ✨ Add variable templates: `{id}`, `{name}`, `{date}`, `{time}` usable in reply and kick messages
-- ✨ Add hit notifications: support notifying group admins, bot admin, and command rule creators
-- ✨ Add multi-level whitelists and group blacklists (global / group / rule / command level)
-- ✨ Add `TimeParser` module supporting combined date + weekday + time-range expressions with cross-day support
-- ✨ Add `handlers/time_parser.py` and `handlers/sentinel_handler.py` modules
-
-### Changed
-- ♻️ Update help menu with new sentinel monitoring command group
-- ♻️ `_conf_schema.json`: add sentinel monitoring config section (separated by divider), including 15 config items: global switch, group blacklist, user whitelist, detection rules, command rules
-
-### Documentation
-- 📝 Update `metadata.yaml` version to v1.2.1
-
----
-
-## [1.2.0] - 2026-05-05
-
-### Added
-- ✨ Add group essence message management: support setting and removing group essence messages
-- ✨ Add command `/bot set_essence <QQ>` (`/bot 设精 <QQ>`): set the latest message of a user as group essence
-- ✨ Add command `/bot remove_essence <QQ>` (`/bot 移精 <QQ>`): remove group essence message from a user
-- ✨ Add `set_essence_msg`, `delete_essence_msg`, `get_essence_msg_list` API methods
-- ✨ Add i18n keys `cmd_set_essence`, `cmd_remove_essence`, `msg_set_essence_success`, `msg_remove_essence_success`
-
-### Documentation
-- 📝 Update README.md, add essence message feature description and usage examples
-
----
-
-## [1.1.8] - 2026-05-05
-
-### Documentation
-- 📝 Update README.md, improve command interception mechanism description
-- 📝 Add usage instructions for `@bot /bot xxx` format
-- 📝 Update feature table, describe silent handling for non-whitelist groups
-
----
-
-## [1.1.7] - 2026-05-05
-
-### Cleanup
-- 🗑️ Remove redundant i18n translation key `msg_whitelist_not_allowed` (non-whitelist groups are now silently ignored)
-
----
-
-## [1.1.6] - 2026-05-05
-
-### Fixed
-- 🐛 Fix `@bot /bot xxx` format commands not being correctly intercepted in non-whitelist groups
-- 🐛 Fix missing `yield` after `stop_event()` causing events not being properly blocked
-
----
-
-## [1.1.5] - 2026-05-05
-
-### Added
-- ✨ Support `@bot /bot xxx` format command interception, using the same logic as direct `/bot xxx`
-
----
-
-## [1.1.4] - 2026-05-05
-
-### Fixed
-- 🐛 Refactor message judgment logic: determine if it's a `/bot` command by raw message, no longer interferes with other conversations
-- 🐛 Fix whitelist and unknown command interception not working
-
-### Changed
-- ♻️ Optimize interception logic:
-  1. Take over all commands starting with `/bot`, regardless of whether the group is in the whitelist
-  2. Groups in whitelist: valid commands get normal reply, invalid commands show "Command not found"
-  3. Groups not in whitelist: all `/bot` commands are silently ignored
-
----
-
-## [1.1.3] - 2026-05-05
-
-### Fixed
-- 🐛 Fix whitelist and unknown command interception not working
-- 🐛 Improve interception logic: distinguish between invalid commands and normal LLM conversations, only intercept when no other handlers are activated
-
----
-
-## [1.1.2] - 2026-05-05
-
-### Fixed
-- 🐛 Fix unknown command interception affecting normal LLM conversations: now only intercepts messages starting with `/bot`, no longer interferes with other conversations
-
----
-
-## [1.1.1] - 2026-05-05
-
-### Changed
-- ♻️ Non-whitelist groups now silently ignore commands instead of replying with a message
-
----
-
-## [1.1.0] - 2026-05-05
-
-### Added
-- ✨ Add group whitelist feature: configure whitelist group IDs, when enabled only whitelisted groups can use plugin features
-- ✨ Add config option `whitelist_enabled`: enable/disable group whitelist
-- ✨ Add config option `group_whitelist`: group whitelist list, supports multiple group IDs
-- ✨ Add config option `welcome_global_enabled`: global master switch for welcome messages, can disable welcome messages for all groups with one click, enabled by default
-
-### Fixed
-- 🐛 Fix unknown commands (e.g. `/bot list`) not showing "Command not found" message
-- 🐛 Fix whitelist interception not working: `WakingCheckStage` removes wake prefix, causing message to not contain `/bot`
-- 🐛 Fix `whitelist_guard` not using `yield` to return results, causing event interception to not work
-- 🐛 Fix command handler detection logic: check if any command handler (starting with `cmd_`) is activated
-
-### Changed
-- ♻️ Refactor command interception mechanism: use high-priority event listener `whitelist_guard` to handle whitelist check and unknown command interception
-- ♻️ Standardize config option naming: `welcome_enabled` → `welcome_global_enabled` (global master switch), `default_welcome_enabled` → `welcome_default_enabled` (default value for new groups)
-- 📝 Update README.md, add configuration priority explanation and group-level configuration description
-
----
-
-## [1.0.16] - 2026-05-04
-
-### Added
-- ✨ Add group whitelist feature: configure whitelist group IDs, when enabled only whitelisted groups can use plugin features
-- ✨ Add config option `whitelist_enabled`: enable/disable group whitelist
-- ✨ Add config option `group_whitelist`: group whitelist list, supports multiple group IDs
-- ✨ Add i18n translation `msg_whitelist_not_allowed`: whitelist restriction prompt message
-
----
-
-## [1.0.15] - 2026-05-04
-
-### Fixed
-- 🐛 Fix fallback handler not working for unknown commands
-- 🐛 Remove invalid `@bot_group.command("")` approach, use `@filter.event_message_type` event listener instead
-- 🐛 Add `on_unknown_command` method to listen all message events, check if `/bot` prefix is present but sub-command is not in valid list, then prompt "Command not found"
-
----
-
-## [1.0.14] - 2026-05-04
-
-### Changed
-- ♻️ Fully updated README.md to reflect latest feature status
-- ♻️ Updated plugin name, command list, configuration description, permission description
-- ♻️ Added welcome message variable description and unknown command handling description
-
----
-
-## [1.0.13] - 2026-05-04
-
-### Fixed
-- 🐛 Fix display_name, short_desc, desc i18n switching not working
-- 🐛 `I18nManager` now correctly loads `metadata` section, added `get_metadata()` method
-- 🐛 `main.py` added `display_name`, `short_desc`, `desc` properties that return locale-specific metadata
-- 🐛 `metadata.yaml` restored to standard format (name uses English identifier, display_name uses English)
-
----
-
-## [1.0.12] - 2026-05-04
-
-### Changed
-- ♻️ Plugin renamed to **BotKeeper - Group Manager**
-- ♻️ Updated all plugin name references in metadata.yaml, i18n files, main.py class docstrings and logs
-
----
-
-## [1.0.11] - 2026-05-04
-
-### Added
-- ✨ Add fallback handler: When user inputs an unknown or invalid `/bot` command, automatically prompt "Command not found, use /bot help to see available commands"
-- ✨ Add `msg_command_not_found` i18n translation key (Chinese and English)
-
----
-
-## [1.0.10] - 2026-05-04
-
-### Changed
-- ♻️ Updated Chinese i18n file, changed all command examples from `/机器人` to `/bot`
-
----
-
-## [1.0.9] - 2026-05-04
-
-### Changed
-- ♻️ Removed command group Chinese alias `/机器人`, unified to use `/bot` as the only command prefix
-- ♻️ Updated `_strip_command_prefix()` method to only support `/bot` prefix parsing
-
----
-
-## [1.0.8] - 2026-05-04
-
-### Changed
-- ♻️ Unified command prefix: Both Chinese and English messages must start with `/bot` to ensure consistent and clear command wake-up
-
----
-
-## [1.0.7] - 2026-05-04
-
 ### Fixed
 - 🐛 Fix locale switching not working: `locale` is now read dynamically from config on each `_t()` call instead of being cached
 - 🐛 Fix config page always showing English: `_conf_schema.json` now uses Chinese descriptions, i18n files provide English overrides
@@ -753,6 +524,23 @@
 
 ## [1.0.6] - 2026-05-04
 
+### 修复
+- 🐛 修复 `cmd_help` 传递多余 `event` 参数给 `_t()` 导致 basedpyright 报错
+- 🐛 修复 `cmd_global_mute` 空参数时 `status.lower()` 崩溃
+- 🐛 修复 `_check_group_role` 异常静默无日志
+- 🐛 修复 `on_event` 中 2 组 `group_id=0` 被当作有效群号
+- 🐛 修复 main.py 中 9 处注释乱码（`<QQå?>`）
+
+### 修改
+- ♻️ 移除 `default_admin_list` 配置项，权限检测改为直接查询 QQ 群内真实角色
+- ♻️ 统一国际化文件至 `.astrbot-plugin/i18n/` 目录，移除旧的 `locales/` 和 `i18n.py` 硬编码翻译
+- ♻️ 重构 `__init__` 签名，使用 `AstrBotConfig` 类型
+- ♻️ 重构 `_t()` 方法，移除未使用的 `event` 参数
+- ♻️ 将 `_extract_text_after_target` 移至 Helpers 区
+- ♻️ 所有方法添加中英文双语 docstrings
+- ♻️ 补全缺失的 i18n 翻译 key（help/cmd/mute_success 等 20+ 个）
+- ♻️ 严格按照 AstrBot 插件文档规范重构项目结构
+
 ### Fixed
 - 🐛 Fix `cmd_help` passing unused `event` parameter to `_t()` causing basedpyright errors
 - 🐛 Fix `cmd_global_mute` crash when status argument is empty
@@ -774,6 +562,9 @@
 
 ## [1.0.5] - 2026-05-03
 
+### 新增
+- ✨ 新增配置项 `default_admin_list`：在 WebUI 中设置全局默认管理员 QQ 号列表
+
 ### Added
 - ✨ Add `default_admin_list` config: set global default admin QQ numbers via WebUI
 
@@ -781,12 +572,32 @@
 
 ## [1.0.4] - 2026-05-03
 
+### 修复
+- 🐛 修复插件无法识别群主和群管理员权限的问题，`_is_plugin_admin` 现在会同时检查本地管理员列表和 QQ 群内真实角色
+
 ### Fixed
 - 🐛 Fix plugin unable to recognize group owner and admin roles; `_is_plugin_admin` now checks both local admin list and QQ group roles
 
 ---
 
 ## [1.0.3] - 2026-05-03
+
+### 修复
+- 🐛 修复设置头衔（`set_group_special_title`）和提升管理员（`set_group_admin`）功能无效的问题
+- 🐛 修复所有写操作（禁言、踢人、改名等）成功后仍提示"操作失败"的根因：OneBot API 成功时返回 `None` 被误判为失败
+- 🐛 修复获取公告列表无法获取群内公告的问题，新增 `_get_group_notice` API 调用
+- 🐛 修复添加管理员（`add_admin`）和移除管理员（`remove_admin`）功能不可用，增加手动参数提取回退逻辑
+- 🐛 修复 `_extract_text_after_target` 在 At 组件后无法正确提取文本的问题
+
+### 新增
+- ✨ 发布公告支持配置项：是否需要群成员确认（`default_announce_confirm_required`）
+- ✨ 发布公告支持配置项：是否置顶（`default_announce_pinned`）
+- ✨ 公告列表显示置顶和需确认标签
+- ✨ 设置群名（`set_group_name`）支持双引号包裹带空格的群名，如 `/bot set_group_name "群名称"`
+
+### 修改
+- ♻️ 重构 `GroupHandler`，新增 `_execute_api` 和 `_execute_api_with_error` 方法，区分读操作和写操作的返回值判断逻辑
+- ♻️ 重构 `NoticeHandler`，新增 `get_from_group` 方法获取群内公告
 
 ### Fixed
 - 🐛 Fix `set_group_special_title` (set title) and `set_group_admin` (promote to admin) not working
@@ -809,6 +620,14 @@
 
 ## [1.0.2] - 2026-05-03
 
+### 修复
+- 🐛 修复 `set_group_special_title` API 缺少 `duration` 参数导致设置头衔失败
+- 🐛 改进错误处理，操作失败时显示具体错误信息
+
+### 修改
+- ♻️ 将指令参数从 `@用户` 格式改为 `<QQ号>` 格式
+- ♻️ 规范本地化文件格式，统一使用 `<QQ号>` / `<QQ>` 格式
+
 ### Fixed
 - 🐛 Fix `set_group_special_title` API missing `duration` parameter causing title setting failure
 - 🐛 Improve error handling, show detailed error message when operation fails
@@ -820,6 +639,24 @@
 ---
 
 ## [1.0.1] - 2026-05-03
+
+### 新增
+- ✨ 添加 WebUI 配置面板支持
+- ✨ 新增配置项：语言设置（中文/英文）
+- ✨ 新增配置项：默认禁言时长
+- ✨ 新增配置项：默认开启欢迎消息
+- ✨ 新增配置项：默认欢迎消息内容
+- ✨ 新增配置项：最大撤回条数
+
+### 修改
+- ♻️ 重构配置管理，使用 AstrBot 标准配置系统
+- ♻️ 移除手动文件存储的 global_config
+- ♻️ 使用 StarTools.get_data_dir() 获取数据目录
+- 📝 更新 README 许可证说明（AGPL-3.0）
+
+### 修复
+- 🐛 修复 register_star() 参数名错误
+- 🐛 修复 Context 对象无 data_dir 属性错误
 
 ### Added
 - ✨ Add WebUI configuration panel support
@@ -843,6 +680,19 @@
 
 ## [1.0.0] - 2026-05-03
 
+### 新增
+- ✨ 初始版本发布
+- ✨ 新人欢迎功能（自动发送欢迎消息）
+- ✨ 管理员管理（添加/移除/列出管理员）
+- ✨ 禁言管理（单个禁言、解禁、全体禁言）
+- ✨ 拉黑功能（封禁用户）
+- ✨ 消息撤回功能
+- ✨ 群名片管理（修改昵称、设置头衔）
+- ✨ 管理员权限管理（设为管理员/取消管理员）
+- ✨ 群名称修改
+- ✨ 群公告管理（发布/查看公告）
+- ✨ 中英文双语支持
+
 ### Added
 - ✨ Initial release
 - ✨ Welcome message for new members
@@ -855,3 +705,5 @@
 - ✨ Group name modification
 - ✨ Group announcement management (publish/list)
 - ✨ Chinese/English bilingual support
+
+---

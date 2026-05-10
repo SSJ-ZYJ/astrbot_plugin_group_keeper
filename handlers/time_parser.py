@@ -16,7 +16,7 @@ WEEKDAY_MAP = {
 
 
 class TimeParser:
-    """Parses and evaluates time range expressions for sentinel rules.
+    """Parses and evaluates time range expressions for inspection rules.
 
     Supports combining date, weekday, and time ranges in a single string.
     Examples:
