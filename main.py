@@ -644,7 +644,7 @@ class GroupKeeperPlugin(star.Star):
 
         self_id = str(event.get_self_id())
         nodes = MessageHandler.build_merged_message(self_id, message, self.display_name)
-        return event.chain_result(nodes)
+        return event.chain_result(nodes)  # type: ignore
 
     # ------------------------------------------------------------------ #
     #  Command group: /bot
