@@ -2,7 +2,7 @@
   "metadata": {
     "display_name": "BotKeeper - Group Manager",
     "short_desc": "HTS Team Group Control Assistant",
-    "desc": "An Astrbot plugin for managing QQ groups, designed for HTS Team management. Supports welcome messages, admin management and other features."
+    "desc": "An Astrbot plugin for managing QQ groups, designed for HTS Team management. Supports welcome messages, group management and other features."
   },
   "config": {
     "locale": {

@@ -2,7 +2,7 @@
   "metadata": {
     "display_name": "群控助手 - BotKeeper",
     "short_desc": "HTS Team 群控助手",
-    "desc": "一个用来管理 QQ群聊 的 Astrbot 插件，用于管理 HTS Team，满足 HTS 管理需求。支持新人欢迎、管理员管理等功能。"
+    "desc": "一个用来管理 QQ群聊 的 Astrbot 插件，为 HTS Team 所设计。支持新人欢迎、群管理等功能。"
   },
   "config": {
     "locale": {
